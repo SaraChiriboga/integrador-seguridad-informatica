@@ -1,0 +1,60 @@
+﻿@model IEnumerable<SGRC_Integrador.Models.Riesgo>
+
+<div class="container-fluid fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark">Matriz de Riesgos Identificados</h2>
+
+        <button class="btn btn-danger" onclick="loadView('@Url.Action("Create", "Riesgos")')">
+            <i class="fas fa-plus me-2"></i> Evaluar Nuevo Riesgo
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Activo Afectado</th>
+                        <th>Amenaza</th>
+                        <th class="text-center">Prob.</th>
+                        <th class="text-center">Imp.</th>
+                        <th class="text-center">Nivel Riesgo</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        // Lógica de colores simple
+                        string colorClass = "bg-success";
+                        if (item.Nivel >= 13) { colorClass = "bg-danger text-white"; }
+                        else if (item.Nivel >= 9) { colorClass = "bg-warning text-dark"; }
+                        else if (item.Nivel >= 5) { colorClass = "bg-info text-dark"; }
+
+                        <tr>
+                            <td class="ps-4">@item.ActivoNombre</td>
+                            <td>@item.Amenaza</td>
+                            <td class="text-center text-muted">@item.Probabilidad</td>
+                            <td class="text-center text-muted">@item.Impacto</td>
+                            <td class="text-center">
+                                <span class="badge rounded-pill @colorClass px-3 py-2">
+                                    @item.Nivel
+                                </span>
+                            </td>
+                            <td>
+                                @if (item.Tratado)
+                                {
+                                    <span class="text-success"><i class="fas fa-check-circle"></i> Tratado</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger"><i class="fas fa-exclamation-circle"></i> Expuesto</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

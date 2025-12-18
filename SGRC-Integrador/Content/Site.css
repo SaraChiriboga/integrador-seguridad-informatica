@@ -1,0 +1,403 @@
+﻿
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--body-bg);
+}
+
+.page-wrapper {
+    display: flex;
+    align-items: flex-start;
+    padding: 30px;
+    gap: 24px;
+    height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* =========================================
+   VARIABLES DE AJUSTE
+   ========================================= */
+:root {
+    --sidebar-bg: #0b1e3b; /* Azul Navy */
+    --accent-red: #d62828; /* Rojo Intenso */
+    --text-white: #ffffff;
+    /* DIMENSIONES (Aquí ajustamos lo que pediste) */
+    --sb-collapsed: 100px; /* Ancho cerrado (antes 90px) */
+    --sb-expanded: 200px; /* Ancho abierto (antes 240px -> Más espacio) */
+    --btn-height: 55px; /* Altura del botón */
+    --icon-area: 60px; /* Ancho del área del icono (antes 30px -> Más ancho) */
+}
+
+/* =========================================
+   SIDEBAR FLOTANTE
+   ========================================= */
+.sidebar {
+    width: var(--sb-collapsed);
+    height: calc(100vh - 60px);
+    position: sticky;
+    top: 30px;
+    background-color: var(--sidebar-bg);
+    color: var(--text-white);
+    /* Bordes y Sombra */
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(11, 30, 59, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 0;
+    box-sizing: border-box;
+    /* Transición suave de anchura */
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 100;
+    overflow: hidden;
+}
+
+    /* --- AL EXPANDIR (HOVER) --- */
+    .sidebar:hover {
+        width: var(--sb-expanded); /* Se abre a 300px */
+        align-items: stretch; /* IMPORTANTE: Estira los elementos a lo ancho */
+    }
+
+/* --- LOGO --- */
+.logo-container {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.logo-bar {
+    width: 100px;
+    height: auto;
+    object-fit: contain;
+    transition: width 0.3s;
+}
+
+.sidebar:hover .logo-bar {
+    width: 140px; /* Logo más grande al abrir */
+}
+
+/* --- CONTENEDOR DE BOTONES --- */
+.buttons-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    /* --- LÓGICA DE CENTRADO --- */
+    flex-grow: 1; /* Ocupa TODO el espacio vertical disponible */
+    justify-content: center; /* Centra los botones dentro de ese espacio */
+}
+
+/* --- EL BOTÓN (ROJO/TRANSPARENTE) --- */
+.sidebar-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    /* Ocupar todo el ancho disponible del contenedor */
+    width: 100%;
+    height: var(--btn-height);
+    border-radius: 15px; /* Bordes más redondos */
+
+    display: flex;
+    align-items: center;
+    /* Al inicio centrado, luego lo cambiamos con la expansión */
+    justify-content: flex-start;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+/* --- ÁREA DEL ICONO (WRAPPER) --- */
+.icon-wrap {
+    /* Aquí está el cambio que pediste: ES MÁS ANCHO */
+    width: var(--icon-area); /* 60px fijos */
+    height: 100%; /* Altura completa del botón */
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0; /* No aplastar el icono */
+    /* Si la sidebar está cerrada, el icono se centra en el botón */
+    /* Calculamos el margen para centrarlo visualmente cuando está cerrado: 
+       AnchoBoton(70px) - IconArea(60px) = 10px sobrantes / 2 = 5px margen */
+    margin: 0 auto;
+}
+
+/* AJUSTE AL EXPANDIR: El icono se pega a la izquierda */
+.sidebar:hover .icon-wrap {
+    margin: 0; /* Quitar el auto margin para que se alinee a la izquierda */
+}
+
+/* Estilo del icono FontAwesome */
+.sidebar-btn i {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.3s;
+}
+
+/* --- TEXTO DEL ENLACE --- */
+.link-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-white);
+    white-space: nowrap;
+    /* Oculto por defecto */
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    /* Absoluto para no molestar el centrado del icono cuando está cerrado */
+    position: absolute;
+    left: var(--icon-area); /* Empieza justo después del icono */
+}
+
+/* MOSTRAR TEXTO AL ABRIR */
+.sidebar:hover .link-text {
+    opacity: 1;
+    transform: translateX(0);
+    position: relative; /* Vuelve al flujo normal */
+    left: 0;
+}
+
+/* --- ESTADOS (ACTIVO / HOVER) --- */
+
+/* Hover normal */
+.sidebar-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+    .sidebar-btn:hover i {
+        color: #fff;
+    }
+
+/* ACTIVO (FONDO ROJO) */
+.sidebar-btn.active {
+    background-color: var(--accent-red);
+    box-shadow: 0 4px 15px rgba(214, 40, 40, 0.4);
+}
+
+    .sidebar-btn.active i {
+        color: #fff;
+    }
+
+    .sidebar-btn.active .link-text {
+        font-weight: 700;
+    }
+
+/* --- CONTENIDO DASHBOARD --- */
+.dashboard {
+    flex: 1;
+    height: 100%;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* =========================================
+   ESTILOS DE VISTAS INTERNAS (AJAX)
+   ========================================= */
+
+/* Animación de entrada suave */
+.fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- TABLAS PERSONALIZADAS --- */
+.table-custom-container {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.table-custom thead th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    padding: 12px;
+}
+
+.table-custom tbody td {
+    vertical-align: middle;
+    padding: 12px;
+    color: #212529;
+}
+
+/* --- BADGES DE ACTIVOS --- */
+.badge-custom {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.badge-hw {
+    background-color: #e2e8f0;
+    color: #1e293b;
+}
+/* Gris azulado */
+.badge-sw {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+/* Azul claro */
+.badge-datos {
+    background-color: #fce7f3;
+    color: #9d174d;
+}
+/* Rosa */
+.badge-personal {
+    background-color: #ffedd5;
+    color: #9a3412;
+}
+/* Naranja */
+
+/* --- TARJETA DE RIESGO (SEMAFORO) --- */
+/* Animación de latido para riesgos críticos */
+@keyframes pulseRed {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+        transform: scale(1);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(220, 53, 69, 0);
+        transform: scale(1.02);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+        transform: scale(1);
+    }
+}
+
+.pulse-critical {
+    animation: pulseRed 1.5s infinite;
+}
+
+/* Colores de fondo para la tarjeta de resultado */
+.bg-risk-low {
+    background-color: #198754 !important;
+    color: white;
+}
+
+.bg-risk-med {
+    background-color: #ffc107 !important;
+    color: black;
+}
+
+.bg-risk-high {
+    background-color: #fd7e14 !important;
+    color: white;
+}
+
+.bg-risk-critical {
+    background-color: #dc3545 !important;
+    color: white;
+}
+
+/* =========================================
+   CUSTOM FORM-RANGE (SLIDERS)
+   ========================================= */
+
+/* Reset base */
+.form-range {
+    height: 1.5rem; /* Altura del contenedor */
+    padding: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+    /* --- TRACK (El carril gris) --- */
+    .form-range::-webkit-slider-runnable-track {
+        width: 100%;
+        height: 0.5rem; /* Grosor de la línea */
+        background-color: #e9ecef; /* Gris claro */
+        border-radius: 1rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    .form-range::-moz-range-track {
+        width: 100%;
+        height: 0.5rem;
+        background-color: #e9ecef;
+        border-radius: 1rem;
+        border: none;
+        cursor: pointer;
+    }
+
+    /* --- THUMB (El botón redondo) --- */
+    .form-range::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 1.25rem; /* Tamaño del círculo (20px) */
+        width: 1.25rem;
+        margin-top: -0.375rem; /* Cálculo para centrar: (0.5rem - 1.25rem) / 2 */
+        background-color: #0b1e3b; /* TU AZUL OSCURO */
+        border: 2px solid #fff; /* Borde blanco para resaltar */
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        cursor: grab;
+    }
+
+    .form-range::-moz-range-thumb {
+        height: 1.25rem;
+        width: 1.25rem;
+        background-color: #0b1e3b; /* TU AZUL OSCURO */
+        border: 2px solid #fff;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transition: background-color 0.2s ease, transform 0.2s ease;
+        cursor: grab;
+        border: none; /* Fix Firefox border */
+    }
+
+    /* --- INTERACCIÓN (Hover y Active) --- */
+    /* Cambia a ROJO y crece al pasar el mouse o arrastrar */
+
+    .form-range:hover::-webkit-slider-thumb,
+    .form-range:active::-webkit-slider-thumb {
+        background-color: #d62828; /* TU ROJO */
+        transform: scale(1.2);
+    }
+
+    .form-range:hover::-moz-range-thumb,
+    .form-range:active::-moz-range-thumb {
+        background-color: #d62828; /* TU ROJO */
+        transform: scale(1.2);
+    }
+
+    /* Quitar el borde azul por defecto al hacer click */
+    .form-range:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+        .form-range:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 3px rgba(214, 40, 40, 0.25); /* Anillo rojo suave */
+        }

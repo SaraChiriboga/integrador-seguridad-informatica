@@ -1,0 +1,105 @@
+﻿<div class="container fade-in">
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-light me-3" onclick="loadView('@Url.Action("Index", "Activos")')">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h3 class="fw-bold mb-0">Registrar Nuevo Activo</h3>
+    </div>
+
+    <form id="formActivo" action="@Url.Action("Create", "Activos")" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 rounded-4 mb-3">
+                    <h5 class="mb-3 text-secondary">Información General</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre del Activo</label>
+                        <input type="text" name="Nombre" class="form-control" required placeholder="Ej: Servidor Oracle">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo</label>
+                        <select name="Tipo" class="form-select form-select-lg">
+                            <option value="" disabled selected>Seleccione...</option>
+                            <optgroup label="Infraestructura Tecnológica">
+                                <option value="HW">Hardware (Servidores, Redes)</option>
+                                <option value="SW">Software (Sistemas, Apps)</option>
+                            </optgroup>
+                            <optgroup label="Información">
+                                <option value="DATOS">Datos / Bases de Datos</option>
+                            </optgroup>
+                            <optgroup label="Organizacional">
+                                <option value="PERSONAL">Personal / RRHH</option>
+                                <option value="SERV">Servicios (Nube, Web)</option>
+                                <option value="INST">Instalaciones (Data Center, Oficinas)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ubicación</label>
+                        <input type="text" name="Ubicacion" class="form-control" placeholder="Ej: Rack 4 - DC Quito">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm p-4 rounded-4 bg-light">
+                    <h5 class="mb-3 text-primary">Valoración (Escala 1-4)</h5>
+
+                    <label class="form-label mt-2">Confidencialidad (C)</label>
+                    <input type="range" class="form-range" name="ValorC" id="slideC" min="1" max="4" value="1" oninput="calcTotal()">
+
+                    <label class="form-label mt-2">Integridad (I)</label>
+                    <input type="range" class="form-range" name="ValorI" id="slideI" min="1" max="4" value="1" oninput="calcTotal()">
+
+                    <label class="form-label mt-2">Disponibilidad (D)</label>
+                    <input type="range" class="form-range" name="ValorD" id="slideD" min="1" max="4" value="1" oninput="calcTotal()">
+
+                    <hr />
+
+                    <div class="text-center">
+                        <small class="text-muted">VALOR TOTAL</small>
+                        <h1 class="display-3 fw-bold" id="txtTotal">3</h1>
+                        <span class="badge bg-success" id="badgeNivel">Activo Bajo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-danger">Guardar Activo</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Interceptar el envío del formulario para usar AJAX
+    $('#formActivo').submit(function (e) {
+        e.preventDefault(); // Evita recarga completa
+        var form = $(this);
+        $.post(form.attr('action'), form.serialize(), function (response) {
+            $('#main-content').html(response); // Carga la respuesta (Index) en el contenedor
+        });
+    });
+
+    function calcTotal() {
+        let c = parseInt(document.getElementById('slideC').value);
+        let i = parseInt(document.getElementById('slideI').value);
+        let d = parseInt(document.getElementById('slideD').value);
+        let total = c + i + d;
+
+        document.getElementById('txtTotal').innerText = total;
+
+        let badge = document.getElementById('badgeNivel');
+        badge.className = "badge"; // Reset clases
+
+        if (total >= 10) {
+            badge.innerText = "CRÍTICO - Joya de la Corona";
+            badge.classList.add("bg-danger");
+        } else if (total >= 7) {
+            badge.innerText = "Activo Importante";
+            badge.classList.add("bg-warning", "text-dark");
+        } else {
+            badge.innerText = "Activo Bajo";
+            badge.classList.add("bg-success");
+        }
+    }
+</script>

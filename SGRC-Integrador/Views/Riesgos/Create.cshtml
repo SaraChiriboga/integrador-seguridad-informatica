@@ -1,0 +1,126 @@
+﻿<div class="container fade-in">
+    <div class="d-flex align-items-center mb-4">
+        <button class="btn btn-light me-3" onclick="loadView('@Url.Action("Index", "Riesgos")')">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h3 class="fw-bold mb-0">Evaluar Escenario de Riesgo</h3>
+    </div>
+
+    <form id="formRiesgo" action="@Url.Action("Create", "Riesgos")" method="post">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="card border-0 shadow-sm p-4 mb-3 rounded-4">
+                    <div class="mb-3">
+                        <label class="form-label">Activo Afectado</label>
+                        @Html.DropDownList("ActivoNombre", (SelectList)ViewBag.ListaActivos, "Seleccione un activo...", new { @class = "form-select" })
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Amenaza / Vulnerabilidad</label>
+                        <input type="text" name="Amenaza" class="form-control" placeholder="Ej: Ransomware por falta de parches" required>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm p-4 rounded-4">
+                    <h5 class="mb-4">Matriz de Cálculo</h5>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label class="fw-bold mb-2">Probabilidad (1-4)</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <input type="radio" class="btn-check" name="Probabilidad" id="p1" value="1" onclick="calcRiesgo()" checked>
+                                <label class="btn btn-outline-secondary" for="p1">1. Rara</label>
+
+                                <input type="radio" class="btn-check" name="Probabilidad" id="p2" value="2" onclick="calcRiesgo()">
+                                <label class="btn btn-outline-secondary" for="p2">2. Posible</label>
+
+                                <input type="radio" class="btn-check" name="Probabilidad" id="p3" value="3" onclick="calcRiesgo()">
+                                <label class="btn btn-outline-secondary" for="p3">3. Probable</label>
+
+                                <input type="radio" class="btn-check" name="Probabilidad" id="p4" value="4" onclick="calcRiesgo()">
+                                <label class="btn btn-outline-secondary" for="p4">4. Muy Probable</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="fw-bold mb-2">Impacto (1-4)</label>
+                            <div class="btn-group-vertical w-100" role="group">
+                                <input type="radio" class="btn-check" name="Impacto" id="i1" value="1" onclick="calcRiesgo()" checked>
+                                <label class="btn btn-outline-secondary" for="i1">1. Bajo</label>
+
+                                <input type="radio" class="btn-check" name="Impacto" id="i2" value="2" onclick="calcRiesgo()">
+                                <label class="btn btn-outline-secondary" for="i2">2. Moderado</label>
+
+                                <input type="radio" class="btn-check" name="Impacto" id="i3" value="3" onclick="calcRiesgo()">
+                                <label class="btn btn-outline-secondary" for="i3">3. Alto</label>
+
+                                <input type="radio" class="btn-check" name="Impacto" id="i4" value="4" onclick="calcRiesgo()">
+                                <label class="btn btn-outline-secondary" for="i4">4. Crítico</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-5">
+                <div id="riskCard" class="card border-0 shadow text-center p-5 rounded-4 text-white h-100 d-flex justify-content-center align-items-center bg-risk-low" style="transition: all 0.3s;">
+                    <div>
+                        <small>NIVEL DE RIESGO</small>
+                        <h1 class="display-1 fw-bold" id="txtRiesgo">1</h1>
+                        <h4 id="lblRiesgo">BAJO</h4>
+                        <i id="iconRiesgo" class="fas fa-check-circle fa-4x mt-3"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-end">
+            <button type="submit" class="btn btn-danger">Guardar Evaluación</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // AJAX Submit
+    $('#formRiesgo').submit(function (e) {
+        e.preventDefault();
+        $.post($(this).attr('action'), $(this).serialize(), function (response) {
+            $('#main-content').html(response);
+        });
+    });
+
+    // Lógica Semáforo
+    function calcRiesgo() {
+        let p = parseInt(document.querySelector('input[name="Probabilidad"]:checked').value);
+        let i = parseInt(document.querySelector('input[name="Impacto"]:checked').value);
+        let total = p * i;
+
+        document.getElementById('txtRiesgo').innerText = total;
+
+        let card = document.getElementById('riskCard');
+        let label = document.getElementById('lblRiesgo');
+        let icon = document.getElementById('iconRiesgo');
+
+        // Reset clases (Mantiene estructura base, borra colores y animaciones)
+        card.className = "card border-0 shadow text-center p-5 rounded-4 h-100 d-flex justify-content-center align-items-center";
+
+        if (total >= 13) {
+            card.classList.add("bg-risk-critical", "pulse-critical"); // Clases del Site.css
+            label.innerText = "CRÍTICO";
+            icon.className = "fas fa-radiation-alt fa-4x mt-3";
+        }
+        else if (total >= 9) {
+            card.classList.add("bg-risk-high");
+            label.innerText = "ALTO";
+            icon.className = "fas fa-exclamation-triangle fa-4x mt-3";
+        }
+        else if (total >= 5) {
+            card.classList.add("bg-risk-med");
+            label.innerText = "MEDIO";
+            icon.className = "fas fa-exclamation-circle fa-4x mt-3";
+        }
+        else {
+            card.classList.add("bg-risk-low");
+            label.innerText = "BAJO";
+            icon.className = "fas fa-check-circle fa-4x mt-3";
+        }
+    }
+</script>

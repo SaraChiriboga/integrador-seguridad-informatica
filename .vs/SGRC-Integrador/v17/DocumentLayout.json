@@ -1,0 +1,86 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\content\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\content\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\controllers\\riesgoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\riesgoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\views\\activos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\activos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\controllers\\activoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\activoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 247,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Site.css",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Content\\Site.css",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Content\\Site.css",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Content\\Site.css",
+              "RelativeToolTip": "SGRC-Integrador\\Content\\Site.css",
+              "ViewState": "AgIAAH4BAAAAAAAAAAAAwJABAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2025-12-16T22:14:32.408Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RiesgosController.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "RelativeToolTip": "SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAowDoAAAA+AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-17T03:03:25.392Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ActivosController.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\ActivosController.cs",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\ActivosController.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\ActivosController.cs",
+              "RelativeToolTip": "SGRC-Integrador\\Controllers\\ActivosController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAkwB4AAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-17T02:52:26.299Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Create.cshtml",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Activos\\Create.cshtml",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Create.cshtml",
+              "RelativeToolTip": "SGRC-Integrador\\Views\\Activos\\Create.cshtml",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACEAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-12-17T00:54:46.759Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
