@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="SGRC_DBModelStoreContainer" CdmEntityContainer="SGRC_DBEntities">
+    <EntitySetMapping Name="Activos">
+      <EntityTypeMapping TypeName="SGRC_DBModel.Activo">
+        <MappingFragment StoreEntitySet="Activos">
+          <ScalarProperty Name="IdActivo" ColumnName="IdActivo" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+          <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+          <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+          <ScalarProperty Name="ValorC" ColumnName="ValorC" />
+          <ScalarProperty Name="ValorI" ColumnName="ValorI" />
+          <ScalarProperty Name="ValorD" ColumnName="ValorD" />
+          <ScalarProperty Name="ValorTotal" ColumnName="ValorTotal" />
+          <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Riesgos">
+      <EntityTypeMapping TypeName="SGRC_DBModel.Riesgo">
+        <MappingFragment StoreEntitySet="Riesgos">
+          <ScalarProperty Name="IdRiesgo" ColumnName="IdRiesgo" />
+          <ScalarProperty Name="IdActivo" ColumnName="IdActivo" />
+          <ScalarProperty Name="Amenaza" ColumnName="Amenaza" />
+          <ScalarProperty Name="Vulnerabilidad" ColumnName="Vulnerabilidad" />
+          <ScalarProperty Name="Probabilidad" ColumnName="Probabilidad" />
+          <ScalarProperty Name="Impacto" ColumnName="Impacto" />
+          <ScalarProperty Name="NivelRiesgo" ColumnName="NivelRiesgo" />
+          <ScalarProperty Name="Tratado" ColumnName="Tratado" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tratamientos">
+      <EntityTypeMapping TypeName="SGRC_DBModel.Tratamiento">
+        <MappingFragment StoreEntitySet="Tratamientos">
+          <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
+          <ScalarProperty Name="IdRiesgo" ColumnName="IdRiesgo" />
+          <ScalarProperty Name="Estrategia" ColumnName="Estrategia" />
+          <ScalarProperty Name="AccionCorrectiva" ColumnName="AccionCorrectiva" />
+          <ScalarProperty Name="Responsable" ColumnName="Responsable" />
+          <ScalarProperty Name="FechaLimite" ColumnName="FechaLimite" />
+          <ScalarProperty Name="Progreso" ColumnName="Progreso" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Usuarios">
+      <EntityTypeMapping TypeName="SGRC_DBModel.Usuario">
+        <MappingFragment StoreEntitySet="Usuarios">
+          <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+          <ScalarProperty Name="NombreCompleto" ColumnName="NombreCompleto" />
+          <ScalarProperty Name="Correo" ColumnName="Correo" />
+          <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+          <ScalarProperty Name="Rol" ColumnName="Rol" />
+          <ScalarProperty Name="Activo" ColumnName="Activo" />
+          <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

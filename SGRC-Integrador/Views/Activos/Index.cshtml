@@ -1,74 +1,55 @@
-﻿@{
-    Layout = null;
-}
+﻿@model IEnumerable<SGRC_Integrador.Models.Activo>
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    @model IEnumerable<SGRC_Integrador.Models.Activo>
-
-    <div class="fade-in">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h2 class="fw-bold mb-0">Inventario de Activos</h2>
-            </div>
-            <button class="btn btn-danger" onclick="loadView('@Url.Action("Create", "Activos")')">
-                <i class="fas fa-plus me-2"></i> Nuevo Activo
-            </button>
-        </div>
-
-        <div class="table-custom-container">
-            <table class="table table-custom mb-0">
-                <thead>
-                    <tr>
-                        <th>Nombre del Activo</th>
-                        <th>Tipo</th>
-                        <th>Ubicación</th>
-                        <th class="text-center">Valoración (C+I+D)</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td class="fw-bold">@item.Nombre</td>
-                            <td>
-                                @if (item.Tipo == "HW")
-                                {<span class="badge-custom badge-hw">Hardware</span> }
-                                else if (item.Tipo == "SW")
-                                { <span class="badge-custom badge-sw">Software</span> }
-                                else if (item.Tipo == "DATOS")
-                                { <span class="badge-custom badge-datos">Datos</span> }
-                                else
-                                { <span class="badge-custom badge-personal">@item.Tipo</span>}
-                            </td>
-                            <td>@item.Ubicacion</td>
-                            <td class="text-center">
-                                <span class="fw-bold fs-5 @(item.ValorTotal >= 10 ? "text-danger" : "text-dark")">
-                                    @item.ValorTotal
-                                </span>
-                                @if (item.ValorTotal >= 10)
-                                {
-                                    <i class="fas fa-exclamation-circle text-danger ms-1" title="Activo Crítico"></i>
-                                }
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-danger"
-                                        onclick="loadView('@Url.Action("Create", "Riesgos", new { activoId = item.Id })')">
-                                    <i class="fas fa-biohazard me-1"></i> Analizar Riesgo
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+<div class="fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">Inventario de Activos</h2>
+        <button class="btn btn-danger" onclick="loadView('@Url.Action("Create", "Activos")')">
+            <i class="fas fa-plus me-2"></i> Nuevo Activo
+        </button>
     </div>
-</body>
-</html>
+
+    <div class="table-custom-container">
+        <table class="table table-custom">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th class="text-center">Valor (C+I+D)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    // Lógica para asignar la clase de color según el tipo
+                    string claseBadge = "badge-personal"; // Clase por defecto
+                    string nombreLargo = item.Tipo;
+
+                    if (item.Tipo == "HW") { claseBadge = "badge-hw"; nombreLargo = "Hardware"; }
+                    else if (item.Tipo == "SW") { claseBadge = "badge-sw"; nombreLargo = "Software"; }
+                    else if (item.Tipo == "DATOS") { claseBadge = "badge-datos"; nombreLargo = "Datos"; }
+                    else if (item.Tipo == "SERV") { claseBadge = "badge-serv"; nombreLargo = "Servicio"; }
+
+                    <tr>
+                        <td class="fw-bold">@item.Nombre</td>
+                        <td>
+                            <span class="badge-custom @claseBadge">@nombreLargo</span>
+                        </td>
+                        <td class="text-center">
+                            <span class="fw-bold @(item.ValorTotal >= 10 ? "text-danger" : "")">@item.ValorTotal</span>
+                            @if (item.ValorTotal >= 10)
+                            {
+                                <i class="fas fa-exclamation-circle text-danger ms-1" title="Activo Crítico"></i>
+                            }
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="loadView('@Url.Action("Create", "Riesgos", new { activoId = item.IdActivo })')">
+                                <i class="fas fa-biohazard me-1"></i> Analizar Riesgo
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

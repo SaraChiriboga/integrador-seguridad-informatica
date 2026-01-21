@@ -1,0 +1,74 @@
+﻿@model SGRC_Integrador.Models.Tratamiento
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>Tratamiento</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Estrategia)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Estrategia)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.AccionCorrectiva)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.AccionCorrectiva)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Responsable)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Responsable)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.FechaLimite)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.FechaLimite)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Progreso)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Progreso)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Riesgo.Amenaza)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Riesgo.Amenaza)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.IdTratamiento }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

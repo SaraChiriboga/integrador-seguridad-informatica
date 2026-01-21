@@ -1,60 +1,68 @@
 ﻿@model IEnumerable<SGRC_Integrador.Models.Riesgo>
 
-<div class="container-fluid fade-in">
+<div class="fade-in">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark">Matriz de Riesgos Identificados</h2>
-
+        <h2 class="fw-bold mb-0">Matriz de Riesgos</h2>
         <button class="btn btn-danger" onclick="loadView('@Url.Action("Create", "Riesgos")')">
-            <i class="fas fa-plus me-2"></i> Evaluar Nuevo Riesgo
+            <i class="fas fa-plus me-2"></i> Nuevo Análisis
         </button>
     </div>
 
-    <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-body p-0">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
-                    <tr>
-                        <th class="ps-4">Activo Afectado</th>
-                        <th>Amenaza</th>
-                        <th class="text-center">Prob.</th>
-                        <th class="text-center">Imp.</th>
-                        <th class="text-center">Nivel Riesgo</th>
-                        <th>Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        // Lógica de colores simple
-                        string colorClass = "bg-success";
-                        if (item.Nivel >= 13) { colorClass = "bg-danger text-white"; }
-                        else if (item.Nivel >= 9) { colorClass = "bg-warning text-dark"; }
-                        else if (item.Nivel >= 5) { colorClass = "bg-info text-dark"; }
+    <div class="table-custom-container">
+        <table class="table table-custom">
+            <thead>
+                <tr>
+                    <th>Activo</th>
+                    <th>Amenaza</th>
+                    <th class="text-center">Nivel (P x I)</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    // Determinamos el color del nivel de riesgo basado en 'NivelRiesgo'
+                    string claseColor = "text-success";
+                    if (item.NivelRiesgo >= 12) { claseColor = "text-danger fw-bold pulse-red"; }
+                    else if (item.NivelRiesgo >= 8) { claseColor = "text-warning fw-bold"; }
 
-                        <tr>
-                            <td class="ps-4">@item.ActivoNombre</td>
-                            <td>@item.Amenaza</td>
-                            <td class="text-center text-muted">@item.Probabilidad</td>
-                            <td class="text-center text-muted">@item.Impacto</td>
-                            <td class="text-center">
-                                <span class="badge rounded-pill @colorClass px-3 py-2">
-                                    @item.Nivel
-                                </span>
-                            </td>
-                            <td>
-                                @if (item.Tratado)
-                                {
-                                    <span class="text-success"><i class="fas fa-check-circle"></i> Tratado</span>
-                                }
-                                else
-                                {
-                                    <span class="text-danger"><i class="fas fa-exclamation-circle"></i> Expuesto</span>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    <tr>
+                        @* 1. Solución Error ActivoNombre: Usamos la relación de navegación de EF *@
+                        <td class="fw-bold">@(item.Activo != null ? item.Activo.Nombre : "Sin Activo")</td>
+
+                        <td>@item.Amenaza</td>
+
+                        @* 2. Solución Error Nivel: La propiedad en la BD se llama 'NivelRiesgo' *@
+                        <td class="text-center">
+                            <span class="@claseColor">@item.NivelRiesgo</span>
+                        </td>
+
+                        <td>
+                            @* 3. Solución Error bool?: Usamos .GetValueOrDefault() para convertir bool? a bool *@
+                            @if (item.Tratado.GetValueOrDefault())
+                            {
+                                <span class="badge bg-success"><i class="fas fa-check me-1"></i> Tratado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger"><i class="fas fa-exclamation-triangle me-1"></i> Expuesto</span>
+                            }
+                        </td>
+
+                        <td>
+                            @* Botón para ir al módulo de tratamiento *@
+                            @if (!item.Tratado.GetValueOrDefault())
+                            {
+                                <button class="btn btn-sm btn-warning"
+                                        onclick="loadView('@Url.Action("Create", "Tratamientos", new { idRiesgo = item.IdRiesgo })')">
+                                    <i class="fas fa-hammer me-1"></i> Tratar
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>

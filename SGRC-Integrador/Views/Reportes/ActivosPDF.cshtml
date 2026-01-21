@@ -1,0 +1,62 @@
+﻿@model IEnumerable<SGRC_Integrador.Models.Activo>
+@{ Layout = null; }
+
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #0b1e3b;
+            color: white;
+        }
+
+        .critical {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Inventario de Activos Críticos - SGRC</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>C</th>
+                <th>I</th>
+                <th>D</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Nombre</td>
+                    <td>@item.Tipo</td>
+                    <td>@item.ValorC</td>
+                    <td>@item.ValorI</td>
+                    <td>@item.ValorD</td>
+                    <td class="@(item.ValorTotal >= 10 ? "critical" : "")">@item.ValorTotal</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

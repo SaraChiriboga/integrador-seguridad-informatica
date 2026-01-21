@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SGRC_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Activo">
+    <Key>
+      <PropertyRef Name="IdActivo" />
+    </Key>
+    <Property Name="IdActivo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Tipo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Ubicacion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ValorC" Type="Int32" Nullable="false" />
+    <Property Name="ValorI" Type="Int32" Nullable="false" />
+    <Property Name="ValorD" Type="Int32" Nullable="false" />
+    <Property Name="ValorTotal" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Riesgos" Relationship="Self.FK_Riesgo_Activo" FromRole="Activos" ToRole="Riesgos" />
+  </EntityType>
+  <EntityType Name="Riesgo">
+    <Key>
+      <PropertyRef Name="IdRiesgo" />
+    </Key>
+    <Property Name="IdRiesgo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdActivo" Type="Int32" Nullable="false" />
+    <Property Name="Amenaza" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Vulnerabilidad" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Probabilidad" Type="Int32" Nullable="false" />
+    <Property Name="Impacto" Type="Int32" Nullable="false" />
+    <Property Name="NivelRiesgo" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Tratado" Type="Boolean" />
+    <NavigationProperty Name="Activo" Relationship="Self.FK_Riesgo_Activo" FromRole="Riesgos" ToRole="Activos" />
+    <NavigationProperty Name="Tratamientos" Relationship="Self.FK_Tratamiento_Riesgo" FromRole="Riesgos" ToRole="Tratamientos" />
+  </EntityType>
+  <EntityType Name="Tratamiento">
+    <Key>
+      <PropertyRef Name="IdTratamiento" />
+    </Key>
+    <Property Name="IdTratamiento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdRiesgo" Type="Int32" Nullable="false" />
+    <Property Name="Estrategia" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="AccionCorrectiva" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Responsable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="FechaLimite" Type="DateTime" Precision="0" />
+    <Property Name="Progreso" Type="Int32" />
+    <NavigationProperty Name="Riesgo" Relationship="Self.FK_Tratamiento_Riesgo" FromRole="Tratamientos" ToRole="Riesgos" />
+  </EntityType>
+  <EntityType Name="Usuario">
+    <Key>
+      <PropertyRef Name="IdUsuario" />
+    </Key>
+    <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NombreCompleto" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Rol" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Activo" Type="Boolean" />
+    <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+  </EntityType>
+  <Association Name="FK_Riesgo_Activo">
+    <End Role="Activos" Type="Self.Activo" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Riesgos" Type="Self.Riesgo" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Activos">
+        <PropertyRef Name="IdActivo" />
+      </Principal>
+      <Dependent Role="Riesgos">
+        <PropertyRef Name="IdActivo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tratamiento_Riesgo">
+    <End Role="Riesgos" Type="Self.Riesgo" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Tratamientos" Type="Self.Tratamiento" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Riesgos">
+        <PropertyRef Name="IdRiesgo" />
+      </Principal>
+      <Dependent Role="Tratamientos">
+        <PropertyRef Name="IdRiesgo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="SGRC_DBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Activos" EntityType="Self.Activo" />
+    <EntitySet Name="Riesgos" EntityType="Self.Riesgo" />
+    <EntitySet Name="Tratamientos" EntityType="Self.Tratamiento" />
+    <EntitySet Name="Usuarios" EntityType="Self.Usuario" />
+    <AssociationSet Name="FK_Riesgo_Activo" Association="Self.FK_Riesgo_Activo">
+      <End Role="Activos" EntitySet="Activos" />
+      <End Role="Riesgos" EntitySet="Riesgos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tratamiento_Riesgo" Association="Self.FK_Tratamiento_Riesgo">
+      <End Role="Riesgos" EntitySet="Riesgos" />
+      <End Role="Tratamientos" EntitySet="Tratamientos" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

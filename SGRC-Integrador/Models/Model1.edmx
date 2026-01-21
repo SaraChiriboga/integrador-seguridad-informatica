@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SGRC_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Activos">
+          <Key>
+            <PropertyRef Name="IdActivo" />
+          </Key>
+          <Property Name="IdActivo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Tipo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Ubicacion" Type="nvarchar" MaxLength="100" />
+          <Property Name="Descripcion" Type="nvarchar(max)" />
+          <Property Name="ValorC" Type="int" Nullable="false" />
+          <Property Name="ValorI" Type="int" Nullable="false" />
+          <Property Name="ValorD" Type="int" Nullable="false" />
+          <Property Name="ValorTotal" Type="int" StoreGeneratedPattern="Computed" />
+          <Property Name="FechaCreacion" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Riesgos">
+          <Key>
+            <PropertyRef Name="IdRiesgo" />
+          </Key>
+          <Property Name="IdRiesgo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdActivo" Type="int" Nullable="false" />
+          <Property Name="Amenaza" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Vulnerabilidad" Type="nvarchar" MaxLength="255" />
+          <Property Name="Probabilidad" Type="int" Nullable="false" />
+          <Property Name="Impacto" Type="int" Nullable="false" />
+          <Property Name="NivelRiesgo" Type="int" StoreGeneratedPattern="Computed" />
+          <Property Name="Tratado" Type="bit" />
+        </EntityType>
+        <EntityType Name="Tratamientos">
+          <Key>
+            <PropertyRef Name="IdTratamiento" />
+          </Key>
+          <Property Name="IdTratamiento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdRiesgo" Type="int" Nullable="false" />
+          <Property Name="Estrategia" Type="nvarchar" MaxLength="20" />
+          <Property Name="AccionCorrectiva" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Responsable" Type="nvarchar" MaxLength="100" />
+          <Property Name="FechaLimite" Type="date" />
+          <Property Name="Progreso" Type="int" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NombreCompleto" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Correo" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Rol" Type="nvarchar" MaxLength="20" />
+          <Property Name="Activo" Type="bit" />
+          <Property Name="FechaRegistro" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_Riesgo_Activo">
+          <End Role="Activos" Type="Self.Activos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Riesgos" Type="Self.Riesgos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activos">
+              <PropertyRef Name="IdActivo" />
+            </Principal>
+            <Dependent Role="Riesgos">
+              <PropertyRef Name="IdActivo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tratamiento_Riesgo">
+          <End Role="Riesgos" Type="Self.Riesgos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Tratamientos" Type="Self.Tratamientos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Riesgos">
+              <PropertyRef Name="IdRiesgo" />
+            </Principal>
+            <Dependent Role="Tratamientos">
+              <PropertyRef Name="IdRiesgo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SGRC_DBModelStoreContainer">
+          <EntitySet Name="Activos" EntityType="Self.Activos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Riesgos" EntityType="Self.Riesgos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tratamientos" EntityType="Self.Tratamientos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Riesgo_Activo" Association="Self.FK_Riesgo_Activo">
+            <End Role="Activos" EntitySet="Activos" />
+            <End Role="Riesgos" EntitySet="Riesgos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tratamiento_Riesgo" Association="Self.FK_Tratamiento_Riesgo">
+            <End Role="Riesgos" EntitySet="Riesgos" />
+            <End Role="Tratamientos" EntitySet="Tratamientos" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SGRC_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Activo">
+          <Key>
+            <PropertyRef Name="IdActivo" />
+          </Key>
+          <Property Name="IdActivo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Tipo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Ubicacion" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ValorC" Type="Int32" Nullable="false" />
+          <Property Name="ValorI" Type="Int32" Nullable="false" />
+          <Property Name="ValorD" Type="Int32" Nullable="false" />
+          <Property Name="ValorTotal" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="FechaCreacion" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Riesgos" Relationship="Self.FK_Riesgo_Activo" FromRole="Activos" ToRole="Riesgos" />
+        </EntityType>
+        <EntityType Name="Riesgo">
+          <Key>
+            <PropertyRef Name="IdRiesgo" />
+          </Key>
+          <Property Name="IdRiesgo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdActivo" Type="Int32" Nullable="false" />
+          <Property Name="Amenaza" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Vulnerabilidad" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Probabilidad" Type="Int32" Nullable="false" />
+          <Property Name="Impacto" Type="Int32" Nullable="false" />
+          <Property Name="NivelRiesgo" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Tratado" Type="Boolean" />
+          <NavigationProperty Name="Activo" Relationship="Self.FK_Riesgo_Activo" FromRole="Riesgos" ToRole="Activos" />
+          <NavigationProperty Name="Tratamientos" Relationship="Self.FK_Tratamiento_Riesgo" FromRole="Riesgos" ToRole="Tratamientos" />
+        </EntityType>
+        <EntityType Name="Tratamiento">
+          <Key>
+            <PropertyRef Name="IdTratamiento" />
+          </Key>
+          <Property Name="IdTratamiento" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdRiesgo" Type="Int32" Nullable="false" />
+          <Property Name="Estrategia" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="AccionCorrectiva" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Responsable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FechaLimite" Type="DateTime" Precision="0" />
+          <Property Name="Progreso" Type="Int32" />
+          <NavigationProperty Name="Riesgo" Relationship="Self.FK_Tratamiento_Riesgo" FromRole="Tratamientos" ToRole="Riesgos" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NombreCompleto" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Correo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Rol" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Activo" Type="Boolean" />
+          <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_Riesgo_Activo">
+          <End Role="Activos" Type="Self.Activo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Riesgos" Type="Self.Riesgo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Activos">
+              <PropertyRef Name="IdActivo" />
+            </Principal>
+            <Dependent Role="Riesgos">
+              <PropertyRef Name="IdActivo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Tratamiento_Riesgo">
+          <End Role="Riesgos" Type="Self.Riesgo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Tratamientos" Type="Self.Tratamiento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Riesgos">
+              <PropertyRef Name="IdRiesgo" />
+            </Principal>
+            <Dependent Role="Tratamientos">
+              <PropertyRef Name="IdRiesgo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SGRC_DBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Activos" EntityType="Self.Activo" />
+          <EntitySet Name="Riesgos" EntityType="Self.Riesgo" />
+          <EntitySet Name="Tratamientos" EntityType="Self.Tratamiento" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuario" />
+          <AssociationSet Name="FK_Riesgo_Activo" Association="Self.FK_Riesgo_Activo">
+            <End Role="Activos" EntitySet="Activos" />
+            <End Role="Riesgos" EntitySet="Riesgos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Tratamiento_Riesgo" Association="Self.FK_Tratamiento_Riesgo">
+            <End Role="Riesgos" EntitySet="Riesgos" />
+            <End Role="Tratamientos" EntitySet="Tratamientos" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SGRC_DBModelStoreContainer" CdmEntityContainer="SGRC_DBEntities">
+          <EntitySetMapping Name="Activos">
+            <EntityTypeMapping TypeName="SGRC_DBModel.Activo">
+              <MappingFragment StoreEntitySet="Activos">
+                <ScalarProperty Name="IdActivo" ColumnName="IdActivo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="ValorC" ColumnName="ValorC" />
+                <ScalarProperty Name="ValorI" ColumnName="ValorI" />
+                <ScalarProperty Name="ValorD" ColumnName="ValorD" />
+                <ScalarProperty Name="ValorTotal" ColumnName="ValorTotal" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Riesgos">
+            <EntityTypeMapping TypeName="SGRC_DBModel.Riesgo">
+              <MappingFragment StoreEntitySet="Riesgos">
+                <ScalarProperty Name="IdRiesgo" ColumnName="IdRiesgo" />
+                <ScalarProperty Name="IdActivo" ColumnName="IdActivo" />
+                <ScalarProperty Name="Amenaza" ColumnName="Amenaza" />
+                <ScalarProperty Name="Vulnerabilidad" ColumnName="Vulnerabilidad" />
+                <ScalarProperty Name="Probabilidad" ColumnName="Probabilidad" />
+                <ScalarProperty Name="Impacto" ColumnName="Impacto" />
+                <ScalarProperty Name="NivelRiesgo" ColumnName="NivelRiesgo" />
+                <ScalarProperty Name="Tratado" ColumnName="Tratado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tratamientos">
+            <EntityTypeMapping TypeName="SGRC_DBModel.Tratamiento">
+              <MappingFragment StoreEntitySet="Tratamientos">
+                <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
+                <ScalarProperty Name="IdRiesgo" ColumnName="IdRiesgo" />
+                <ScalarProperty Name="Estrategia" ColumnName="Estrategia" />
+                <ScalarProperty Name="AccionCorrectiva" ColumnName="AccionCorrectiva" />
+                <ScalarProperty Name="Responsable" ColumnName="Responsable" />
+                <ScalarProperty Name="FechaLimite" ColumnName="FechaLimite" />
+                <ScalarProperty Name="Progreso" ColumnName="Progreso" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="SGRC_DBModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="NombreCompleto" ColumnName="NombreCompleto" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="Rol" ColumnName="Rol" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

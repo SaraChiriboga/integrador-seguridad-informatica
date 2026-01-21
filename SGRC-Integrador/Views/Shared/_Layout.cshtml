@@ -44,8 +44,8 @@
                         <span class="link-text">Riesgos</span>
                     </button>
 
-                    <button class="sidebar-btn @(ViewContext.RouteData.Values["controller"].ToString() == "Tratamiento" ? "active" : "")"
-                            onclick="loadView('@Url.Action("Index", "Tratamiento")')">
+                    <button class="sidebar-btn @(ViewContext.RouteData.Values["controller"].ToString() == "Tratamientos" ? "active" : "")"
+                            onclick="loadView('@Url.Action("Index", "Tratamientos")')">
                         <div class="icon-wrap">
                             <i class="fas fa-notes-medical"></i>
                         </div>

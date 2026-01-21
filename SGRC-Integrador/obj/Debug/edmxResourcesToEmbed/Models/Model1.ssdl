@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="SGRC_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Activos">
+    <Key>
+      <PropertyRef Name="IdActivo" />
+    </Key>
+    <Property Name="IdActivo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="Tipo" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Ubicacion" Type="nvarchar" MaxLength="100" />
+    <Property Name="Descripcion" Type="nvarchar(max)" />
+    <Property Name="ValorC" Type="int" Nullable="false" />
+    <Property Name="ValorI" Type="int" Nullable="false" />
+    <Property Name="ValorD" Type="int" Nullable="false" />
+    <Property Name="ValorTotal" Type="int" StoreGeneratedPattern="Computed" />
+    <Property Name="FechaCreacion" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Riesgos">
+    <Key>
+      <PropertyRef Name="IdRiesgo" />
+    </Key>
+    <Property Name="IdRiesgo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdActivo" Type="int" Nullable="false" />
+    <Property Name="Amenaza" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="Vulnerabilidad" Type="nvarchar" MaxLength="255" />
+    <Property Name="Probabilidad" Type="int" Nullable="false" />
+    <Property Name="Impacto" Type="int" Nullable="false" />
+    <Property Name="NivelRiesgo" Type="int" StoreGeneratedPattern="Computed" />
+    <Property Name="Tratado" Type="bit" />
+  </EntityType>
+  <EntityType Name="Tratamientos">
+    <Key>
+      <PropertyRef Name="IdTratamiento" />
+    </Key>
+    <Property Name="IdTratamiento" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdRiesgo" Type="int" Nullable="false" />
+    <Property Name="Estrategia" Type="nvarchar" MaxLength="20" />
+    <Property Name="AccionCorrectiva" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Responsable" Type="nvarchar" MaxLength="100" />
+    <Property Name="FechaLimite" Type="date" />
+    <Property Name="Progreso" Type="int" />
+  </EntityType>
+  <EntityType Name="Usuarios">
+    <Key>
+      <PropertyRef Name="IdUsuario" />
+    </Key>
+    <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NombreCompleto" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Correo" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="PasswordHash" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="Rol" Type="nvarchar" MaxLength="20" />
+    <Property Name="Activo" Type="bit" />
+    <Property Name="FechaRegistro" Type="datetime" />
+  </EntityType>
+  <Association Name="FK_Riesgo_Activo">
+    <End Role="Activos" Type="Self.Activos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Riesgos" Type="Self.Riesgos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Activos">
+        <PropertyRef Name="IdActivo" />
+      </Principal>
+      <Dependent Role="Riesgos">
+        <PropertyRef Name="IdActivo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Tratamiento_Riesgo">
+    <End Role="Riesgos" Type="Self.Riesgos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Tratamientos" Type="Self.Tratamientos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Riesgos">
+        <PropertyRef Name="IdRiesgo" />
+      </Principal>
+      <Dependent Role="Tratamientos">
+        <PropertyRef Name="IdRiesgo" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="SGRC_DBModelStoreContainer">
+    <EntitySet Name="Activos" EntityType="Self.Activos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Riesgos" EntityType="Self.Riesgos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Tratamientos" EntityType="Self.Tratamientos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Riesgo_Activo" Association="Self.FK_Riesgo_Activo">
+      <End Role="Activos" EntitySet="Activos" />
+      <End Role="Riesgos" EntitySet="Riesgos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Tratamiento_Riesgo" Association="Self.FK_Tratamiento_Riesgo">
+      <End Role="Riesgos" EntitySet="Riesgos" />
+      <End Role="Tratamientos" EntitySet="Tratamientos" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

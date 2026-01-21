@@ -1,71 +1,107 @@
 ﻿<div class="container fade-in">
-    <div class="d-flex align-items-center mb-4">
-        <button class="btn btn-light me-3" onclick="loadView('@Url.Action("Index", "Activos")')">
+    <div class="form-header">
+        <button class="btn-back" onclick="loadView('@Url.Action("Index", "Activos")')">
             <i class="fas fa-arrow-left"></i>
         </button>
-        <h3 class="fw-bold mb-0">Registrar Nuevo Activo</h3>
+        <h3>Registrar Nuevo Activo</h3>
     </div>
 
     <form id="formActivo" action="@Url.Action("Create", "Activos")" method="post">
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card border-0 shadow-sm p-4 rounded-4 mb-3">
-                    <h5 class="mb-3 text-secondary">Información General</h5>
-                    <div class="mb-3">
-                        <label class="form-label">Nombre del Activo</label>
-                        <input type="text" name="Nombre" class="form-control" required placeholder="Ej: Servidor Oracle">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Tipo</label>
-                        <select name="Tipo" class="form-select form-select-lg">
-                            <option value="" disabled selected>Seleccione...</option>
-                            <optgroup label="Infraestructura Tecnológica">
-                                <option value="HW">Hardware (Servidores, Redes)</option>
-                                <option value="SW">Software (Sistemas, Apps)</option>
-                            </optgroup>
-                            <optgroup label="Información">
-                                <option value="DATOS">Datos / Bases de Datos</option>
-                            </optgroup>
-                            <optgroup label="Organizacional">
-                                <option value="PERSONAL">Personal / RRHH</option>
-                                <option value="SERV">Servicios (Nube, Web)</option>
-                                <option value="INST">Instalaciones (Data Center, Oficinas)</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Ubicación</label>
-                        <input type="text" name="Ubicacion" class="form-control" placeholder="Ej: Rack 4 - DC Quito">
-                    </div>
+        <div class="form-grid">
+            <!-- Información General -->
+            <div class="card-form">
+                <h5 class="card-form-title">
+                    <i class="fas fa-info-circle"></i>
+                    Información General
+                </h5>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">Nombre del Activo</label>
+                    <input type="text" name="Nombre" class="form-input-modern" required placeholder="Ej: Servidor Oracle">
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">Tipo de Activo</label>
+                    <select name="Tipo" class="form-select-modern" required>
+                        <option value="" disabled selected>Seleccione el tipo...</option>
+                        <optgroup label="Infraestructura Tecnológica">
+                            <option value="HW">Hardware (Servidores, Redes)</option>
+                            <option value="SW">Software (Sistemas, Apps)</option>
+                        </optgroup>
+                        <optgroup label="Información">
+                            <option value="DATOS">Datos / Bases de Datos</option>
+                        </optgroup>
+                        <optgroup label="Organizacional">
+                            <option value="PERSONAL">Personal / RRHH</option>
+                            <option value="SERV">Servicios (Nube, Web)</option>
+                            <option value="INST">Instalaciones (Data Center, Oficinas)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="form-group-modern">
+                    <label class="form-label-modern">Ubicación</label>
+                    <input type="text" name="Ubicacion" class="form-input-modern" placeholder="Ej: Rack 4 - DC Quito">
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card border-0 shadow-sm p-4 rounded-4 bg-light">
-                    <h5 class="mb-3 text-primary">Valoración (Escala 1-4)</h5>
+            <!-- Valoración -->
+            <div class="card-form card-valoracion">
+                <h5 class="card-form-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Valoración de Seguridad
+                </h5>
 
-                    <label class="form-label mt-2">Confidencialidad (C)</label>
-                    <input type="range" class="form-range" name="ValorC" id="slideC" min="1" max="4" value="1" oninput="calcTotal()">
-
-                    <label class="form-label mt-2">Integridad (I)</label>
-                    <input type="range" class="form-range" name="ValorI" id="slideI" min="1" max="4" value="1" oninput="calcTotal()">
-
-                    <label class="form-label mt-2">Disponibilidad (D)</label>
-                    <input type="range" class="form-range" name="ValorD" id="slideD" min="1" max="4" value="1" oninput="calcTotal()">
-
-                    <hr />
-
-                    <div class="text-center">
-                        <small class="text-muted">VALOR TOTAL</small>
-                        <h1 class="display-3 fw-bold" id="txtTotal">3</h1>
-                        <span class="badge bg-success" id="badgeNivel">Activo Bajo</span>
+                <div class="slider-group-modern">
+                    <div class="slider-header-modern">
+                        <span class="slider-label-modern">
+                            <i class="fas fa-lock"></i>
+                            Confidencialidad
+                        </span>
+                        <span class="slider-value-modern" id="valC">1</span>
                     </div>
+                    <input type="range" class="form-range" name="ValorC" id="slideC" min="1" max="4" value="1" oninput="updateSlider('slideC', 'valC')">
+                </div>
+
+                <div class="slider-group-modern">
+                    <div class="slider-header-modern">
+                        <span class="slider-label-modern">
+                            <i class="fas fa-check-circle"></i>
+                            Integridad
+                        </span>
+                        <span class="slider-value-modern" id="valI">1</span>
+                    </div>
+                    <input type="range" class="form-range" name="ValorI" id="slideI" min="1" max="4" value="1" oninput="updateSlider('slideI', 'valI')">
+                </div>
+
+                <div class="slider-group-modern">
+                    <div class="slider-header-modern">
+                        <span class="slider-label-modern">
+                            <i class="fas fa-bolt"></i>
+                            Disponibilidad
+                        </span>
+                        <span class="slider-value-modern" id="valD">1</span>
+                    </div>
+                    <input type="range" class="form-range" name="ValorD" id="slideD" min="1" max="4" value="1" oninput="updateSlider('slideD', 'valD')">
+                </div>
+
+                <div class="result-display-modern">
+                    <div class="result-label-modern">Valor Total</div>
+                    <div class="result-value-modern" id="txtTotal">3</div>
+                    <span class="result-badge-modern badge-bajo" id="badgeNivel">Activo Bajo</span>
                 </div>
             </div>
         </div>
 
-        <div class="mt-4 text-end">
-            <button type="submit" class="btn btn-danger">Guardar Activo</button>
+        <div class="form-actions-modern">
+            <button type="button" class="btn-modern btn-secondary-modern" onclick="cancelarFormulario()">
+                <i class="fas fa-times"></i>
+                Cancelar
+            </button>
+            <button type="submit" class="btn-modern btn-primary-modern">
+                <i class="fas fa-save"></i>
+                Guardar Activo
+            </button>
         </div>
     </form>
 </div>
@@ -73,13 +109,21 @@
 <script>
     // Interceptar el envío del formulario para usar AJAX
     $('#formActivo').submit(function (e) {
-        e.preventDefault(); // Evita recarga completa
+        e.preventDefault();
         var form = $(this);
         $.post(form.attr('action'), form.serialize(), function (response) {
-            $('#main-content').html(response); // Carga la respuesta (Index) en el contenedor
+            $('#main-content').html(response);
         });
     });
 
+    // Actualizar valor del slider
+    function updateSlider(sliderId, displayId) {
+        const value = document.getElementById(sliderId).value;
+        document.getElementById(displayId).innerText = value;
+        calcTotal();
+    }
+
+    // Calcular total
     function calcTotal() {
         let c = parseInt(document.getElementById('slideC').value);
         let i = parseInt(document.getElementById('slideI').value);
@@ -89,17 +133,27 @@
         document.getElementById('txtTotal').innerText = total;
 
         let badge = document.getElementById('badgeNivel');
-        badge.className = "badge"; // Reset clases
+        badge.className = "result-badge-modern";
 
         if (total >= 10) {
             badge.innerText = "CRÍTICO - Joya de la Corona";
-            badge.classList.add("bg-danger");
+            badge.classList.add("badge-critico");
         } else if (total >= 7) {
             badge.innerText = "Activo Importante";
-            badge.classList.add("bg-warning", "text-dark");
+            badge.classList.add("badge-importante");
         } else {
             badge.innerText = "Activo Bajo";
-            badge.classList.add("bg-success");
+            badge.classList.add("badge-bajo");
         }
     }
+
+    // Cancelar formulario
+    function cancelarFormulario() {
+        if (confirm('¿Está seguro de cancelar? Se perderán los datos ingresados.')) {
+            loadView('@Url.Action("Index", "Activos")');
+        }
+    }
+
+    // Inicializar
+    calcTotal();
 </script>
