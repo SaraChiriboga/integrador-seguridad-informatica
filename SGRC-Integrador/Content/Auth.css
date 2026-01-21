@@ -1,0 +1,778 @@
+﻿/* =========================================
+   ESTILOS DE AUTENTICACIÓN - SGRC
+   Login y 2FA
+   ========================================= */
+
+/* --- RESET Y BASE --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0b1e3b 0%, #1a3a5c 50%, #0b1e3b 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+    /* --- PATRÓN DE FONDO ANIMADO --- */
+    body::before {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background-image: radial-gradient(circle at 20% 50%, rgba(214, 40, 40, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        animation: backgroundMove 20s ease-in-out infinite;
+    }
+
+@keyframes backgroundMove {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-50px, -50px);
+    }
+}
+
+/* --- ELEMENTOS DECORATIVOS FLOTANTES --- */
+.floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 15s ease-in-out infinite;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background: #d62828;
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    background: white;
+    bottom: -50px;
+    right: -50px;
+    animation-delay: 3s;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    background: #d62828;
+    top: 50%;
+    right: 10%;
+    animation-delay: 6s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-30px) rotate(180deg);
+    }
+}
+
+/* --- WRAPPER PRINCIPAL --- */
+.auth-wrapper {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+}
+
+/* --- CARD DE AUTENTICACIÓN --- */
+.auth-card {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    padding: 50px 45px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 100px rgba(214, 40, 40, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    position: relative;
+    overflow: hidden;
+    animation: cardEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Borde superior decorativo */
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #d62828 0%, #ff4444 50%, #d62828 100%);
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+/* --- HEADER DE AUTENTICACIÓN --- */
+.auth-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* --- LOGO CONTAINER CORREGIDO Y MÁS GRANDE --- */
+.logo-container {
+    width: 100px; /* Tamaño aumentado */
+    height: 100px;
+    margin: 0 auto 5px;
+    background: linear-gradient(135deg, #0b1e3b 0%, #1a3a5c 100%);
+    border-radius: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 35px rgba(11, 30, 59, 0.4);
+    position: relative;
+    padding: 10px; /* Menos padding para que el logo se vea más grande */
+    z-index: 1;
+}
+
+.logo-bar {
+    width: 150%; /* Ocupa casi todo el contenedor */
+    height: 150%;
+    object-fit: contain;
+    display: block;
+    position: relative;
+    z-index: 2; /* Por debajo del punto rojo */
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.logo-container i {
+    font-size: 48px;
+    color: white;
+}
+
+
+/* Verification icon container - 2FA */
+.verification-icon-container {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, #0b1e3b 0%, #1a3a5c 100%);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 15px 40px rgba(11, 30, 59, 0.3);
+    position: relative;
+    animation: iconPulse 2s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.verification-icon-container i {
+    font-size: 56px;
+    color: white;
+}
+
+/* Animación de ondas para 2FA */
+.verification-icon-container::before,
+.verification-icon-container::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(11, 30, 59, 0.3);
+    border-radius: 30px;
+    animation: ripple 2s ease-out infinite;
+}
+
+.verification-icon-container::after {
+    animation-delay: 1s;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
+
+/* Títulos */
+.auth-title {
+    color: #0b1e3b;
+    font-weight: 800;
+    font-size: 32px;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    line-height: 1.6;
+}
+
+/* Email display para 2FA */
+.email-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #f8f9fc 0%, #e8eaf0 100%);
+    padding: 10px 20px;
+    border-radius: 12px;
+    margin: 20px auto 0;
+    color: #0b1e3b;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+    .email-display i {
+        color: #d62828;
+    }
+
+/* --- FORMULARIO --- */
+.form-group-modern {
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.form-label-modern {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+    letter-spacing: 0.2px;
+}
+
+/* Input wrapper con icono */
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 18px;
+    transition: color 0.3s;
+    pointer-events: none;
+}
+
+.form-input-modern {
+    width: 100%;
+    padding: 16px 18px 16px 52px;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    background: white;
+    color: #1e293b;
+}
+
+    .form-input-modern:focus {
+        outline: none;
+        border-color: #0b1e3b;
+        box-shadow: 0 0 0 4px rgba(11, 30, 59, 0.08);
+    }
+
+        .form-input-modern:focus + .input-icon {
+            color: #0b1e3b;
+        }
+
+    .form-input-modern::placeholder {
+        color: #cbd5e0;
+    }
+
+/* --- SECCIÓN RECORDAR / OLVIDÓ CONTRASEÑA --- */
+.remember-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .checkbox-wrapper input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        border: 2px solid #e2e8f0;
+        cursor: pointer;
+    }
+
+    .checkbox-wrapper label {
+        font-size: 14px;
+        color: #64748b;
+        cursor: pointer;
+        user-select: none;
+    }
+
+.forgot-link {
+    font-size: 14px;
+    color: #d62828;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+    .forgot-link:hover {
+        color: #b71f1f;
+    }
+
+/* --- INPUTS DE CÓDIGO 2FA --- */
+.code-input-container {
+    margin: 40px 0 32px;
+}
+
+.code-input-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.code-digit {
+    width: 56px;
+    height: 68px;
+    border: 3px solid #e2e8f0;
+    border-radius: 14px;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    color: #0b1e3b;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+    .code-digit:focus {
+        outline: none;
+        border-color: #0b1e3b;
+        box-shadow: 0 0 0 4px rgba(11, 30, 59, 0.1);
+        transform: scale(1.05);
+    }
+
+    .code-digit.filled {
+        background: linear-gradient(135deg, #f8f9fc 0%, #e8eaf0 100%);
+        border-color: #0b1e3b;
+    }
+
+/* Input oculto para el formulario */
+.hidden-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- TIMER COUNTDOWN --- */
+.timer-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+    .timer-section i {
+        color: #d62828;
+        font-size: 16px;
+    }
+
+.timer-value {
+    font-weight: 700;
+    color: #0b1e3b;
+}
+
+    .timer-value.warning {
+        color: #d62828;
+        animation: timerBlink 1s infinite;
+    }
+
+@keyframes timerBlink {
+    0%, 100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* --- BOTONES --- */
+.btn-primary-modern {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #0b1e3b 0%, #1a3a5c 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(11, 30, 59, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn-primary-modern::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-primary-modern:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(11, 30, 59, 0.4);
+    }
+
+    .btn-primary-modern:active {
+        transform: translateY(0);
+    }
+
+    .btn-primary-modern:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+.btn-icon-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* --- DIVISORES --- */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+}
+
+.divider-text {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- SECCIÓN DE REENVÍO --- */
+.resend-section {
+    text-align: center;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.resend-link {
+    color: #d62828;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .resend-link:hover {
+        color: #b71f1f;
+    }
+
+    .resend-link.disabled {
+        color: #94a3b8;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+/* --- INFO DE SEGURIDAD (LOGIN) --- */
+.security-info {
+    background: linear-gradient(135deg, #f8f9fc 0%, #e8eaf0 100%);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.security-icon {
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: green;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.security-text {
+    flex: 1;
+}
+
+    .security-text strong {
+        display: block;
+        color: #1e293b;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .security-text p {
+        color: #64748b;
+        font-size: 13px;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+/* --- TIPS DE SEGURIDAD (2FA) --- */
+.security-tips {
+    background: linear-gradient(135deg, #f8f9fc 0%, #e8eaf0 100%);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: left;
+    margin-top: 24px;
+}
+
+.security-tips-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+    .security-tips-title i {
+        color: #0b1e3b;
+        font-size: 16px;
+    }
+
+.security-tips ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.security-tips li {
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    padding-left: 24px;
+    position: relative;
+}
+
+    .security-tips li::before {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: #22c55e;
+        font-size: 12px;
+    }
+
+    .security-tips li:last-child {
+        margin-bottom: 0;
+    }
+
+/* --- MENSAJES DE ERROR --- */
+.text-danger {
+    background: #fee;
+    color: #dc3545;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .text-danger::before {
+        content: '\f071';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+    }
+
+/* Para alinear al centro en 2FA */
+.auth-card.text-center .text-danger {
+    justify-content: center;
+}
+
+/* --- BACK BUTTON --- */
+.back-section {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+    .back-link:hover {
+        color: #0b1e3b;
+    }
+
+/* --- UTILIDADES --- */
+.w-100 {
+    width: 100%;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.small {
+    font-size: 0.875rem;
+}
+
+.text-muted {
+    color: #64748b;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 40px 30px;
+    }
+
+    .auth-title {
+        font-size: 28px;
+    }
+
+    .remember-section {
+        flex-direction: column;
+        align-items: start;
+        gap: 12px;
+    }
+
+    /* Ajustes para 2FA */
+    .code-digit {
+        width: 48px;
+        height: 60px;
+        font-size: 28px;
+    }
+
+    .code-input-wrapper {
+        gap: 8px;
+    }
+
+    .verification-icon-container {
+        width: 100px;
+        height: 100px;
+    }
+
+        .verification-icon-container i {
+            font-size: 48px;
+        }
+}
+
+@media (max-width: 360px) {
+    .code-digit {
+        width: 42px;
+        height: 56px;
+        font-size: 24px;
+    }
+
+    .code-input-wrapper {
+        gap: 6px;
+    }
+}

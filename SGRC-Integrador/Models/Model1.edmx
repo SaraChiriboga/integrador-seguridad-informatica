@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SGRC_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SGRC_DBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Activos">
           <Key>
             <PropertyRef Name="IdActivo" />
@@ -56,6 +56,9 @@
           <Property Name="Rol" Type="nvarchar" MaxLength="20" />
           <Property Name="Activo" Type="bit" />
           <Property Name="FechaRegistro" Type="datetime" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="100" />
+          <Property Name="Codigo2FA" Type="nvarchar" MaxLength="6" />
+          <Property Name="FechaExpiracion2FA" Type="datetime" />
         </EntityType>
         <Association Name="FK_Riesgo_Activo">
           <End Role="Activos" Type="Self.Activos" Multiplicity="1">
@@ -99,8 +102,7 @@
             <End Role="Tratamientos" EntitySet="Tratamientos" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SGRC_DBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -159,6 +161,9 @@
           <Property Name="Rol" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Activo" Type="Boolean" />
           <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Codigo2FA" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="FechaExpiracion2FA" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_Riesgo_Activo">
           <End Role="Activos" Type="Self.Activo" Multiplicity="1">
@@ -254,6 +259,9 @@
           <EntitySetMapping Name="Usuarios">
             <EntityTypeMapping TypeName="SGRC_DBModel.Usuario">
               <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="FechaExpiracion2FA" ColumnName="FechaExpiracion2FA" />
+                <ScalarProperty Name="Codigo2FA" ColumnName="Codigo2FA" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
                 <ScalarProperty Name="NombreCompleto" ColumnName="NombreCompleto" />
                 <ScalarProperty Name="Correo" ColumnName="Correo" />

@@ -47,6 +47,9 @@
     <EntitySetMapping Name="Usuarios">
       <EntityTypeMapping TypeName="SGRC_DBModel.Usuario">
         <MappingFragment StoreEntitySet="Usuarios">
+          <ScalarProperty Name="FechaExpiracion2FA" ColumnName="FechaExpiracion2FA" />
+          <ScalarProperty Name="Codigo2FA" ColumnName="Codigo2FA" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
           <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
           <ScalarProperty Name="NombreCompleto" ColumnName="NombreCompleto" />
           <ScalarProperty Name="Correo" ColumnName="Correo" />

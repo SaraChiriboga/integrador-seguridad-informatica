@@ -21,5 +21,8 @@ namespace SGRC_Integrador.Models
         public string Rol { get; set; }
         public Nullable<bool> Activo { get; set; }
         public Nullable<System.DateTime> FechaRegistro { get; set; }
+        public string Nombre { get; set; }
+        public string Codigo2FA { get; set; }
+        public Nullable<System.DateTime> FechaExpiracion2FA { get; set; }
     }
 }

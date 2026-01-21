@@ -1,0 +1,326 @@
+﻿@{ Layout = null; }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación 2FA - SGRC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="~/Content/Auth.css">
+</head>
+<body>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+
+    <div class="auth-wrapper">
+        <div class="auth-card text-center">
+            <div class="auth-header">
+                <h2 class="auth-title">Verificación 2FA</h2>
+                <p class="auth-subtitle">
+                    Ingresa el código de 6 dígitos que enviamos a tu correo electrónico
+                </p>
+                <div class="email-display">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>@ViewBag.Email</span>
+                </div>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                <div class="code-input-container">
+                    <div class="code-input-wrapper">
+                        <input type="text" class="code-digit" maxlength="1" data-index="0" />
+                        <input type="text" class="code-digit" maxlength="1" data-index="1" />
+                        <input type="text" class="code-digit" maxlength="1" data-index="2" />
+                        <input type="text" class="code-digit" maxlength="1" data-index="3" />
+                        <input type="text" class="code-digit" maxlength="1" data-index="4" />
+                        <input type="text" class="code-digit" maxlength="1" data-index="5" />
+                    </div>
+                    <!-- Input oculto que se envía en el formulario -->
+                    <input type="text" name="codigo" class="hidden-input" maxlength="6" />
+                </div>
+
+                <div class="timer-section">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>Código válido por: <span class="timer-value" id="timer">05:00</span></span>
+                </div>
+
+                <button type="submit" class="btn-primary-modern w-100" id="verifyBtn">
+                    <span class="btn-icon-text">
+                        <i class="fa-solid fa-check-circle"></i>
+                        Verificar Código
+                    </span>
+                </button>
+            }
+
+            @if (ViewBag.Error != null)
+            {
+                <p class="text-danger mt-3">@ViewBag.Error</p>
+            }
+
+            <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">¿No recibiste el código?</span>
+                <div class="divider-line"></div>
+            </div>
+
+            <div class="resend-section">
+                <a href="#" class="resend-link" id="resendLink">
+                    <i class="fa-solid fa-rotate-right"></i> Reenviar código
+                </a>
+            </div>
+
+            <div class="back-section">
+                <a href="@Url.Action("Login", "Auth")" class="back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Volver al inicio de sesión
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    // --- MANEJO DE INPUTS DE CÓDIGO ---
+    const codeDigits = document.querySelectorAll('.code-digit');
+    const hiddenInput = document.querySelector('input[name="codigo"]');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const timerElement = document.getElementById('timer');
+    const resendLink = document.getElementById('resendLink');
+
+    // Configuración inicial
+    let timeLeft = 300; // 5 minutos en segundos
+    let countdownInterval;
+
+    // --- EVENTOS DE INPUTS ---
+    codeDigits.forEach((input, index) => {
+        // Evento al escribir
+        input.addEventListener('input', (e) => {
+            const value = e.target.value;
+
+            // Solo permitir números
+            if (!/^\d*$/.test(value)) {
+                e.target.value = '';
+                return;
+            }
+
+            if (value) {
+                e.target.classList.add('filled');
+                // Mover al siguiente input automáticamente
+                if (index < codeDigits.length - 1) {
+                    codeDigits[index + 1].focus();
+                }
+            } else {
+                e.target.classList.remove('filled');
+            }
+
+            updateHiddenInput();
+        });
+
+        // Evento de teclado
+        input.addEventListener('keydown', (e) => {
+            // Backspace: volver al anterior si está vacío
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+                codeDigits[index - 1].focus();
+            }
+
+            // Flechas de navegación
+            if (e.key === 'ArrowLeft' && index > 0) {
+                e.preventDefault();
+                codeDigits[index - 1].focus();
+            }
+            if (e.key === 'ArrowRight' && index < codeDigits.length - 1) {
+                e.preventDefault();
+                codeDigits[index + 1].focus();
+            }
+        });
+
+        // Permitir pegar código completo
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').trim().slice(0, 6);
+
+            if (/^\d+$/.test(pastedData)) {
+                pastedData.split('').forEach((char, i) => {
+                    if (codeDigits[i]) {
+                        codeDigits[i].value = char;
+                        codeDigits[i].classList.add('filled');
+                    }
+                });
+                updateHiddenInput();
+                // Focus en el último dígito pegado o el último campo
+                const lastIndex = Math.min(pastedData.length, codeDigits.length - 1);
+                codeDigits[lastIndex].focus();
+            }
+        });
+    });
+
+    // --- ACTUALIZAR INPUT OCULTO ---
+    function updateHiddenInput() {
+        const code = Array.from(codeDigits).map(input => input.value).join('');
+        hiddenInput.value = code;
+
+        // Habilitar/deshabilitar botón según código completo
+        verifyBtn.disabled = code.length !== 6;
+    }
+
+    // --- TIMER COUNTDOWN ---
+    function startTimer() {
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // Añadir clase de advertencia cuando quedan 30 segundos
+            if (timeLeft <= 30) {
+                timerElement.classList.add('warning');
+            }
+
+            // Cuando el tiempo se acaba
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                timerElement.textContent = '00:00';
+                verifyBtn.disabled = true;
+                verifyBtn.innerHTML = '<span class="btn-icon-text"><i class="fa-solid fa-clock"></i>Código Expirado</span>';
+                resendLink.classList.remove('disabled');
+
+                // Deshabilitar todos los inputs
+                codeDigits.forEach(input => {
+                    input.disabled = true;
+                    input.style.opacity = '0.5';
+                });
+            }
+        }, 1000);
+    }
+
+    // --- REENVIAR CÓDIGO ---
+    resendLink.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (!resendLink.classList.contains('disabled')) {
+            // Aquí puedes hacer una llamada AJAX al servidor para reenviar el código
+            // Ejemplo con fetch:
+            /*
+            fetch('/Auth/ResendCode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Resetear el formulario
+                    resetForm();
+                }
+            });
+            */
+
+            // Por ahora, solo mostramos un mensaje
+            showNotification('Código reenviado a tu correo', 'success');
+
+            // Resetear formulario
+            resetForm();
+
+            // Deshabilitar enlace temporalmente (60 segundos)
+            resendLink.classList.add('disabled');
+            let resendTimeLeft = 60;
+            const originalText = resendLink.innerHTML;
+
+            const resendInterval = setInterval(() => {
+                resendTimeLeft--;
+                resendLink.innerHTML = `<i class="fa-solid fa-clock"></i> Reenviar en ${resendTimeLeft}s`;
+
+                if (resendTimeLeft <= 0) {
+                    clearInterval(resendInterval);
+                    resendLink.innerHTML = originalText;
+                    resendLink.classList.remove('disabled');
+                }
+            }, 1000);
+        }
+    });
+
+    // --- RESETEAR FORMULARIO ---
+    function resetForm() {
+        // Limpiar inputs
+        codeDigits.forEach(input => {
+            input.value = '';
+            input.classList.remove('filled');
+            input.disabled = false;
+            input.style.opacity = '1';
+        });
+
+        // Resetear timer
+        clearInterval(countdownInterval);
+        timeLeft = 300;
+        timerElement.classList.remove('warning');
+
+        // Habilitar botón
+        verifyBtn.disabled = true;
+        verifyBtn.innerHTML = '<span class="btn-icon-text"><i class="fa-solid fa-check-circle"></i>Verificar Código</span>';
+
+        // Focus en primer input
+        codeDigits[0].focus();
+
+        // Reiniciar countdown
+        startTimer();
+    }
+
+    // --- NOTIFICACIÓN SIMPLE ---
+    function showNotification(message, type = 'info') {
+        // Crear elemento de notificación
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#22c55e' : '#0b1e3b'};
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        `;
+
+        notification.innerHTML = `
+            <i class="fa-solid ${type === 'success' ? 'fa-check-circle' : 'fa-info-circle'}"></i>
+            ${message}
+        `;
+
+        document.body.appendChild(notification);
+
+        // Eliminar después de 3 segundos
+        setTimeout(() => {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // --- INICIALIZACIÓN ---
+    // Focus en el primer input al cargar
+    codeDigits[0].focus();
+
+    // Iniciar timer
+    startTimer();
+
+    // Deshabilitar botón inicialmente
+    verifyBtn.disabled = true;
+
+    // Deshabilitar enlace de reenvío al inicio (opcional, por 60 segundos)
+    resendLink.classList.add('disabled');
+    setTimeout(() => resendLink.classList.remove('disabled'), 60000);
+});
+
+document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -51,6 +51,9 @@
     <Property Name="Rol" Type="nvarchar" MaxLength="20" />
     <Property Name="Activo" Type="bit" />
     <Property Name="FechaRegistro" Type="datetime" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="100" />
+    <Property Name="Codigo2FA" Type="nvarchar" MaxLength="6" />
+    <Property Name="FechaExpiracion2FA" Type="datetime" />
   </EntityType>
   <Association Name="FK_Riesgo_Activo">
     <End Role="Activos" Type="Self.Activos" Multiplicity="1">

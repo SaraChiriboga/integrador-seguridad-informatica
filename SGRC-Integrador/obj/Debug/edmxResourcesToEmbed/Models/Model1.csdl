@@ -55,6 +55,9 @@
     <Property Name="Rol" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
     <Property Name="Activo" Type="Boolean" />
     <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Codigo2FA" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="FechaExpiracion2FA" Type="DateTime" Precision="3" />
   </EntityType>
   <Association Name="FK_Riesgo_Activo">
     <End Role="Activos" Type="Self.Activo" Multiplicity="1">
