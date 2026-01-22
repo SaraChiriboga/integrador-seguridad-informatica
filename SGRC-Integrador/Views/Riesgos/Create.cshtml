@@ -1,41 +1,166 @@
 ﻿@model SGRC_Integrador.Models.Riesgo
+@{ Layout = null; }
 
-<div class="container fade-in">
-    <h3 class="fw-bold mb-4">Evaluar Riesgo</h3>
+<div class="container py-4 fade-in">
+    <div class="d-flex align-items-center mb-4">
+        <button onclick="loadView('@Url.Action("Index")')" style="border-color: transparent; background: transparent; width: 45px; height: 45px;">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div>
+            <h2 class="fw-bold mb-0 text-navy">Análisis de Riesgo</h2>
+            <p class="text-muted mb-0">Identifique amenazas y evalúe la exposición del activo seleccionado.</p>
+        </div>
+    </div>
+
     <form id="formRiesgo" action="@Url.Action("Create", "Riesgos")" method="post">
+        <div class="row g-4">
 
-        <div class="form-group-modern mb-3">
-            <label class="form-label-modern">Activo a Evaluar</label>
-            @Html.DropDownList("IdActivo", (SelectList)ViewBag.IdActivo, "Seleccione un activo...", new { @class = "form-select-modern", @required = "required" })
-        </div>
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                    <h5 class="fw-bold mb-4 text-navy border-bottom pb-2">
+                        <i class="fas fa-search me-2 text-primary"></i>Identificación del Escenario
+                    </h5>
 
-        <div class="form-group-modern mb-3">
-            <label class="form-label-modern">Amenaza Detectada</label>
-            <input type="text" name="Amenaza" class="form-input-modern" required placeholder="Ej: Ransomware">
-        </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Activo Crítico a Evaluar</label>
+                        @Html.DropDownList("IdActivo", (SelectList)ViewBag.IdActivo, "Seleccione un activo...", new { @class = "form-select form-select-lg rounded-3 fs-6 border-light bg-light", @required = "required" })
+                    </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <label>Probabilidad (1-4)</label>
-                <input type="range" name="Probabilidad" class="form-range" min="1" max="4" value="1">
+                    <div class="mb-0">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Amenaza Detectada</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-0"><i class="fas fa-biohazard text-danger"></i></span>
+                            <input type="text" name="Amenaza" class="form-control form-control-lg border-light bg-light" required placeholder="Ej: Fuga de datos / Ransomware">
+                        </div>
+                        <small class="text-muted mt-2 d-block">Describa el evento que puede comprometer el activo.</small>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label>Impacto (1-4)</label>
-                <input type="range" name="Impacto" class="form-range" min="1" max="4" value="1">
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-navy text-white">
+                    <h5 class="fw-bold mb-4 border-bottom border-white border-opacity-25 pb-2 text-warning">
+                        <i class="fas fa-calculator me-2"></i>Estimación Cualitativa
+                    </h5>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold">Probabilidad de Ocurrencia</span>
+                            <span class="badge bg-white text-navy" id="valP">1</span>
+                        </div>
+                        <input type="range" name="Probabilidad" id="slideP" class="form-range" min="1" max="4" value="1" oninput="updateRiesgo('slideP', 'valP')">
+                        <div class="d-flex justify-content-between opacity-50" style="font-size: 0.6rem;">
+                            <span>Remota</span>
+                            <span>Frecuente</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold">Impacto en el Negocio</span>
+                            <span class="badge bg-white text-navy" id="valI">1</span>
+                        </div>
+                        <input type="range" name="Impacto" id="slideI" class="form-range" min="1" max="4" value="1" oninput="updateRiesgo('slideI', 'valI')">
+                        <div class="d-flex justify-content-between opacity-50" style="font-size: 0.6rem;">
+                            <span>Leve</span>
+                            <span>Catastrófico</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-4">
+                        <div class="p-3 rounded-4 text-center border border-white border-opacity-25" id="containerResultado">
+                            <span class="d-block small opacity-75 mb-1 text-uppercase">Nivel de Riesgo Inherente</span>
+                            <h1 class="display-3 fw-bold mb-0"><span id="txtNivel">1</span></h1>
+                            <div class="fw-bold text-uppercase mt-1" id="labelNivel" style="letter-spacing: 2px; font-size: 0.8rem;">Bajo</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="mt-4">
-            <button type="submit" class="btn btn-danger btn-lg">Guardar Evaluación</button>
+        <div class="d-flex justify-content-end gap-3 mt-4">
+            <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" onclick="loadView('@Url.Action("Index")')">Descartar</button>
+            <button type="submit" class="btn btn-danger rounded-pill px-5 fw-bold shadow-lg">
+                <i class="fas fa-save me-2"></i>Guardar Evaluación
+            </button>
         </div>
     </form>
 </div>
 
+
+
 <script>
-    $('#formRiesgo').submit(function (e) {
+    function updateRiesgo(sliderId, displayId) {
+        const val = document.getElementById(sliderId).value;
+        document.getElementById(displayId).innerText = val;
+        calcNivel();
+    }
+
+    function calcNivel() {
+        let p = parseInt($('#slideP').val());
+        let i = parseInt($('#slideI').val());
+        let total = p * i;
+
+        $('#txtNivel').text(total);
+
+        let container = $('#containerResultado');
+        let label = $('#labelNivel');
+
+        // Umbrales para matriz 4x4 (Máximo 16)
+        if (total >= 12) {
+            container.css('background-color', 'rgba(214, 40, 40, 0.2)');
+            label.text("Crítico").css('color', '#ff4d4d');
+        } else if (total >= 8) {
+            container.css('background-color', 'rgba(255, 193, 7, 0.2)');
+            label.text("Importante").css('color', '#ffc107');
+        } else {
+            container.css('background-color', 'rgba(255, 255, 255, 0.1)');
+            label.text("Bajo").css('color', '#ffffff');
+        }
+    }
+
+    $('#formRiesgo').off('submit').on('submit', function (e) {
         e.preventDefault();
-        $.post($(this).attr('action'), $(this).serialize(), function (response) {
-            $('#main-content').html(response);
+        var form = $(this);
+        $.post(form.attr('action'), form.serialize(), function (response) {
+            // El controlador devuelve PartialView de Index o el mismo formulario con errores
+            if (typeof response === "string") {
+                $('#main-content').html(response);
+            } else if (response.success) {
+                loadView('@Url.Action("Index", "Riesgos")');
+            }
         });
     });
+
+    // Inicializar cálculos
+    calcNivel();
 </script>
+
+<style>
+    .bg-navy {
+        background-color: #0b1e3b !important;
+    }
+
+    .text-navy {
+        color: #0b1e3b !important;
+    }
+
+    .btn-outline-navy {
+        color: #0b1e3b;
+        border-color: #0b1e3b;
+    }
+
+        .btn-outline-navy:hover {
+            background-color: #0b1e3b;
+            color: white;
+        }
+
+    /* Personalización de sliders para que se vean bien en fondo oscuro */
+    .custom-range::-webkit-slider-runnable-track {
+        background: rgba(255,255,255,0.2);
+    }
+
+    .custom-range::-webkit-slider-thumb {
+        background: #ffc107;
+    }
+</style>

@@ -35,14 +35,9 @@
 
                         <tr>
                             <td class="ps-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="icon-box me-3 bg-light rounded-3 text-navy p-2">
-                                        <i class="fas @(item.Tipo == "HW" ? "fa-server" : item.Tipo == "SW" ? "fa-code" : "fa-database")"></i>
-                                    </div>
-                                    <div>
-                                        <span class="d-block fw-bold text-navy">@item.Nombre</span>
-                                        <small class="text-muted">ID: #@item.IdActivo</small>
-                                    </div>
+                                <div>
+                                    <span class="d-block fw-bold text-navy">@item.Nombre</span>
+                                    <small class="text-muted">ID: #@item.IdActivo</small>
                                 </div>
                             </td>
                             <td>
@@ -51,7 +46,7 @@
                             <td class="text-center">
                                 <div class="d-inline-flex align-items-center justify-content-center border rounded-pill px-3 py-1 @(item.ValorTotal >= 10 ? "border-danger text-danger bg-danger bg-opacity-10" : "bg-light")">
                                     <span class="fw-bold me-1">@item.ValorTotal</span>
-                                    <small class="opacity-50">/ 15</small>
+                                    <small class="opacity-50">/ 12</small>
                                     @if (item.ValorTotal >= 10)
                                     {<i class="fas fa-fire-alt ms-2" title="Activo Crítico"></i>}
                                 </div>
@@ -146,14 +141,6 @@
             background-color: #d62828;
             color: white;
         }
-
-    .icon-box {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
 
     .btn-link:hover {
         transform: scale(1.2);

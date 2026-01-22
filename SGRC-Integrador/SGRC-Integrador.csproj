@@ -325,6 +325,7 @@
     <Content Include="Views\Reportes\PlanTratamientoPDF.cshtml" />
     <Content Include="Views\Activos\Details.cshtml" />
     <Content Include="Views\Activos\Edit.cshtml" />
+    <Content Include="Views\Riesgos\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

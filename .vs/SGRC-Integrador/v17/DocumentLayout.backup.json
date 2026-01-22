@@ -3,76 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\controllers\\riesgoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\riesgoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\controllers\\activoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\activoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\activos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\activos\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\riesgos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\riesgos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\activos\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\activos\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\activos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\activos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\activos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\activos\\details.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\models\\activo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\models\\activo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\tratamientos\\gestionar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\tratamientos\\gestionar.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\controllers\\tratamientoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\tratamientoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\filters\\sessioncheckattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\filters\\sessioncheckattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\views\\riesgos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\riesgos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\riesgos\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\global.asax.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\views\\reportes\\plantratamientopdf.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\reportes\\plantratamientopdf.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\views\\tratamientos\\bitacora.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\tratamientos\\bitacora.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -82,231 +26,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 247,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Edit.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Edit.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Activos\\Edit.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Edit.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Activos\\Edit.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAACRAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T06:26:46.356Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Create.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Activos\\Create.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Create.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Activos\\Create.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAACRAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T06:24:31.717Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Details.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Activos\\Details.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Details.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Activos\\Details.cshtml",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAEsAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T06:25:47.256Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "ActivosController.cs",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\ActivosController.cs",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\ActivosController.cs",
               "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\ActivosController.cs",
               "RelativeToolTip": "SGRC-Integrador\\Controllers\\ActivosController.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAIwE8AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAAAAAAAgwC4AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T06:25:12.843Z",
+              "WhenOpened": "2026-01-22T07:04:51.102Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Activo.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Models\\Activo.cs",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Models\\Activo.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Models\\Activo.cs",
-              "RelativeToolTip": "SGRC-Integrador\\Models\\Activo.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAACUAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "RiesgosController.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "RelativeToolTip": "SGRC-Integrador\\Controllers\\RiesgosController.cs",
+              "ViewState": "AgIAACMAAAAAAAAAAAAUwC4AAABVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T06:21:11.784Z",
+              "WhenOpened": "2026-01-22T07:04:37.05Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Riesgos\\Details.cshtml",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Riesgos\\Details.cshtml",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Riesgos\\Details.cshtml",
+              "RelativeToolTip": "SGRC-Integrador\\Views\\Riesgos\\Details.cshtml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAG4AAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-22T07:03:38.387Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Index.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Activos\\Index.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Index.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Activos\\Index.cshtml",
-              "ViewState": "AgIAADMAAAAAAAAAAAAAAKEAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T06:19:51.055Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "_Layout.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Shared\\_Layout.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Shared\\_Layout.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Shared\\_Layout.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Shared\\_Layout.cshtml",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAAAFsAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T03:43:21.758Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\HomeController.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "SGRC-Integrador\\Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB0AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T05:20:21.983Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "Web.config",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Web.config",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Web.config",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Web.config",
-              "RelativeToolTip": "SGRC-Integrador\\Web.config",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFsAAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2026-01-22T05:20:02.153Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Global.asax.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Global.asax.cs",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Global.asax.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Global.asax.cs",
-              "RelativeToolTip": "SGRC-Integrador\\Global.asax.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T05:19:50.596Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "SGRC-Integrador\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAC0AAAAAAAAAAAAcwCkAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T05:08:36.094Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Gestionar.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Tratamientos\\Gestionar.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Tratamientos\\Gestionar.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Tratamientos\\Gestionar.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Tratamientos\\Gestionar.cshtml",
-              "ViewState": "AgIAACUAAAAAAAAAAAAUwDsAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T05:01:15.884Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "PlanTratamientoPDF.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Reportes\\PlanTratamientoPDF.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Reportes\\PlanTratamientoPDF.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Reportes\\PlanTratamientoPDF.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Reportes\\PlanTratamientoPDF.cshtml",
-              "ViewState": "AgIAAHIAAAAAAAAAAAAAAIwAAAA2AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T04:53:50.952Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "TratamientosController.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\TratamientosController.cs",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\TratamientosController.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\TratamientosController.cs",
-              "RelativeToolTip": "SGRC-Integrador\\Controllers\\TratamientosController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T04:43:57.456Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "SessionCheckAttribute.cs",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Filters\\SessionCheckAttribute.cs",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Filters\\SessionCheckAttribute.cs",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Filters\\SessionCheckAttribute.cs",
-              "RelativeToolTip": "SGRC-Integrador\\Filters\\SessionCheckAttribute.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAA1wCkAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-01-22T05:35:31.842Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Riesgos\\Index.cshtml",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Riesgos\\Index.cshtml",
               "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Riesgos\\Index.cshtml",
               "RelativeToolTip": "SGRC-Integrador\\Views\\Riesgos\\Index.cshtml",
-              "ViewState": "AgIAACAAAAAAAAAAAAAuwEMAAAAGAAAAAAAAAA==",
+              "ViewState": "AgIAAEkAAAAAAAAAAAAQwFoAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T05:21:05.431Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "Bitacora.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Tratamientos\\Bitacora.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Tratamientos\\Bitacora.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Tratamientos\\Bitacora.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Tratamientos\\Bitacora.cshtml",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMYAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T04:41:57.013Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Home\\Index.cshtml",
-              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "SGRC-Integrador\\Views\\Home\\Index.cshtml",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAAJEAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2026-01-22T00:05:49.208Z"
+              "WhenOpened": "2026-01-22T07:02:05.637Z",
+              "EditorCaption": ""
             }
           ]
         }

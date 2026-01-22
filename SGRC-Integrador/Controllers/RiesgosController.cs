@@ -1,8 +1,9 @@
-﻿using System;
+﻿using SGRC_Integrador.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
-using SGRC_Integrador.Models;
 
 namespace SGRC_Integrador.Controllers
 {
@@ -32,6 +33,28 @@ namespace SGRC_Integrador.Controllers
                 db.SaveChanges();
                 return PartialView("Index", db.Riesgos.ToList());
             }
+            return PartialView(riesgo);
+        }
+
+        // GET: Riesgos/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Usamos .Include(r => r.Activo) para cargar los datos del activo relacionado
+            // y .Include(r => r.Tratamientos) si quieres mostrar info del tratamiento en la ficha
+            var riesgo = db.Riesgos
+                .Include("Activo")
+                .FirstOrDefault(r => r.IdRiesgo == id);
+
+            if (riesgo == null)
+            {
+                return HttpNotFound();
+            }
+
             return PartialView(riesgo);
         }
     }
