@@ -41,25 +41,28 @@ namespace SGRC_Integrador.Controllers
 
         public ActionResult PlanTratamientoPDF(int id)
         {
-            // Ahora esto funcionará correctamente gracias al using System.Data.Entity
             var tratamiento = db.Tratamientos
-                .Include(t => t.Riesgo)
-                .Include(t => t.Riesgo.Activo)
-                .FirstOrDefault(t => t.IdTratamiento == id);
+        .Include(t => t.Riesgo)
+        .Include(t => t.Riesgo.Activo)
+        .FirstOrDefault(t => t.IdTratamiento == id);
 
             if (tratamiento == null) return HttpNotFound();
 
+            // Carga de KPIs y Bitácora mediante SQL Directo o navegación
             ViewBag.KPIs = db.Database.SqlQuery<TratamientoKPI>(
                 "SELECT * FROM TratamientoKPIs WHERE IdTratamiento = {0}", id).ToList();
 
             ViewBag.Bitacora = db.Database.SqlQuery<TratamientoBitacora>(
-                "SELECT * FROM TratamientoBitacora WHERE IdTratamiento = {0} ORDER BY FechaRegistro DESC", id).ToList();
+                "SELECT * FROM TratamientoBitacora WHERE IdTratamiento = {0} ORDER BY FechaRegistro ASC", id).ToList();
 
-            return new ViewAsPdf("PlanTratamientoPDF", tratamiento)
+            ViewBag.Auditor = Session["UsuarioNombre"]?.ToString() ?? "Auditor de Seguridad";
+            ViewBag.FechaReporte = DateTime.Now.ToString("f");
+
+            return new Rotativa.ViewAsPdf("PlanTratamientoPDF", tratamiento)
             {
-                FileName = "Plan_Tratamiento_" + id + ".pdf",
-                PageOrientation = Rotativa.Options.Orientation.Portrait,
-                PageMargins = new Rotativa.Options.Margins(10, 10, 10, 10)
+                FileName = $"Plan_Mitigacion_TRAT-{id}.pdf",
+                PageSize = Rotativa.Options.Size.A4,
+                PageMargins = new Rotativa.Options.Margins(15, 15, 15, 15)
             };
         }
 

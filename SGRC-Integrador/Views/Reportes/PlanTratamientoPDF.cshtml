@@ -8,160 +8,313 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            font-size: 12px;
-            color: #333;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #2d3748;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
         }
 
+        .page {
+            padding: 30px;
+        }
+
+        /* Header Premium */
         .header {
-            text-align: center;
-            border-bottom: 2px solid #0b1e3b;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            border-bottom: 4px solid #0b1e3b;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
 
-        .section-title {
-            background: #0b1e3b;
-            color: white;
-            padding: 5px 10px;
-            font-weight: bold;
+        .logo {
+            height: 65px;
+            float: left;
+        }
+
+        .header-meta {
+            float: right;
+            text-align: right;
+            font-size: 10px;
+            color: #718096;
+        }
+
+        .doc-title {
+            clear: both;
+            text-align: center;
             margin-top: 20px;
+        }
+
+            .doc-title h2 {
+                color: #0b1e3b;
+                margin: 0;
+                font-size: 18px;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+
+            .doc-title span {
+                color: #d62828;
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+        /* Secciones */
+        .section-header {
+            background: #f7fafc;
+            border-left: 5px solid #0b1e3b;
+            padding: 8px 15px;
+            margin: 25px 0 10px 0;
+            font-weight: bold;
+            color: #0b1e3b;
+            text-transform: uppercase;
+            font-size: 12px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            margin-bottom: 15px;
+            font-size: 11px;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #edf2f7;
+            color: #4a5568;
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        /* Estilos de Datos */
+        .highlight-row {
+            background-color: #fffaf0;
         }
 
         .badge {
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 9px;
+            text-transform: uppercase;
+        }
+
+        .bg-mitigar {
+            background-color: #3182ce;
+        }
+
+        .bg-aceptar {
+            background-color: #e53e3e;
+        }
+
+        .bg-critico {
+            color: #e53e3e;
             font-weight: bold;
         }
 
-        .danger {
-            color: #d9534f;
+        .progress-container {
+            background: #edf2f7;
+            border-radius: 10px;
+            height: 12px;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .progress-bar {
+            background: #38a169;
+            height: 12px;
+            border-radius: 10px;
         }
 
         .footer {
-            margin-top: 50px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
             text-align: center;
-            font-size: 10px;
-            color: #777;
+            font-size: 9px;
+            color: #a0aec0;
+            border-top: 1px solid #edf2f7;
+            padding-top: 10px;
         }
 
-        .signature-box {
-            margin-top: 40px;
-            border-top: 1px solid #000;
-            width: 200px;
-            text-align: center;
+        .signature-section {
+            margin-top: 50px;
+            width: 100%;
+        }
+
+        .sig-box {
+            width: 40%;
             display: inline-block;
+            text-align: center;
+            font-size: 11px;
+        }
+
+        .sig-line {
+            border-top: 1px solid #2d3748;
+            margin: 0 20px 10px 20px;
+            padding-top: 5px;
+        }
+
+        .lopdp-alert {
+            border: 2px dashed #e53e3e;
+            background: #fff5f5;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>SISTEMA DE GESTIÓN DE RIESGOS Y CUMPLIMIENTO (SGRC)</h2>
-        <h3>INFORME DE AUDITORÍA: PLAN DE TRATAMIENTO DE RIESGOS</h3>
-    </div>
-
-    <div class="section-title">1. DATOS DEL RIESGO INHERENTE</div>
-    <table>
-        <tr>
-            <th>ID Riesgo:</th>
-            <td>#@Model.Riesgo.IdRiesgo</td>
-            <th>Activo:</th>
-            <td>@Model.Riesgo.Activo.Nombre</td>
-        </tr>
-        <tr>
-            <th>Amenaza:</th>
-            <td colspan="3">@Model.Riesgo.Amenaza</td>
-        </tr>
-        <tr>
-            <th>Criticidad:</th>
-            <td><span class="danger">Nivel @Model.Riesgo.NivelRiesgo</span></td>
-            <th>Estrategia:</th>
-            <td>@Model.Estrategia</td>
-        </tr>
-    </table>
-
-    <div class="section-title">2. PLAN DE ACCIÓN Y CONTROLES (ISO 27002)</div>
-    <p><strong>Control Aplicado:</strong> @(Model.ControlISO ?? "N/A")</p>
-    <p><strong>Descripción Técnica:</strong> @Model.AccionCorrectiva</p>
-
-    <div class="section-title">3. INDICADORES DE GESTIÓN (KPIs)</div>
-    <table>
-        <thead>
-            <tr>
-                <th>KPI</th>
-                <th>Meta Esperada</th>
-                <th>Frecuencia</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var k in kpis)
-            {
-                <tr>
-                    <td>@k.NombreKPI</td>
-                    <td>@k.MetaEsperada</td>
-                    <td>@k.FrecuenciaMedicion</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <div class="section-title">4. BITÁCORA DE CUMPLIMIENTO (EVIDENCIA TÉCNICA)</div>
-    <table>
-        <thead>
-            <tr>
-                <th>Fecha</th>
-                <th>Responsable</th>
-                <th>Actividad Realizada</th>
-                <th>KPI Impactado </th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var b in bitacora)
-            {
-                <tr>
-                    <td>@b.FechaRegistro.Value.ToShortDateString()</td>
-                    <td>@b.UsuarioResponsable</td>
-                    <td>@b.DescripcionActividad</td>
-                    <td>@b.IdKPI</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    @if (Model.Estrategia == "Aceptar")
-    {
-        <div style="margin-top: 20px; border: 1px solid red; padding: 10px;">
-            <strong>NOTA ÉTICA LOPDP:</strong> Este riesgo ha sido aceptado bajo responsabilidad gerencial, reconociendo las implicaciones del Art. 42 de la Ley Orgánica de Protección de Datos Personales.
+    <div class="page">
+        <div class="header">
+            <img src="@Url.Content("~/Content/Images/logo-azul.svg")" alt="logo" class="logo" />
+            <div class="header-meta">
+                <strong>INFORME TÉCNICO:</strong> SGRC-TRAT-@Model.IdTratamiento<br />
+                <strong>AUDITOR:</strong> @ViewBag.Auditor<br />
+                <strong>EMISIÓN:</strong> @ViewBag.FechaReporte
+            </div>
+            <div class="doc-title">
+                <h2>Plan de Tratamiento de Riesgos</h2>
+                <span>CONFIDENCIAL - USO INTERNO</span>
+            </div>
         </div>
-    }
 
-    <div style="text-align: center; margin-top: 60px;">
-        <div class="signature-box">Responsable del Plan<br>@Model.Responsable</div>
-        <div style="display: inline-block; width: 100px;"></div>
-        <div class="signature-box">Oficial de Seguridad (CISO)</div>
-    </div>
+        <div class="section-header">1. Diagnóstico del Riesgo Inherente</div>
+        <table>
+            <tr>
+                <th width="20%">Activo Afectado:</th>
+                <td width="30%"><strong>@Model.Riesgo.Activo.Nombre</strong></td>
+                <th width="20%">ID de Registro:</th>
+                <td width="30%">#@Model.IdTratamiento</td>
+            </tr>
+            <tr>
+                <th>Amenaza:</th>
+                <td>@Model.Riesgo.Amenaza</td>
+                <th>Vulnerabilidad:</th>
+                <td>@(Model.Riesgo.Vulnerabilidad ?? "Debilidad técnica no especificada")</td>
+            </tr>
+            <tr class="highlight-row">
+                <th>Nivel de Riesgo:</th>
+                <td class="bg-critico">@Model.Riesgo.NivelRiesgo (Crítico)</td>
+                <th>Estrategia Seleccionada:</th>
+                <td><span class="badge @(Model.Estrategia == "Mitigar" ? "bg-mitigar" : "bg-aceptar")">@Model.Estrategia</span></td>
+            </tr>
+        </table>
 
-    <div class="footer">
-        Documento generado automáticamente por el sistema SGRC Integrador - Fecha: @DateTime.Now.ToString()
+        <div class="section-header">2. Definición del Control de Seguridad (ISO 27002)</div>
+        <table>
+            <tr>
+                <th width="20%">Control Referencia:</th>
+                <td><strong>@Model.ControlISO</strong></td>
+            </tr>
+            <tr>
+                <th>Acción Correctiva:</th>
+                <td>@Model.AccionCorrectiva</td>
+            </tr>
+            <tr>
+                <th>Responsable:</th>
+                <td>@Model.Responsable</td>
+            </tr>
+            <tr>
+                <th>Progreso Actual:</th>
+                <td>
+                    <strong>@Model.Progreso%</strong>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: @Model.Progreso%"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-header">3. Métrica de Desempeño (KPIs)</div>
+        @if (kpis != null && kpis.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Indicador (KPI)</th>
+                        <th>Meta Esperada</th>
+                        <th>Frecuencia de Medición</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var k in kpis)
+                    {
+                        <tr>
+                            <td>@k.NombreKPI</td>
+                            <td><strong>@k.MetaEsperada</strong></td>
+                            <td>@k.FrecuenciaMedicion</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        { <p style="font-size: 11px;">No se definieron KPIs específicos para este plan.</p>}
+
+        <div class="section-header">4. Evidencia de Ejecución (Bitácora Técnica)</div>
+        @if (bitacora != null && bitacora.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th width="15%">Fecha</th>
+                        <th width="15%">Auditor</th>
+                        <th>Actividad Realizada y Observaciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var b in bitacora)
+                    {
+                        <tr>
+                            <td>@b.FechaRegistro.Value.ToShortDateString()</td>
+                            <td>@b.UsuarioResponsable</td>
+                            <td>
+                                <strong>@b.DescripcionActividad</strong><br />
+                                <span style="color: #718096; font-size: 10px;">@b.ObservacionesTecnicas</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        { <p style="font-size: 11px;">No existen registros de bitácora para este plan.</p>}
+
+        @if (Model.Estrategia == "Aceptar")
+        {
+            <div class="lopdp-alert">
+                <strong>CLÁUSULA DE RESPONSABILIDAD (LOPDP ART. 42):</strong><br />
+                La organización acepta formalmente el riesgo residual derivado de esta amenaza. Se certifica que el Oficial de Protección de Datos (DPO) ha sido informado y que se han valorado los impactos sobre los derechos y libertades de los titulares de datos.
+            </div>
+        }
+
+        <div class="signature-section">
+            <div class="sig-box">
+                <div class="sig-line"></div>
+                <strong>@Model.Responsable</strong><br />Responsable de Implementación
+            </div>
+            <div style="display: inline-block; width: 15%;"></div>
+            <div class="sig-box">
+                <div class="sig-line"></div>
+                <strong>Oficial de Seguridad (CISO)</strong><br />Validación y Cumplimiento
+            </div>
+        </div>
+
+        <div class="footer">
+            Este documento es propiedad de la organización. Generado por SGRC Integrador v2.0 - Página 1 de 1
+        </div>
     </div>
 </body>
 </html>
