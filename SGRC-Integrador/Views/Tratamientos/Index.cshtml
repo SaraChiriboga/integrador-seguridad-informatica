@@ -1,8 +1,12 @@
 ﻿@model IEnumerable<SGRC_Integrador.Models.Tratamiento>
 @{
     Layout = null;
-    // Capturamos el ID del riesgo que viene desde la Matriz de Riesgos para resaltar
-    int? highlightId = ViewBag.HighlightId as int?;
+    // Recuperamos el ID que enviamos desde el controlador para el efecto de resaltado
+    int highlightId = 0;
+    if (ViewBag.HighlightId != null)
+    {
+        int.TryParse(ViewBag.HighlightId.ToString(), out highlightId);
+    }
 }
 
 <div class="container-fluid py-4 fade-in">
@@ -17,107 +21,109 @@
     </div>
 
     <div class="row g-4">
-        @if (!Model.Any())
+        @if (Model == null || !Model.Any())
         {
             <div class="col-12 text-center py-5">
                 <i class="fas fa-folder-open fa-4x text-light mb-3"></i>
                 <h5 class="text-muted">No existen planes de tratamiento registrados.</h5>
-                <p class="small text-muted">Inicie un plan desde la Matriz de Riesgos.</p>
+                <p class="small text-muted">Inicie un plan de acción desde la Matriz de Riesgos.</p>
             </div>
         }
-
-        @foreach (var item in Model)
+        else
         {
-            if (item.Riesgo == null) { continue; }
+            foreach (var item in Model)
+            {
+                // Validación crucial para evitar error 500 si la relación está rota en la BD
+                if (item.Riesgo == null) { continue; }
 
-            // Lógica para determinar si esta tarjeta debe ser resaltada
-            bool isHighlighted = highlightId.HasValue && item.IdRiesgo == highlightId.Value;
+                // Verificamos si este elemento específico es el que venimos a buscar
+                bool isHighlighted = highlightId != 0 && item.IdRiesgo == highlightId;
 
-            <div class="col-xl-4 col-md-6 @(isHighlighted ? "highlight-focus" : "")" id="plan-@item.IdRiesgo">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden treatment-card @(isHighlighted ? "border-highlight" : "")">
+                <div class="col-xl-4 col-md-6 @(isHighlighted ? "highlight-focus" : "")" id="plan-@item.IdRiesgo">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden treatment-card @(isHighlighted ? "border-highlight" : "")">
 
-                    <div class="p-3 @(item.Estrategia == "Mitigar" ? "bg-primary" : item.Estrategia == "Aceptar" ? "bg-danger" : item.Estrategia == "Transferir" ? "bg-warning text-dark" : "bg-info") text-white d-flex justify-content-between align-items-center">
-                        <span class="small fw-bold text-uppercase">@(item.Estrategia ?? "Sin Definir")</span>
-                        <i class="fas @(item.Estrategia == "Mitigar" ? "fa-shield-alt" : item.Estrategia == "Aceptar" ? "fa-gavel" : "fa-exchange-alt")"></i>
-                    </div>
+                        <div class="p-3 @(item.Estrategia == "Mitigar" ? "bg-primary" : item.Estrategia == "Aceptar" ? "bg-danger" : item.Estrategia == "Transferir" ? "bg-warning text-dark" : "bg-info") text-white d-flex justify-content-between align-items-center">
+                            <span class="small fw-bold text-uppercase">@(item.Estrategia ?? "Sin Definir")</span>
+                            <i class="fas @(item.Estrategia == "Mitigar" ? "fa-shield-alt" : item.Estrategia == "Aceptar" ? "fa-gavel" : "fa-exchange-alt")"></i>
+                        </div>
 
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="fw-bold text-navy mb-1 text-truncate" style="max-width: 80%;" title="@item.Riesgo.Amenaza">
-                                @item.Riesgo.Amenaza
-                            </h5>
-                            @if (isHighlighted)
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="fw-bold text-navy mb-0 text-truncate" style="max-width: 85%;" title="@item.Riesgo.Amenaza">
+                                    @item.Riesgo.Amenaza
+                                </h5>
+                                @if (isHighlighted)
+                                {
+                                    <span class="badge bg-success rounded-pill animate-bounce" style="font-size: 0.6rem;">NUEVO</span>
+                                }
+                            </div>
+
+                            <p class="small text-muted mb-3">
+                                <i class="fas fa-box me-1"></i> Activo: <span class="fw-bold text-dark">@(item.Riesgo.Activo != null ? item.Riesgo.Activo.Nombre : "No asignado")</span>
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(item.ControlISO))
                             {
-                                <span class="badge bg-success rounded-pill animate-bounce" style="font-size: 0.6rem;">NUEVO</span>
+                                <div class="bg-light p-2 rounded-3 mb-3 border-start border-primary border-4 shadow-xs">
+                                    <small class="d-block text-primary fw-bold" style="font-size: 0.7rem;">Control ISO 27002:</small>
+                                    <span class="small text-dark fw-bold">Ref: @item.ControlISO</span>
+                                </div>
                             }
-                        </div>
 
-                        <p class="small text-muted mb-3">
-                            <i class="fas fa-box me-1"></i> Activo: <span class="fw-bold text-dark">@(item.Riesgo.Activo != null ? item.Riesgo.Activo.Nombre : "N/A")</span>
-                        </p>
-
-                        @if (!string.IsNullOrEmpty(item.ControlISO))
-                        {
-                            <div class="bg-light p-2 rounded-3 mb-3 border-start border-primary border-4 shadow-xs">
-                                <small class="d-block text-primary fw-bold" style="font-size: 0.7rem;">Control ISO 27002:</small>
-                                <span class="small text-dark fw-bold">Ref: @item.ControlISO</span>
-                            </div>
-                        }
-
-                        <div class="mb-4">
-                            <div class="d-flex justify-content-between mb-1">
-                                <span class="small fw-bold text-muted">Progreso de Implementación</span>
-                                <span class="small fw-bold text-navy">@(item.Progreso ?? 0)%</span>
-                            </div>
-                            <div class="progress rounded-pill" style="height: 10px;">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated @((item.Progreso ?? 0) >= 100 ? "bg-success" : "bg-primary")"
-                                     role="progressbar"
-                                     style="width: @(item.Progreso ?? 0)%"></div>
-                            </div>
-                        </div>
-
-                        <div class="row text-center g-2 mb-4">
-                            <div class="col-6">
-                                <div class="border rounded-4 p-2 bg-light bg-opacity-50">
-                                    <h6 class="m-0 fw-bold text-navy" style="font-size: 0.85rem;">
-                                        @(item.FechaLimite.HasValue ? item.FechaLimite.Value.ToShortDateString() : "S/F")
-                                    </h6>
-                                    <small class="text-muted" style="font-size: 0.65rem;">Fecha Límite</small>
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small fw-bold text-muted">Progreso</span>
+                                    <span class="small fw-bold text-navy">@(item.Progreso ?? 0)%</span>
+                                </div>
+                                <div class="progress rounded-pill" style="height: 10px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated @((item.Progreso ?? 0) >= 100 ? "bg-success" : "bg-primary")"
+                                         role="progressbar"
+                                         style="width: @(item.Progreso ?? 0)%"></div>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="border rounded-4 p-2 bg-light bg-opacity-50">
-                                    <h6 class="m-0 fw-bold text-navy text-truncate" style="font-size: 0.85rem;" title="@item.Responsable">
-                                        @(string.IsNullOrEmpty(item.Responsable) ? "Sin Asignar" : item.Responsable.Split(' ')[0])
-                                    </h6>
-                                    <small class="text-muted" style="font-size: 0.65rem;">Responsable</small>
+
+                            <div class="row text-center g-2 mb-4">
+                                <div class="col-6">
+                                    <div class="border rounded-4 p-2 bg-light bg-opacity-50">
+                                        <h6 class="m-0 fw-bold text-navy" style="font-size: 0.85rem;">
+                                            @(item.FechaLimite.HasValue ? item.FechaLimite.Value.ToShortDateString() : "Pte.")
+                                        </h6>
+                                        <small class="text-muted" style="font-size: 0.95rem;">Fecha Límite</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="border rounded-4 p-2 bg-light bg-opacity-50">
+                                        <h6 class="m-0 fw-bold text-navy text-truncate" style="font-size: 0.85rem;" title="@item.Responsable">
+                                            @(string.IsNullOrEmpty(item.Responsable) ? "S/A" : item.Responsable.Split(' ')[0])
+                                        </h6>
+                                        <small class="text-muted" style="font-size: 0.95rem;">Responsable</small>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="d-grid">
-                            <button onclick="loadView('@Url.Action("Bitacora", "Tratamientos", new { id = item.IdTratamiento })')"
-                                    class="btn btn-navy py-2 rounded-pill shadow-sm fw-bold">
-                                <i class="fas fa-clipboard-list me-2"></i> Gestión de Bitácora
-                            </button>
+                            <div class="d-grid">
+                                <button onclick="loadView('@Url.Action("Bitacora", "Tratamientos", new { id = item.IdTratamiento })')"
+                                        class="btn btn-navy py-2 rounded-pill shadow-sm fw-bold">
+                                    <i class="fas fa-clipboard-list me-2"></i> Gestión de Bitácora
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>
 
 <style>
-    /* Estilos de la Tarjeta */
     .treatment-card {
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         border: 1px solid #eee !important;
     }
 
         .treatment-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(11, 30, 59, 0.15) !important;
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(11, 30, 59, 0.12) !important;
         }
 
     .text-navy {
@@ -133,7 +139,6 @@
         .btn-navy:hover {
             background-color: #d62828;
             color: white;
-            transform: scale(1.02);
         }
 
     .btn-outline-navy {
@@ -146,14 +151,14 @@
             color: white;
         }
 
-    /* Efectos de Resaltado (Highlight Focus) */
-    @@keyframes flash-highlight {
+    /* Animaciones de resaltado */
+    @@keyframes pulse-highlight {
         0% {
             transform: scale(1);
         }
 
         50% {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
 
         100% {
@@ -162,48 +167,43 @@
     }
 
     .highlight-focus {
-        animation: flash-highlight 1.5s ease-in-out;
+        animation: pulse-highlight 2s ease-in-out;
         z-index: 100;
     }
 
     .border-highlight {
-        border: 3px solid #198754 !important; /* Verde éxito */
-        box-shadow: 0 0 20px rgba(25, 135, 84, 0.4) !important;
-    }
-
-    .shadow-xs {
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        border: 3px solid grey !important;
+        box-shadow: 0 0 5px rgb(0, 0, 0) !important;
     }
 
     .animate-bounce {
-        animation: bounce 2s infinite;
+        animation: bounce-custom 2s infinite;
     }
 
-    @@keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {
+    @@keyframes bounce-custom {
+        0%, 100% {
             transform: translateY(0);
         }
 
-        40% {
+        50% {
             transform: translateY(-5px);
-        }
-
-        60% {
-            transform: translateY(-3px);
         }
     }
 </style>
 
 <script>
     $(document).ready(function() {
-        // Lógica de desplazamiento automático al tratamiento resaltado
-        var highlightId = '@(ViewBag.HighlightId ?? 0)';
+        // Ejecutamos el scroll suave si existe un ID resaltado
+        var highlightId = '@highlightId';
         if (highlightId !== '0') {
             var target = $('#plan-' + highlightId);
             if (target.length) {
-                $('html, body').animate({
-                    scrollTop: target.offset().top - 150
-                }, 800);
+                // Pequeño delay para asegurar que la vista parcial terminó de renderizarse
+                setTimeout(function() {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 150
+                    }, 1000);
+                }, 200);
             }
         }
     });

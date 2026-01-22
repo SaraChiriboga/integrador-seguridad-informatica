@@ -15,25 +15,29 @@ namespace SGRC_Integrador.Controllers
     {
         private SGRC_DBEntities db = new SGRC_DBEntities();
 
-        public ActionResult Index()
-        {
-            var tratamientos = db.Tratamientos
-                .Include(t => t.Riesgo)
-                .Include(t => t.Riesgo.Activo)
-                .ToList();
-
-            return PartialView(tratamientos);
-        }
-
         public ActionResult Index(int? highlightId)
         {
-            var tratamientos = db.Tratamientos
-                .Include(t => t.Riesgo)
-                .Include(t => t.Riesgo.Activo)
-                .ToList();
+            try
+            {
+                // Forzamos la carga de Riesgo y Activo de forma explícita
+                var tratamientos = db.Tratamientos
+                    .Include(t => t.Riesgo)
+                    .Include(t => t.Riesgo.Activo)
+                    .AsNoTracking() // Mejora rendimiento y evita errores de seguimiento
+                    .ToList();
 
-            ViewBag.HighlightId = highlightId; // Pasamos el ID a resaltar
-            return PartialView(tratamientos);
+                // Si vienes de resaltar un riesgo
+                ViewBag.HighlightId = highlightId;
+
+                return PartialView(tratamientos);
+            }
+            catch (Exception ex)
+            {
+                // Esto permite ver el error real en la consola de depuración de VS
+                System.Diagnostics.Debug.WriteLine("Error en Tratamientos/Index: " + ex.Message);
+                Response.StatusCode = 500;
+                return Content("Error al cargar tablero: " + ex.Message);
+            }
         }
 
         public ActionResult Gestionar(int? idRiesgo)
