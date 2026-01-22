@@ -48,14 +48,50 @@
         </div>
 
         <div id="panelISO" class="card p-3 mb-4 border-start border-primary border-5 bg-light shadow-sm" style="display:none;">
-            <label class="form-label fw-bold text-primary"><i class="fas fa-book-reader me-2"></i>Control Normativo ISO 27002:2022</label>
+            <label class="form-label fw-bold text-primary">
+                <i class="fas fa-shield-alt me-2"></i>Controles Técnicos de Mitigación (ISO 27002:2022)
+            </label>
             <select name="ControlISO" class="form-select">
-                <option value="">-- Seleccione el control técnico --</option>
-                <option value="5.17">5.17 Autenticación Multifactor (MFA)</option>
-                <option value="8.1">8.1 Seguridad de Endpoints</option>
-                <option value="8.20">8.20 Seguridad de Redes</option>
-                <option value="8.24">8.24 Gestión de Incidentes</option>
+                <option value="">-- Seleccione el control técnico aplicado --</option>
+
+                <optgroup label="Controles Organizacionales">
+                    <option value="5.7">5.7 Inteligencia de amenazas</option>
+                    <option value="5.15">5.15 Control de acceso</option>
+                    <option value="5.23">5.23 Seguridad de la información en servicios en la nube</option>
+                    <option value="5.30">5.30 Preparación de las TIC para la continuidad del negocio</option>
+                </optgroup>
+
+                <optgroup label="Controles de Personas y Físicos">
+                    <option value="6.3">6.3 Concienciación y formación en ciberseguridad</option>
+                    <option value="7.10">7.10 Almacenamiento de soportes (Cifrado de medios)</option>
+                    <option value="7.12">7.12 Seguridad de activos fuera de las instalaciones</option>
+                </optgroup>
+
+                <optgroup label="Controles Tecnológicos (Mitigación Directa)">
+                    <option value="8.1">8.1 Dispositivos de usuario final (Endpoints)</option>
+                    <option value="8.2">8.2 Derechos de acceso privilegiado</option>
+                    <option value="8.3">8.3 Restricción de acceso a la información</option>
+                    <option value="8.5">8.5 Autenticación segura (MFA)</option>
+                    <option value="8.7">8.7 Protección contra malware</option>
+                    <option value="8.8">8.8 Gestión de vulnerabilidades técnicas</option>
+                    <option value="8.9">8.9 Gestión de la configuración (Hardening)</option>
+                    <option value="8.10">8.10 Eliminación de información</option>
+                    <option value="8.11">8.11 Enmascaramiento de datos</option>
+                    <option value="8.12">8.12 Prevención de fuga de datos (DLP)</option>
+                    <option value="8.13">8.13 Copias de seguridad (Backup)</option>
+                    <option value="8.15">8.15 Registro de eventos (Logging)</option>
+                    <option value="8.16">8.16 Actividades de monitoreo</option>
+                    <option value="8.20">8.20 Seguridad de redes (Firewalls/VLANs)</option>
+                    <option value="8.24">8.24 Gestión de incidentes de seguridad</option>
+                    <option value="8.31">8.31 Separación de entornos (Desarrollo/Pruebas/Prod)</option>
+                </optgroup>
             </select>
+            <div class="mt-2">
+                <small class="text-muted italic">
+                    <i class="fas fa-info-circle me-1"></i>
+                    La selección del control quedará registrada en el informe de auditoría como medida de mitigación técnica.
+                </small>
+            </div>
         </div>
 
         <div class="row g-4 mb-4">
