@@ -1,159 +1,102 @@
-﻿<div class="container fade-in">
-    <div class="form-header">
-        <button class="btn-back" onclick="loadView('@Url.Action("Index", "Activos")')">
+﻿@model SGRC_Integrador.Models.Activo
+@{ Layout = null; }
+
+<div class="container py-4 fade-in">
+    <div class="d-flex align-items-center mb-4">
+        <button onclick="loadView('@Url.Action("Index")')" style="border-color: transparent; background: transparent; width: 45px; height: 45px;">
             <i class="fas fa-arrow-left"></i>
         </button>
-        <h3>Registrar Nuevo Activo</h3>
+        <div>
+            <h2 class="fw-bold mb-0 text-navy">Registrar Nuevo Activo</h2>
+            <p class="text-muted mb-0">Identifique y valore los activos según el estándar ISO 27005</p>
+        </div>
     </div>
 
     <form id="formActivo" action="@Url.Action("Create", "Activos")" method="post">
-        <div class="form-grid">
-            <!-- Información General -->
-            <div class="card-form">
-                <h5 class="card-form-title">
-                    <i class="fas fa-info-circle"></i>
-                    Información General
-                </h5>
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                    <h5 class="fw-bold mb-4 text-navy border-bottom pb-2">
+                        <i class="fas fa-info-circle me-2 text-primary"></i>Información General
+                    </h5>
 
-                <div class="form-group-modern">
-                    <label class="form-label-modern">Nombre del Activo</label>
-                    <input type="text" name="Nombre" class="form-input-modern" required placeholder="Ej: Servidor Oracle">
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Nombre del Activo</label>
+                        <input type="text" name="Nombre" class="form-control form-control-lg rounded-3 fs-6" required placeholder="Ej: Servidor de Producción SAP">
+                    </div>
 
-                <div class="form-group-modern">
-                    <label class="form-label-modern">Tipo de Activo</label>
-                    <select name="Tipo" class="form-select-modern" required>
-                        <option value="" disabled selected>Seleccione el tipo...</option>
-                        <optgroup label="Infraestructura Tecnológica">
-                            <option value="HW">Hardware (Servidores, Redes)</option>
-                            <option value="SW">Software (Sistemas, Apps)</option>
-                        </optgroup>
-                        <optgroup label="Información">
-                            <option value="DATOS">Datos / Bases de Datos</option>
-                        </optgroup>
-                        <optgroup label="Organizacional">
-                            <option value="PERSONAL">Personal / RRHH</option>
-                            <option value="SERV">Servicios (Nube, Web)</option>
-                            <option value="INST">Instalaciones (Data Center, Oficinas)</option>
-                        </optgroup>
-                    </select>
-                </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Tipo de Activo</label>
+                            <select name="Tipo" class="form-select rounded-3" required>
+                                <option value="" disabled selected>Seleccione...</option>
+                                <optgroup label="Tecnología">
+                                    <option value="HW">Hardware</option>
+                                    <option value="SW">Software</option>
+                                    <option value="SERV">Servicio Cloud</option>
+                                </optgroup>
+                                <optgroup label="Información">
+                                    <option value="DATOS">Base de Datos / Archivos</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Ubicación Física/Lógica</label>
+                            <input type="text" name="Ubicacion" class="form-control rounded-3" placeholder="Ej: AWS Virginia / Rack 2">
+                        </div>
+                    </div>
 
-                <div class="form-group-modern">
-                    <label class="form-label-modern">Ubicación</label>
-                    <input type="text" name="Ubicacion" class="form-input-modern" placeholder="Ej: Rack 4 - DC Quito">
+                    <div class="mb-0">
+                        <label class="form-label fw-bold small text-muted">Descripción y Función</label>
+                        <textarea name="Descripcion" class="form-control rounded-3" rows="4" placeholder="Breve descripción del propósito del activo..."></textarea>
+                    </div>
                 </div>
             </div>
 
-            <!-- Valoración -->
-            <div class="card-form card-valoracion">
-                <h5 class="card-form-title">
-                    <i class="fas fa-shield-alt"></i>
-                    Valoración de Seguridad
-                </h5>
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-navy text-white">
+                    <h5 class="fw-bold mb-4 border-bottom border-white border-opacity-25 pb-2">
+                        <i class="fas fa-shield-alt me-2 text-warning"></i>Valoración de Seguridad
+                    </h5>
 
-                <div class="slider-group-modern">
-                    <div class="slider-header-modern">
-                        <span class="slider-label-modern">
-                            <i class="fas fa-lock"></i>
-                            Confidencialidad
-                        </span>
-                        <span class="slider-value-modern" id="valC">1</span>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold"><i class="fas fa-lock me-2 text-warning"></i>Confidencialidad</span>
+                            <span class="badge bg-white text-navy" id="valC">1</span>
+                        </div>
+                        <input type="range" name="ValorC" id="slideC" class="form-range custom-range" min="1" max="4" value="1" oninput="updateSlider('slideC', 'valC')">
                     </div>
-                    <input type="range" class="form-range" name="ValorC" id="slideC" min="1" max="4" value="1" oninput="updateSlider('slideC', 'valC')">
-                </div>
 
-                <div class="slider-group-modern">
-                    <div class="slider-header-modern">
-                        <span class="slider-label-modern">
-                            <i class="fas fa-check-circle"></i>
-                            Integridad
-                        </span>
-                        <span class="slider-value-modern" id="valI">1</span>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold"><i class="fas fa-check-circle me-2 text-info"></i>Integridad</span>
+                            <span class="badge bg-white text-navy" id="valI">1</span>
+                        </div>
+                        <input type="range" name="ValorI" id="slideI" class="form-range custom-range" min="1" max="4" value="1" oninput="updateSlider('slideI', 'valI')">
                     </div>
-                    <input type="range" class="form-range" name="ValorI" id="slideI" min="1" max="4" value="1" oninput="updateSlider('slideI', 'valI')">
-                </div>
 
-                <div class="slider-group-modern">
-                    <div class="slider-header-modern">
-                        <span class="slider-label-modern">
-                            <i class="fas fa-bolt"></i>
-                            Disponibilidad
-                        </span>
-                        <span class="slider-value-modern" id="valD">1</span>
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold"><i class="fas fa-bolt me-2 text-warning"></i>Disponibilidad</span>
+                            <span class="badge bg-white text-navy" id="valD">1</span>
+                        </div>
+                        <input type="range" name="ValorD" id="slideD" class="form-range custom-range" min="1" max="4" value="1" oninput="updateSlider('slideD', 'valD')">
                     </div>
-                    <input type="range" class="form-range" name="ValorD" id="slideD" min="1" max="4" value="1" oninput="updateSlider('slideD', 'valD')">
-                </div>
 
-                <div class="result-display-modern">
-                    <div class="result-label-modern">Valor Total</div>
-                    <div class="result-value-modern" id="txtTotal">3</div>
-                    <span class="result-badge-modern badge-bajo" id="badgeNivel">Activo Bajo</span>
+                    <div class="bg-white bg-opacity-10 p-4 rounded-4 text-center">
+                        <span class="d-block small opacity-75 mb-1">Nivel de Criticidad Total</span>
+                        <h1 class="display-4 fw-bold mb-0" id="txtTotal">3</h1>
+                        <div class="mt-2 fw-bold" id="badgeNivel">Activo Bajo</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="form-actions-modern">
-            <button type="button" class="btn-modern btn-secondary-modern" onclick="cancelarFormulario()">
-                <i class="fas fa-times"></i>
-                Cancelar
-            </button>
-            <button type="submit" class="btn-modern btn-primary-modern">
-                <i class="fas fa-save"></i>
-                Guardar Activo
+        <div class="d-flex justify-content-end gap-3 mt-4">
+            <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" onclick="loadView('@Url.Action("Index")')">Cancelar</button>
+            <button type="submit" class="btn btn-navy rounded-pill px-5 fw-bold shadow-lg">
+                <i class="fas fa-save me-2"></i>Guardar Activo
             </button>
         </div>
     </form>
 </div>
-
-<script>
-    // Interceptar el envío del formulario para usar AJAX
-    $('#formActivo').submit(function (e) {
-        e.preventDefault();
-        var form = $(this);
-        $.post(form.attr('action'), form.serialize(), function (response) {
-            $('#main-content').html(response);
-        });
-    });
-
-    // Actualizar valor del slider
-    function updateSlider(sliderId, displayId) {
-        const value = document.getElementById(sliderId).value;
-        document.getElementById(displayId).innerText = value;
-        calcTotal();
-    }
-
-    // Calcular total
-    function calcTotal() {
-        let c = parseInt(document.getElementById('slideC').value);
-        let i = parseInt(document.getElementById('slideI').value);
-        let d = parseInt(document.getElementById('slideD').value);
-        let total = c + i + d;
-
-        document.getElementById('txtTotal').innerText = total;
-
-        let badge = document.getElementById('badgeNivel');
-        badge.className = "result-badge-modern";
-
-        if (total >= 10) {
-            badge.innerText = "CRÍTICO - Joya de la Corona";
-            badge.classList.add("badge-critico");
-        } else if (total >= 7) {
-            badge.innerText = "Activo Importante";
-            badge.classList.add("badge-importante");
-        } else {
-            badge.innerText = "Activo Bajo";
-            badge.classList.add("badge-bajo");
-        }
-    }
-
-    // Cancelar formulario
-    function cancelarFormulario() {
-        if (confirm('¿Está seguro de cancelar? Se perderán los datos ingresados.')) {
-            loadView('@Url.Action("Index", "Activos")');
-        }
-    }
-
-    // Inicializar
-    calcTotal();
-</script>

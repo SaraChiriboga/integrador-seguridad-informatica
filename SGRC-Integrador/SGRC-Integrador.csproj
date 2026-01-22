@@ -323,6 +323,8 @@
     <Content Include="Views\Tratamientos\Gestionar.cshtml" />
     <Content Include="Views\Tratamientos\Bitacora.cshtml" />
     <Content Include="Views\Reportes\PlanTratamientoPDF.cshtml" />
+    <Content Include="Views\Activos\Details.cshtml" />
+    <Content Include="Views\Activos\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

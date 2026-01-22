@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity; // Necesario para EntityState
 using System.Linq;
 using System.Web.Mvc;
 using SGRC_Integrador.Models;
+using System.Net;
 
 namespace SGRC_Integrador.Controllers
 {
@@ -10,30 +12,117 @@ namespace SGRC_Integrador.Controllers
     {
         private SGRC_DBEntities db = new SGRC_DBEntities();
 
-        // Lista los activos desde la BD
         public ActionResult Index()
         {
             var lista = db.Activos.ToList();
             return PartialView(lista);
         }
 
-        // Muestra el formulario de creación
         public ActionResult Create()
         {
             return PartialView();
         }
 
-        // Procesa el guardado del activo
         [HttpPost]
         public ActionResult Create(Activo activo)
         {
             if (ModelState.IsValid)
             {
-                db.Activos.Add(activo);
-                db.SaveChanges();
-                return PartialView("Index", db.Activos.ToList());
+                try
+                {
+                    db.Activos.Add(activo);
+                    db.SaveChanges();
+                    // Devolvemos éxito para que JS recargue la lista
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
             }
             return PartialView(activo);
+        }
+
+        // --- NUEVO MÉTODO: DETALLES ---
+        public ActionResult Details(int? id)
+        {
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var activo = db.Activos.Find(id);
+            if (activo == null) return HttpNotFound();
+
+            return PartialView(activo);
+        }
+
+        // --- NUEVO MÉTODO: EDITAR (GET) ---
+        public ActionResult Edit(int? id)
+        {
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var activo = db.Activos.Find(id);
+            if (activo == null) return HttpNotFound();
+
+            return PartialView(activo);
+        }
+
+        // --- NUEVO MÉTODO: EDITAR (POST) ---
+        [HttpPost]
+        public ActionResult Edit(Activo activo)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.Entry(activo).State = EntityState.Modified;
+                    db.SaveChanges();
+                    // Devolvemos éxito para que JS recargue la lista
+                    return Json(new { success = true });
+                }
+                catch (Exception ex)
+                {
+                    return Json(new { success = false, message = ex.Message });
+                }
+            }
+            return PartialView(activo);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteConfirmed(int id, string password)
+        {
+            try
+            {
+                // Usamos la sesión que definimos en tu Login
+                string nombreUsuario = Session["UsuarioNombre"]?.ToString();
+                var usuario = db.Usuarios.FirstOrDefault(u => u.Nombre == nombreUsuario);
+
+                if (usuario == null || usuario.PasswordHash != password)
+                {
+                    return Json(new { success = false, message = "Contraseña de seguridad incorrecta." });
+                }
+
+                var activo = db.Activos.Include(a => a.Riesgos).FirstOrDefault(a => a.IdActivo == id);
+                if (activo == null) return Json(new { success = false, message = "Activo no encontrado." });
+
+                if (activo.Riesgos.Any())
+                {
+                    return Json(new { success = false, message = "Restricción de Integridad: Este activo tiene riesgos analizados y no puede eliminarse." });
+                }
+
+                db.Activos.Remove(activo);
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

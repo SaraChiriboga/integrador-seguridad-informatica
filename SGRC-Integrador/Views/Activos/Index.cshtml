@@ -1,55 +1,162 @@
 ﻿@model IEnumerable<SGRC_Integrador.Models.Activo>
 
-<div class="fade-in">
+<div class="fade-in container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold mb-0">Inventario de Activos</h2>
-        <button class="btn btn-danger" onclick="loadView('@Url.Action("Create", "Activos")')">
+        <div>
+            <h2 class="fw-bold mb-0 text-navy">Inventario de Activos</h2>
+            <p class="text-muted">Gestión de activos de información y activos físicos.</p>
+        </div>
+        <button class="btn btn-navy rounded-pill px-4" onclick="loadView('@Url.Action("Create", "Activos")')">
             <i class="fas fa-plus me-2"></i> Nuevo Activo
         </button>
     </div>
 
-    <div class="table-custom-container">
-        <table class="table table-custom">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Tipo</th>
-                    <th class="text-center">Valor (C+I+D)</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    // Lógica para asignar la clase de color según el tipo
-                    string claseBadge = "badge-personal"; // Clase por defecto
-                    string nombreLargo = item.Tipo;
-
-                    if (item.Tipo == "HW") { claseBadge = "badge-hw"; nombreLargo = "Hardware"; }
-                    else if (item.Tipo == "SW") { claseBadge = "badge-sw"; nombreLargo = "Software"; }
-                    else if (item.Tipo == "DATOS") { claseBadge = "badge-datos"; nombreLargo = "Datos"; }
-                    else if (item.Tipo == "SERV") { claseBadge = "badge-serv"; nombreLargo = "Servicio"; }
-
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
                     <tr>
-                        <td class="fw-bold">@item.Nombre</td>
-                        <td>
-                            <span class="badge-custom @claseBadge">@nombreLargo</span>
-                        </td>
-                        <td class="text-center">
-                            <span class="fw-bold @(item.ValorTotal >= 10 ? "text-danger" : "")">@item.ValorTotal</span>
-                            @if (item.ValorTotal >= 10)
-                            {
-                                <i class="fas fa-exclamation-circle text-danger ms-1" title="Activo Crítico"></i>
-                            }
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-outline-danger" onclick="loadView('@Url.Action("Create", "Riesgos", new { activoId = item.IdActivo })')">
-                                <i class="fas fa-biohazard me-1"></i> Analizar Riesgo
-                            </button>
-                        </td>
+                        <th class="ps-4">Activo</th>
+                        <th>Clasificación</th>
+                        <th class="text-center">Criticidad (C+I+D)</th>
+                        <th class="text-end pe-4">Acciones Técnicas</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        string claseBadge = "bg-secondary";
+                        string nombreLargo = item.Tipo;
+
+                        if (item.Tipo == "HW") { claseBadge = "bg-info text-dark"; nombreLargo = "Hardware"; }
+                        else if (item.Tipo == "SW") { claseBadge = "bg-primary"; nombreLargo = "Software"; }
+                        else if (item.Tipo == "DATOS") { claseBadge = "bg-success"; nombreLargo = "Datos"; }
+                        else if (item.Tipo == "SERV") { claseBadge = "bg-warning text-dark"; nombreLargo = "Servicio"; }
+
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3 bg-light rounded-3 text-navy p-2">
+                                        <i class="fas @(item.Tipo == "HW" ? "fa-server" : item.Tipo == "SW" ? "fa-code" : "fa-database")"></i>
+                                    </div>
+                                    <div>
+                                        <span class="d-block fw-bold text-navy">@item.Nombre</span>
+                                        <small class="text-muted">ID: #@item.IdActivo</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge @claseBadge rounded-pill">@nombreLargo</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-inline-flex align-items-center justify-content-center border rounded-pill px-3 py-1 @(item.ValorTotal >= 10 ? "border-danger text-danger bg-danger bg-opacity-10" : "bg-light")">
+                                    <span class="fw-bold me-1">@item.ValorTotal</span>
+                                    <small class="opacity-50">/ 15</small>
+                                    @if (item.ValorTotal >= 10)
+                                    {<i class="fas fa-fire-alt ms-2" title="Activo Crítico"></i>}
+                                </div>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group shadow-sm rounded-pill bg-white border p-1">
+                                    <button class="btn btn-link text-navy p-2" title="Detalles" onclick="loadView('@Url.Action("Details", "Activos", new { id = item.IdActivo })')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-link text-primary p-2" title="Editar" onclick="loadView('@Url.Action("Edit", "Activos", new { id = item.IdActivo })')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-link text-danger p-2" title="Analizar Riesgo" onclick="loadView('@Url.Action("Create", "Riesgos", new { activoId = item.IdActivo })')">
+                                        <i class="fas fa-biohazard"></i>
+                                    </button>
+                                    <button class="btn btn-link text-dark p-2" title="Eliminar" onclick="confirmarEliminacion(@item.IdActivo, '@item.Nombre')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalEliminarActivo" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-dark text-white rounded-top-4 border-0">
+                <h5 class="modal-title fw-bold"><i class="fas fa-shield-alt me-2"></i>Confirmación de Seguridad</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="text-center mb-4">Está por eliminar el activo: <br><strong id="nombreActivoEliminar" class="text-danger fs-5"></strong></p>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">Contraseña del Auditor</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-lock"></i></span>
+                        <input type="password" id="confirmPass" class="form-control border-light bg-light" placeholder="Ingrese su contraseña actual">
+                    </div>
+                </div>
+                <input type="hidden" id="idActivoEliminar" />
+            </div>
+            <div class="modal-footer border-0 p-3">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4" onclick="ejecutarEliminacion()">Confirmar Eliminación</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmarEliminacion(id, nombre) {
+        $('#idActivoEliminar').val(id);
+        $('#nombreActivoEliminar').text(nombre);
+        $('#confirmPass').val('');
+        var modal = new bootstrap.Modal(document.getElementById('modalEliminarActivo'));
+        modal.show();
+    }
+
+    function ejecutarEliminacion() {
+        const id = $('#idActivoEliminar').val();
+        const pass = $('#confirmPass').val();
+
+        if(!pass) { alert("Debe ingresar su contraseña."); return; }
+
+        $.post('@Url.Action("DeleteConfirmed", "Activos")', { id: id, password: pass }, function(res) {
+            if(res.success) {
+                bootstrap.Modal.getInstance(document.getElementById('modalEliminarActivo')).hide();
+                loadView('@Url.Action("Index", "Activos")');
+            } else {
+                alert("Error: " + res.message);
+            }
+        });
+    }
+</script>
+
+<style>
+    .text-navy {
+        color: #0b1e3b;
+    }
+
+    .btn-navy {
+        background-color: #0b1e3b;
+        color: white;
+    }
+
+        .btn-navy:hover {
+            background-color: #d62828;
+            color: white;
+        }
+
+    .icon-box {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-link:hover {
+        transform: scale(1.2);
+        transition: 0.2s;
+    }
+</style>

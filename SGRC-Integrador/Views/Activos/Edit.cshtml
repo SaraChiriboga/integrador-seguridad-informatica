@@ -1,0 +1,129 @@
+﻿@model SGRC_Integrador.Models.Activo
+@{ Layout = null; }
+
+<div class="container py-4 fade-in">
+    <div class="d-flex align-items-center mb-4">
+        <button onclick="loadView('@Url.Action("Index")')" style="border-color: transparent; background: transparent; width: 45px; height: 45px;">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div>
+            <h2 class="fw-bold mb-0 text-navy">Editar Activo: @Model.Nombre</h2>
+            <p class="text-muted mb-0">Actualice la valoración o los datos técnicos del activo</p>
+        </div>
+    </div>
+
+    <form id="formEditActivo" action="@Url.Action("Edit", "Activos")" method="post">
+        @Html.HiddenFor(m => m.IdActivo)
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
+                    <h5 class="fw-bold mb-4 text-navy border-bottom pb-2">
+                        <i class="fas fa-edit me-2 text-primary"></i>Datos Actualizados
+                    </h5>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-muted">Nombre del Activo</label>
+                        <input type="text" name="Nombre" value="@Model.Nombre" class="form-control form-control-lg rounded-3 fs-6" required>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Tipo</label>
+                            <select name="Tipo" class="form-select rounded-3" required>
+                                <option value="HW" @(Model.Tipo == "HW" ? "selected" : "")>Hardware</option>
+                                <option value="SW" @(Model.Tipo == "SW" ? "selected" : "")>Software</option>
+                                <option value="DATOS" @(Model.Tipo == "DATOS" ? "selected" : "")>Datos</option>
+                                <option value="SERV" @(Model.Tipo == "SERV" ? "selected" : "")>Servicios</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">Ubicación</label>
+                            <input type="text" name="Ubicacion" value="@Model.Ubicacion" class="form-control rounded-3">
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <label class="form-label fw-bold small text-muted">Descripción</label>
+                        <textarea name="Descripcion" class="form-control rounded-3" rows="4">@Model.Descripcion</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-navy text-white">
+                    <h5 class="fw-bold mb-4 border-bottom border-white border-opacity-25 pb-2">
+                        <i class="fas fa-sync me-2 text-warning"></i>Re-valoración C-I-D
+                    </h5>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold">Confidencialidad</span>
+                            <span class="badge bg-white text-navy" id="valC">@Model.ValorC</span>
+                        </div>
+                        <input type="range" name="ValorC" id="slideC" class="form-range custom-range" min="1" max="4" value="@Model.ValorC" oninput="updateSlider('slideC', 'valC')">
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold">Integridad</span>
+                            <span class="badge bg-white text-navy" id="valI">@Model.ValorI</span>
+                        </div>
+                        <input type="range" name="ValorI" id="slideI" class="form-range custom-range" min="1" max="4" value="@Model.ValorI" oninput="updateSlider('slideI', 'valI')">
+                    </div>
+
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="small fw-bold">Disponibilidad</span>
+                            <span class="badge bg-white text-navy" id="valD">@Model.ValorD</span>
+                        </div>
+                        <input type="range" name="ValorD" id="slideD" class="form-range custom-range" min="1" max="4" value="@Model.ValorD" oninput="updateSlider('slideD', 'valD')">
+                    </div>
+
+                    <div class="bg-white bg-opacity-10 p-4 rounded-4 text-center border border-white border-opacity-25">
+                        <span class="d-block small opacity-75 mb-1">Nueva Criticidad Calculada</span>
+                        <h1 class="display-4 fw-bold mb-0" id="txtTotal">@Model.ValorTotal</h1>
+                        <div class="mt-2 fw-bold" id="badgeNivel">Calculando...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3 mt-4">
+            <button type="button" class="btn btn-light rounded-pill px-4" onclick="loadView('@Url.Action("Index")')">Descartar</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow">
+                <i class="fas fa-check-circle me-2"></i>Actualizar Activo
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Comparten la misma lógica de sliders
+    function updateSlider(sliderId, displayId) {
+        const val = document.getElementById(sliderId).value;
+        document.getElementById(displayId).innerText = val;
+        calcTotal();
+    }
+
+    function calcTotal() {
+        let c = parseInt($('#slideC').val());
+        let i = parseInt($('#slideI').val());
+        let d = parseInt($('#slideD').val());
+        let total = c + i + d;
+        $('#txtTotal').text(total);
+
+        let label = $('#badgeNivel');
+        if(total >= 12) label.text("CRÍTICO").css('color', '#ff4d4d');
+        else if(total >= 8) label.text("IMPORTANTE").css('color', '#ffcc00');
+        else label.text("BAJO").css('color', '#4dff88');
+    }
+
+    $('#formEditActivo').submit(function(e) {
+        e.preventDefault();
+        $.post($(this).attr('action'), $(this).serialize(), function(res) {
+            loadView('@Url.Action("Index")');
+        });
+    });
+
+    calcTotal();
+</script>

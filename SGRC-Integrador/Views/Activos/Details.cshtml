@@ -1,0 +1,76 @@
+﻿@model SGRC_Integrador.Models.Activo
+@{ Layout = null; }
+
+<div class="container py-4 fade-in">
+    <div class="mb-4">
+        <button onclick="loadView('@Url.Action("Index")')" class="btn btn-link text-navy p-0 text-decoration-none">
+            <i class="fas fa-arrow-left me-2"></i> Volver al Inventario
+        </button>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+                <div class="card-header bg-navy text-white p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="fw-bold mb-0">@Model.Nombre</h3>
+                            <span class="opacity-75">Ficha Técnica de Activo de Información</span>
+                        </div>
+                        <i class="fas fa-shield-alt fa-3x opacity-25"></i>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase">Ubicación / Propietario</label>
+                            <p class="fs-5 fw-bold text-navy">@Model.Ubicacion</p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold text-uppercase">Categoría</label>
+                            <p class="fs-5">@Model.Tipo</p>
+                        </div>
+                        <div class="col-12">
+                            <label class="small text-muted fw-bold text-uppercase">Descripción del Activo</label>
+                            <p class="border-start border-4 border-light ps-3">@Model.Descripcion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 text-center p-4 h-100">
+                <h5 class="fw-bold text-navy mb-4">Valoración C-I-D</h5>
+                <div class="d-flex flex-column gap-3">
+                    <div class="valor-pill p-3 bg-danger bg-opacity-10 rounded-4">
+                        <span class="d-block small text-danger fw-bold">Confidencialidad</span>
+                        <span class="fs-2 fw-bold text-danger">@Model.ValorC</span>
+                    </div>
+                    <div class="valor-pill p-3 bg-info bg-opacity-10 rounded-4">
+                        <span class="d-block small text-info fw-bold">Integridad</span>
+                        <span class="fs-2 fw-bold text-info">@Model.ValorI</span>
+                    </div>
+                    <div class="valor-pill p-3 bg-warning bg-opacity-10 rounded-4">
+                        <span class="d-block small text-warning fw-bold">Disponibilidad</span>
+                        <span class="fs-2 fw-bold text-warning">@Model.ValorD</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-top">
+                    <span class="text-muted d-block small">Nivel de Criticidad Total</span>
+                    <h1 class="fw-bold text-navy">@Model.ValorTotal <small class="fs-6 opacity-50">/ 15</small></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-navy {
+        background-color: #0b1e3b;
+    }
+
+    .text-navy {
+        color: #0b1e3b;
+    }
+</style>
