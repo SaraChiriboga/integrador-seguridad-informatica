@@ -11,9 +11,44 @@
         </button>
     </div>
 
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted">
+                            <i class="fas fa-search"></i>
+                        </span>
+                        <input type="text" id="txtBuscarRiesgo" class="form-control border-start-0 ps-0" placeholder="Buscar por amenaza o activo...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select id="filtroEstado" class="form-select border-light bg-light rounded-3">
+                        <option value="todos">Todos los Estados</option>
+                        <option value="tratado">Tratados</option>
+                        <option value="expuesto">Expuestos (Pendientes)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select id="filtroNivelRiesgo" class="form-select border-light bg-light rounded-3">
+                        <option value="todos">Todos los Niveles</option>
+                        <option value="critico">Crítico (12-16)</option>
+                        <option value="alto">Alto (8-11)</option>
+                        <option value="medio-bajo">Medio/Bajo (1-7)</option>
+                    </select>
+                </div>
+                <div class="col-md-2 text-end">
+                    <button class="btn btn-light text-navy fw-bold w-100 rounded-3" onclick="resetFiltrosRiesgo()">
+                        <i class="fas fa-undo me-1"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
+            <table class="table table-hover align-middle mb-0" id="tablaRiesgos">
                 <thead class="bg-light">
                     <tr>
                         <th class="ps-4">Activo Asociado</th>
@@ -29,16 +64,19 @@
                     @foreach (var item in Model)
                     {
                         string textNivel = "text-success";
-                        if (item.NivelRiesgo >= 12) { textNivel = "text-danger"; }
-                        else if (item.NivelRiesgo >= 8) { textNivel = "text-warning"; }
+                        string nivelData = "medio-bajo";
+                        if (item.NivelRiesgo >= 12) { textNivel = "text-danger"; nivelData = "critico"; }
+                        else if (item.NivelRiesgo >= 8) { textNivel = "text-warning"; nivelData = "alto"; }
 
-                        <tr>
+                        string estadoData = item.Tratado.GetValueOrDefault() ? "tratado" : "expuesto";
+
+                        <tr class="riesgo-row" data-estado="@estadoData" data-nivel="@nivelData">
                             <td class="ps-4">
-                                <span class="d-block fw-bold text-navy">@(item.Activo != null ? item.Activo.Nombre : "Sin Activo")</span>
+                                <span class="d-block fw-bold text-navy activo-asociado">@(item.Activo != null ? item.Activo.Nombre : "Sin Activo")</span>
                                 <small class="text-muted text-uppercase" style="font-size: 0.7rem;">ID: #@item.IdRiesgo</small>
                             </td>
                             <td>
-                                <span class="fw-bold">@item.Amenaza</span>
+                                <span class="fw-bold amenaza-texto">@item.Amenaza</span>
                             </td>
                             <td class="text-center">
                                 <span class="badge bg-light text-dark border">@item.Probabilidad</span>
@@ -97,6 +135,10 @@
                     }
                 </tbody>
             </table>
+            <div id="noResultadosRiesgo" class="text-center py-5 d-none">
+                <i class="fas fa-shield-virus fa-3x text-light mb-3"></i>
+                <h5 class="text-muted">No se encontraron riesgos con los criterios seleccionados.</h5>
+            </div>
         </div>
     </div>
 </div>
@@ -130,9 +172,49 @@
     </div>
 </div>
 
-
-
 <script>
+    $(document).ready(function () {
+        // Eventos de filtrado
+        $("#txtBuscarRiesgo").on("keyup", function () { aplicarFiltrosRiesgo(); });
+        $("#filtroEstado, #filtroNivelRiesgo").on("change", function () { aplicarFiltrosRiesgo(); });
+    });
+
+    function aplicarFiltrosRiesgo() {
+        const texto = $("#txtBuscarRiesgo").val().toLowerCase();
+        const estado = $("#filtroEstado").val();
+        const nivel = $("#filtroNivelRiesgo").val();
+        let visibles = 0;
+
+        $(".riesgo-row").each(function () {
+            const amenaza = $(this).find(".amenaza-texto").text().toLowerCase();
+            const activo = $(this).find(".activo-asociado").text().toLowerCase();
+            const estadoRow = $(this).data("estado");
+            const nivelRow = $(this).data("nivel");
+
+            const coincideTexto = amenaza.includes(texto) || activo.includes(texto);
+            const coincideEstado = estado === "todos" || estadoRow === estado;
+            const coincideNivel = nivel === "todos" || nivelRow === nivel;
+
+            if (coincideTexto && coincideEstado && coincideNivel) {
+                $(this).fadeIn(200);
+                visibles++;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        if (visibles === 0) $("#noResultadosRiesgo").removeClass("d-none");
+        else $("#noResultadosRiesgo").addClass("d-none");
+    }
+
+    function resetFiltrosRiesgo() {
+        $("#txtBuscarRiesgo").val("");
+        $("#filtroEstado").val("todos");
+        $("#filtroNivelRiesgo").val("todos");
+        $(".riesgo-row").fadeIn(200);
+        $("#noResultadosRiesgo").addClass("d-none");
+    }
+
     function confirmarEliminarRiesgo(id, nombre) {
         $('#idRiesgoEliminar').val(id);
         $('#nombreRiesgoEliminar').text(nombre);
@@ -146,7 +228,7 @@
         const pass = $('#passAuditorRiesgo').val();
 
         if (!pass) {
-            alert("Debe ingresar su contraseña para autorizar la eliminación.");
+            alert("Debe ingresar su contraseña.");
             return;
         }
 
@@ -161,9 +243,6 @@
                 } else {
                     alert(res.message);
                 }
-            },
-            error: function () {
-                alert("Error de conexión con el servidor.");
             }
         });
     }

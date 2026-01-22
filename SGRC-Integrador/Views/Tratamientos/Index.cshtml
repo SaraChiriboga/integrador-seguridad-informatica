@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<SGRC_Integrador.Models.Tratamiento>
 @{
     Layout = null;
-    // Recuperamos el ID que enviamos desde el controlador para el efecto de resaltado
     int highlightId = 0;
     if (ViewBag.HighlightId != null)
     {
@@ -20,7 +19,44 @@
         </button>
     </div>
 
-    <div class="row g-4">
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted">
+                            <i class="fas fa-filter"></i>
+                        </span>
+                        <input type="text" id="txtBuscarTratamiento" class="form-control border-start-0 ps-0" placeholder="Buscar por amenaza, activo o responsable...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select id="filtroEstrategia" class="form-select border-light bg-light rounded-3">
+                        <option value="todos">Todas las Estrategias</option>
+                        <option value="Mitigar">Mitigar</option>
+                        <option value="Aceptar">Aceptar</option>
+                        <option value="Transferir">Transferir</option>
+                        <option value="Evitar">Evitar</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select id="filtroProgreso" class="form-select border-light bg-light rounded-3">
+                        <option value="todos">Todos los Estados</option>
+                        <option value="pendiente">Pendientes (0%)</option>
+                        <option value="en-proceso">En Proceso (1-99%)</option>
+                        <option value="completado">Completados (100%)</option>
+                    </select>
+                </div>
+                <div class="col-md-2 text-end">
+                    <button class="btn btn-light text-navy fw-bold w-100 rounded-3" onclick="resetFiltrosTratamiento()">
+                        <i class="fas fa-undo me-1"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4" id="contenedorTratamientos">
         @if (Model == null || !Model.Any())
         {
             <div class="col-12 text-center py-5">
@@ -33,13 +69,17 @@
         {
             foreach (var item in Model)
             {
-                // Validación crucial para evitar error 500 si la relación está rota en la BD
                 if (item.Riesgo == null) { continue; }
 
-                // Verificamos si este elemento específico es el que venimos a buscar
                 bool isHighlighted = highlightId != 0 && item.IdRiesgo == highlightId;
+                int progreso = item.Progreso ?? 0;
+                string estadoAvance = progreso == 0 ? "pendiente" : (progreso == 100 ? "completado" : "en-proceso");
 
-                <div class="col-xl-4 col-md-6 @(isHighlighted ? "highlight-focus" : "")" id="plan-@item.IdRiesgo">
+                <div class="col-xl-4 col-md-6 tratamiento-item @(isHighlighted ? "highlight-focus" : "")"
+                     id="plan-@item.IdRiesgo"
+                     data-estrategia="@item.Estrategia"
+                     data-avance="@estadoAvance">
+
                     <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden treatment-card @(isHighlighted ? "border-highlight" : "")">
 
                         <div class="p-3 @(item.Estrategia == "Mitigar" ? "bg-primary" : item.Estrategia == "Aceptar" ? "bg-danger" : item.Estrategia == "Transferir" ? "bg-warning text-dark" : "bg-info") text-white d-flex justify-content-between align-items-center">
@@ -49,7 +89,7 @@
 
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="fw-bold text-navy mb-0 text-truncate" style="max-width: 85%;" title="@item.Riesgo.Amenaza">
+                                <h5 class="fw-bold text-navy mb-0 text-truncate info-amenaza" style="max-width: 85%;" title="@item.Riesgo.Amenaza">
                                     @item.Riesgo.Amenaza
                                 </h5>
                                 @if (isHighlighted)
@@ -59,7 +99,7 @@
                             </div>
 
                             <p class="small text-muted mb-3">
-                                <i class="fas fa-box me-1"></i> Activo: <span class="fw-bold text-dark">@(item.Riesgo.Activo != null ? item.Riesgo.Activo.Nombre : "No asignado")</span>
+                                <i class="fas fa-box me-1"></i> Activo: <span class="fw-bold text-dark info-activo">@(item.Riesgo.Activo != null ? item.Riesgo.Activo.Nombre : "No asignado")</span>
                             </p>
 
                             @if (!string.IsNullOrEmpty(item.ControlISO))
@@ -72,13 +112,13 @@
 
                             <div class="mb-4">
                                 <div class="d-flex justify-content-between mb-1">
-                                    <span class="small fw-bold text-muted">Progreso</span>
-                                    <span class="small fw-bold text-navy">@(item.Progreso ?? 0)%</span>
+                                    <span class="small fw-bold text-muted">Progreso de Mitigación</span>
+                                    <span class="small fw-bold text-navy">@progreso%</span>
                                 </div>
                                 <div class="progress rounded-pill" style="height: 10px;">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated @((item.Progreso ?? 0) >= 100 ? "bg-success" : "bg-primary")"
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated @(progreso >= 100 ? "bg-success" : "bg-primary")"
                                          role="progressbar"
-                                         style="width: @(item.Progreso ?? 0)%"></div>
+                                         style="width: @progreso%"></div>
                                 </div>
                             </div>
 
@@ -88,15 +128,15 @@
                                         <h6 class="m-0 fw-bold text-navy" style="font-size: 0.85rem;">
                                             @(item.FechaLimite.HasValue ? item.FechaLimite.Value.ToShortDateString() : "Pte.")
                                         </h6>
-                                        <small class="text-muted" style="font-size: 0.95rem;">Fecha Límite</small>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Fecha Límite</small>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="border rounded-4 p-2 bg-light bg-opacity-50">
-                                        <h6 class="m-0 fw-bold text-navy text-truncate" style="font-size: 0.85rem;" title="@item.Responsable">
-                                            @(string.IsNullOrEmpty(item.Responsable) ? "S/A" : item.Responsable.Split(' ')[0])
+                                        <h6 class="m-0 fw-bold text-navy text-truncate info-responsable" style="font-size: 0.85rem;" title="@item.Responsable">
+                                            @(string.IsNullOrEmpty(item.Responsable) ? "S/A" : item.Responsable)
                                         </h6>
-                                        <small class="text-muted" style="font-size: 0.95rem;">Responsable</small>
+                                        <small class="text-muted" style="font-size: 0.75rem;">Responsable</small>
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +153,73 @@
             }
         }
     </div>
+
+    <div id="noResultadosTrat" class="text-center py-5 d-none">
+        <i class="fas fa-tasks fa-4x text-light mb-3"></i>
+        <h5 class="text-muted">No se encontraron tratamientos con los filtros aplicados.</h5>
+    </div>
 </div>
+
+
+
+<script>
+    $(document).ready(function() {
+        // Ejecutamos el scroll suave si existe un ID resaltado
+        var highlightId = '@highlightId';
+        if (highlightId !== '0') {
+            var target = $('#plan-' + highlightId);
+            if (target.length) {
+                setTimeout(function() {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 150
+                    }, 1000);
+                }, 200);
+            }
+        }
+
+        // Eventos para filtrado dinámico
+        $("#txtBuscarTratamiento").on("keyup", function() { filtrarTratamientos(); });
+        $("#filtroEstrategia, #filtroProgreso").on("change", function() { filtrarTratamientos(); });
+    });
+
+    function filtrarTratamientos() {
+        const busqueda = $("#txtBuscarTratamiento").val().toLowerCase();
+        const estrategia = $("#filtroEstrategia").val();
+        const avance = $("#filtroProgreso").val();
+        let contador = 0;
+
+        $(".tratamiento-item").each(function() {
+            const txtAmenaza = $(this).find(".info-amenaza").text().toLowerCase();
+            const txtActivo = $(this).find(".info-activo").text().toLowerCase();
+            const txtResp = $(this).find(".info-responsable").text().toLowerCase();
+
+            const dataEstr = $(this).data("estrategia");
+            const dataAvan = $(this).data("avance");
+
+            const coincideBusqueda = txtAmenaza.includes(busqueda) || txtActivo.includes(busqueda) || txtResp.includes(busqueda);
+            const coincideEstrategia = estrategia === "todos" || dataEstr === estrategia;
+            const coincideAvance = avance === "todos" || dataAvan === avance;
+
+            if (coincideBusqueda && coincideEstrategia && coincideAvance) {
+                $(this).fadeIn(300);
+                contador++;
+            } else {
+                $(this).hide();
+            }
+        });
+
+        if (contador === 0) $("#noResultadosTrat").removeClass("d-none");
+        else $("#noResultadosTrat").addClass("d-none");
+    }
+
+    function resetFiltrosTratamiento() {
+        $("#txtBuscarTratamiento").val("");
+        $("#filtroEstrategia").val("todos");
+        $("#filtroProgreso").val("todos");
+        $(".tratamiento-item").fadeIn(300);
+        $("#noResultadosTrat").addClass("d-none");
+    }
+</script>
 
 <style>
     .treatment-card {
@@ -125,6 +231,11 @@
             transform: translateY(-8px);
             box-shadow: 0 15px 30px rgba(11, 30, 59, 0.12) !important;
         }
+
+    .border-highlight {
+        border: 3px solid #0b1e3b !important;
+        box-shadow: 0 0 15px rgba(11, 30, 59, 0.2) !important;
+    }
 
     .text-navy {
         color: #0b1e3b;
@@ -151,36 +262,11 @@
             color: white;
         }
 
-    /* Animaciones de resaltado */
-    @@keyframes pulse-highlight {
-        0% {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.03);
-        }
-
-        100% {
-            transform: scale(1);
-        }
-    }
-
-    .highlight-focus {
-        animation: pulse-highlight 2s ease-in-out;
-        z-index: 100;
-    }
-
-    .border-highlight {
-        border: 3px solid grey !important;
-        box-shadow: 0 0 5px rgb(0, 0, 0) !important;
-    }
-
     .animate-bounce {
-        animation: bounce-custom 2s infinite;
+        animation: bounce 2s infinite;
     }
 
-    @@keyframes bounce-custom {
+    @@keyframes bounce {
         0%, 100% {
             transform: translateY(0);
         }
@@ -190,21 +276,3 @@
         }
     }
 </style>
-
-<script>
-    $(document).ready(function() {
-        // Ejecutamos el scroll suave si existe un ID resaltado
-        var highlightId = '@highlightId';
-        if (highlightId !== '0') {
-            var target = $('#plan-' + highlightId);
-            if (target.length) {
-                // Pequeño delay para asegurar que la vista parcial terminó de renderizarse
-                setTimeout(function() {
-                    $('html, body').animate({
-                        scrollTop: target.offset().top - 150
-                    }, 1000);
-                }, 200);
-            }
-        }
-    });
-</script>
