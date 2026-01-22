@@ -60,6 +60,16 @@
                         <span class="link-text">Reportes</span>
                     </button>
 
+                    <div class="mt-auto pb-3">
+                        <hr class="text-white opacity-25 mx-3" />
+                        <button class="sidebar-btn btn-logout" onclick="logoutSession()">
+                            <div class="icon-wrap">
+                                <i class="fas fa-sign-out-alt text-danger"></i>
+                            </div>
+                            <span class="link-text text-danger fw-bold">Cerrar Sesión</span>
+                        </button>
+                    </div>
+
                 </div>
 
             </div>
@@ -196,6 +206,13 @@
             var currentUrl = window.location.pathname;
             updateSidebar(currentUrl);
         });
+
+        function logoutSession() {
+    if (confirm("¿Está seguro de que desea cerrar su sesión?")) {
+        // Redirección total de la ventana para limpiar el estado de la aplicación
+        window.location.href = '@Url.Action("Logout", "Usuarios")';
+    }
+}
     </script>
 </body>
 </html>

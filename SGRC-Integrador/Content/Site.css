@@ -1483,3 +1483,23 @@ canvas#chartActivos {
     background: #0b1e3b;
     border-radius: 10px;
 }
+
+/* Estilo específico para Logout */
+.btn-logout:hover {
+    background-color: rgba(220, 53, 69, 0.1) !important; /* Rojo sutil al pasar el mouse */
+}
+
+.btn-logout i {
+    color: #ef4444 !important; /* Icono rojo */
+}
+
+.sidebar:hover .btn-logout .link-text {
+    color: #ef4444 !important;
+}
+
+/* Para asegurar que el botón de logout se quede al fondo */
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

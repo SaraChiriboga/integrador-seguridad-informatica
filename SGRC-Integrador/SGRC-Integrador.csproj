@@ -194,6 +194,7 @@
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\RiesgosController.cs" />
     <Compile Include="Controllers\TratamientosController.cs" />
+    <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Filters\SessionCheckAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -330,6 +331,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Usuarios\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
