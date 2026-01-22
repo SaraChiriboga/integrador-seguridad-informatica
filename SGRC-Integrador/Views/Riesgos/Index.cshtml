@@ -84,8 +84,9 @@
                                         }
                                         else
                                         {
+                                            @* Cambia el botón de "Ver Tratamiento" por este *@
                                             <button class="btn btn-link text-success p-2" title="Ver Tratamiento"
-                                                    onclick="loadView('@Url.Action("Index", "Tratamientos")')">
+                                                    onclick="loadView('@Url.Action("Index", "Tratamientos", new { highlightId = item.IdRiesgo })')">
                                                 <i class="fas fa-clipboard-check"></i>
                                             </button>
                                         }

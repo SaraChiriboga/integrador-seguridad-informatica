@@ -20,7 +20,11 @@ namespace SGRC_Integrador.Controllers
         public ActionResult Create(int? activoId)
         {
             var listaActivos = db.Activos.OrderBy(a => a.Nombre).ToList();
+
+            // Es vital que activoId tenga valor para que SelectList marque ese ítem como seleccionado
             ViewBag.IdActivo = new SelectList(listaActivos, "IdActivo", "Nombre", activoId);
+            ViewBag.IsLocked = activoId.HasValue;
+
             return PartialView();
         }
 

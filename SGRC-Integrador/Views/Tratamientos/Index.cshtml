@@ -1,52 +1,76 @@
 ﻿@model IEnumerable<SGRC_Integrador.Models.Tratamiento>
-@{ Layout = null; }
+@{
+    Layout = null;
+    // Capturamos el ID del riesgo que viene desde la Matriz de Riesgos para resaltar
+    int? highlightId = ViewBag.HighlightId as int?;
+}
 
 <div class="container-fluid py-4 fade-in">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold text-navy m-0">Tablero de Control de Tratamientos</h2>
-            <p class="text-muted">Seguimiento de mitigación y cumplimiento normativo ISO/LOPDP</p>
+            <p class="text-muted small">Seguimiento de mitigación y cumplimiento normativo ISO 27001 / LOPDP</p>
         </div>
-        <button onclick="loadView('@Url.Action("Index", "Riesgos")')" class="btn btn-outline-navy rounded-pill shadow-sm">
-            <i class="fas fa-plus me-2"></i>Nuevo Plan (Desde Riesgos)
+        <button onclick="loadView('@Url.Action("Index", "Riesgos")')" class="btn btn-outline-navy rounded-pill shadow-sm fw-bold">
+            <i class="fas fa-arrow-left me-2"></i>Volver a la Matriz
         </button>
     </div>
 
     <div class="row g-4">
+        @if (!Model.Any())
+        {
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-folder-open fa-4x text-light mb-3"></i>
+                <h5 class="text-muted">No existen planes de tratamiento registrados.</h5>
+                <p class="small text-muted">Inicie un plan desde la Matriz de Riesgos.</p>
+            </div>
+        }
+
         @foreach (var item in Model)
         {
-            // Validación de seguridad para evitar errores de referencia nula
             if (item.Riesgo == null) { continue; }
 
-            <div class="col-xl-4 col-md-6">
-                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden treatment-card">
+            // Lógica para determinar si esta tarjeta debe ser resaltada
+            bool isHighlighted = highlightId.HasValue && item.IdRiesgo == highlightId.Value;
 
-                    <div class="p-3 @(item.Estrategia == "Mitigar" ? "bg-primary" : item.Estrategia == "Aceptar" ? "bg-danger" : "bg-warning") text-white d-flex justify-content-between align-items-center">
+            <div class="col-xl-4 col-md-6 @(isHighlighted ? "highlight-focus" : "")" id="plan-@item.IdRiesgo">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden treatment-card @(isHighlighted ? "border-highlight" : "")">
+
+                    <div class="p-3 @(item.Estrategia == "Mitigar" ? "bg-primary" : item.Estrategia == "Aceptar" ? "bg-danger" : item.Estrategia == "Transferir" ? "bg-warning text-dark" : "bg-info") text-white d-flex justify-content-between align-items-center">
                         <span class="small fw-bold text-uppercase">@(item.Estrategia ?? "Sin Definir")</span>
-                        <i class="fas @(item.Estrategia == "Mitigar" ? "fa-shield-alt" : "fa-exclamation-triangle")"></i>
+                        <i class="fas @(item.Estrategia == "Mitigar" ? "fa-shield-alt" : item.Estrategia == "Aceptar" ? "fa-gavel" : "fa-exchange-alt")"></i>
                     </div>
 
                     <div class="card-body p-4">
-                        <h5 class="fw-bold text-navy mb-1">@item.Riesgo.Amenaza</h5>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="fw-bold text-navy mb-1 text-truncate" style="max-width: 80%;" title="@item.Riesgo.Amenaza">
+                                @item.Riesgo.Amenaza
+                            </h5>
+                            @if (isHighlighted)
+                            {
+                                <span class="badge bg-success rounded-pill animate-bounce" style="font-size: 0.6rem;">NUEVO</span>
+                            }
+                        </div>
+
                         <p class="small text-muted mb-3">
-                            <i class="fas fa-box me-1"></i> Activo: @(item.Riesgo.Activo != null ? item.Riesgo.Activo.Nombre : "N/A")
+                            <i class="fas fa-box me-1"></i> Activo: <span class="fw-bold text-dark">@(item.Riesgo.Activo != null ? item.Riesgo.Activo.Nombre : "N/A")</span>
                         </p>
 
                         @if (!string.IsNullOrEmpty(item.ControlISO))
                         {
-                            <div class="bg-light p-2 rounded-3 mb-3 border-start border-primary border-4">
-                                <small class="d-block text-primary fw-bold">Control ISO 27002:</small>
-                                <span class="small">Referencia: @item.ControlISO</span>
+                            <div class="bg-light p-2 rounded-3 mb-3 border-start border-primary border-4 shadow-xs">
+                                <small class="d-block text-primary fw-bold" style="font-size: 0.7rem;">Control ISO 27002:</small>
+                                <span class="small text-dark fw-bold">Ref: @item.ControlISO</span>
                             </div>
                         }
 
                         <div class="mb-4">
                             <div class="d-flex justify-content-between mb-1">
-                                <span class="small fw-bold">Progreso de Implementación</span>
-                                <span class="small fw-bold">@(item.Progreso ?? 0)%</span>
+                                <span class="small fw-bold text-muted">Progreso de Implementación</span>
+                                <span class="small fw-bold text-navy">@(item.Progreso ?? 0)%</span>
                             </div>
-                            <div class="progress" style="height: 8px;">
-                                <div class="progress-bar @((item.Progreso ?? 0) >= 100 ? "bg-success" : "bg-primary")"
+                            <div class="progress rounded-pill" style="height: 10px;">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated @((item.Progreso ?? 0) >= 100 ? "bg-success" : "bg-primary")"
                                      role="progressbar"
                                      style="width: @(item.Progreso ?? 0)%"></div>
                             </div>
@@ -54,24 +78,26 @@
 
                         <div class="row text-center g-2 mb-4">
                             <div class="col-6">
-                                <div class="border rounded-3 p-2 bg-white shadow-xs">
-                                    <h6 class="m-0 fw-bold">@(item.FechaLimite.HasValue ? item.FechaLimite.Value.ToShortDateString() : "S/F")</h6>
-                                    <small class="text-muted small">Fecha Límite</small>
+                                <div class="border rounded-4 p-2 bg-light bg-opacity-50">
+                                    <h6 class="m-0 fw-bold text-navy" style="font-size: 0.85rem;">
+                                        @(item.FechaLimite.HasValue ? item.FechaLimite.Value.ToShortDateString() : "S/F")
+                                    </h6>
+                                    <small class="text-muted" style="font-size: 0.65rem;">Fecha Límite</small>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="border rounded-3 p-2 bg-white shadow-xs">
-                                    <h6 class="m-0 fw-bold">
+                                <div class="border rounded-4 p-2 bg-light bg-opacity-50">
+                                    <h6 class="m-0 fw-bold text-navy text-truncate" style="font-size: 0.85rem;" title="@item.Responsable">
                                         @(string.IsNullOrEmpty(item.Responsable) ? "Sin Asignar" : item.Responsable.Split(' ')[0])
                                     </h6>
-                                    <small class="text-muted small">Responsable</small>
+                                    <small class="text-muted" style="font-size: 0.65rem;">Responsable</small>
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-grid">
                             <button onclick="loadView('@Url.Action("Bitacora", "Tratamientos", new { id = item.IdTratamiento })')"
-                                    class="btn btn-navy py-2 rounded-4 shadow-sm">
+                                    class="btn btn-navy py-2 rounded-pill shadow-sm fw-bold">
                                 <i class="fas fa-clipboard-list me-2"></i> Gestión de Bitácora
                             </button>
                         </div>
@@ -81,3 +107,104 @@
         }
     </div>
 </div>
+
+<style>
+    /* Estilos de la Tarjeta */
+    .treatment-card {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid #eee !important;
+    }
+
+        .treatment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(11, 30, 59, 0.15) !important;
+        }
+
+    .text-navy {
+        color: #0b1e3b;
+    }
+
+    .btn-navy {
+        background-color: #0b1e3b;
+        color: white;
+        border: none;
+    }
+
+        .btn-navy:hover {
+            background-color: #d62828;
+            color: white;
+            transform: scale(1.02);
+        }
+
+    .btn-outline-navy {
+        color: #0b1e3b;
+        border: 2px solid #0b1e3b;
+    }
+
+        .btn-outline-navy:hover {
+            background-color: #0b1e3b;
+            color: white;
+        }
+
+    /* Efectos de Resaltado (Highlight Focus) */
+    @@keyframes flash-highlight {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.05);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .highlight-focus {
+        animation: flash-highlight 1.5s ease-in-out;
+        z-index: 100;
+    }
+
+    .border-highlight {
+        border: 3px solid #198754 !important; /* Verde éxito */
+        box-shadow: 0 0 20px rgba(25, 135, 84, 0.4) !important;
+    }
+
+    .shadow-xs {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .animate-bounce {
+        animation: bounce 2s infinite;
+    }
+
+    @@keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+
+        40% {
+            transform: translateY(-5px);
+        }
+
+        60% {
+            transform: translateY(-3px);
+        }
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        // Lógica de desplazamiento automático al tratamiento resaltado
+        var highlightId = '@(ViewBag.HighlightId ?? 0)';
+        if (highlightId !== '0') {
+            var target = $('#plan-' + highlightId);
+            if (target.length) {
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 150
+                }, 800);
+            }
+        }
+    });
+</script>

@@ -25,6 +25,17 @@ namespace SGRC_Integrador.Controllers
             return PartialView(tratamientos);
         }
 
+        public ActionResult Index(int? highlightId)
+        {
+            var tratamientos = db.Tratamientos
+                .Include(t => t.Riesgo)
+                .Include(t => t.Riesgo.Activo)
+                .ToList();
+
+            ViewBag.HighlightId = highlightId; // Pasamos el ID a resaltar
+            return PartialView(tratamientos);
+        }
+
         public ActionResult Gestionar(int? idRiesgo)
         {
             if (idRiesgo == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

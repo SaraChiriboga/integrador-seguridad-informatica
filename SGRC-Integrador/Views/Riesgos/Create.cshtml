@@ -1,5 +1,8 @@
 ﻿@model SGRC_Integrador.Models.Riesgo
-@{ Layout = null; }
+@{
+    Layout = null;
+    bool isLocked = ViewBag.IsLocked ?? false;
+}
 
 <div class="container py-4 fade-in">
     <div class="d-flex align-items-center mb-4">
@@ -8,13 +11,19 @@
         </button>
         <div>
             <h2 class="fw-bold mb-0 text-navy">Análisis de Riesgo</h2>
-            <p class="text-muted mb-0">Identifique amenazas y evalúe la exposición del activo seleccionado.</p>
+            <p class="text-muted mb-0">Evalúe el impacto y probabilidad para el activo seleccionado.</p>
         </div>
     </div>
 
     <form id="formRiesgo" action="@Url.Action("Create", "Riesgos")" method="post">
-        <div class="row g-4">
 
+        @if (isLocked)
+        {
+            @* El input hidden es vital porque los campos 'disabled' no viajan en el POST *@
+            <input type="hidden" name="IdActivo" value="@(((SelectList)ViewBag.IdActivo).SelectedValue)" />
+        }
+
+        <div class="row g-4">
             <div class="col-lg-7">
                 <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-white">
                     <h5 class="fw-bold mb-4 text-navy border-bottom pb-2">
@@ -23,14 +32,24 @@
 
                     <div class="mb-4">
                         <label class="form-label fw-bold small text-muted text-uppercase">Activo Crítico a Evaluar</label>
-                        @Html.DropDownList("IdActivo", (SelectList)ViewBag.IdActivo, "Seleccione un activo...", new { @class = "form-select form-select-lg rounded-3 fs-6 border-light bg-light", @required = "required" })
+
+                        @if (isLocked)
+                        {
+                            @* IMPORTANTE: No enviamos el string "Seleccione un activo" para forzar el valor real *@
+                            @Html.DropDownList("IdActivo", (SelectList)ViewBag.IdActivo, new { @class = "form-select form-select-lg rounded-3 fs-6 bg-light text-dark fw-bold", @disabled = "disabled" })
+                            <small class="text-primary fw-bold mt-1 d-block"><i class="fas fa-lock me-1"></i> Selección fija desde inventario</small>
+                        }
+                        else
+                        {
+                            @Html.DropDownList("IdActivo", (SelectList)ViewBag.IdActivo, "Seleccione un activo...", new { @class = "form-select form-select-lg rounded-3 fs-6 border-light bg-light", @required = "required" })
+                        }
                     </div>
 
                     <div class="mb-0">
                         <label class="form-label fw-bold small text-muted text-uppercase">Amenaza Detectada</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-0"><i class="fas fa-biohazard text-danger"></i></span>
-                            <input type="text" name="Amenaza" class="form-control form-control-lg border-light bg-light" required placeholder="Ej: Fuga de datos / Ransomware">
+                            <input type="text" name="Amenaza" class="form-control form-control-lg border-light bg-light" required placeholder="Ej: Ransomware / Acceso no autorizado">
                         </div>
                         <small class="text-muted mt-2 d-block">Describa el evento que puede comprometer el activo.</small>
                     </div>
@@ -40,7 +59,7 @@
             <div class="col-lg-5">
                 <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-navy text-white">
                     <h5 class="fw-bold mb-4 border-bottom border-white border-opacity-25 pb-2 text-warning">
-                        <i class="fas fa-calculator me-2"></i>Estimación Cualitativa
+                        <i class="fas fa-calculator me-2"></i>Estimación Cualitativa (ISO 27005)
                     </h5>
 
                     <div class="mb-4">
@@ -50,8 +69,8 @@
                         </div>
                         <input type="range" name="Probabilidad" id="slideP" class="form-range" min="1" max="4" value="1" oninput="updateRiesgo('slideP', 'valP')">
                         <div class="d-flex justify-content-between opacity-50" style="font-size: 0.6rem;">
-                            <span>Remota</span>
-                            <span>Frecuente</span>
+                            <span>Remota (1)</span>
+                            <span>Frecuente (4)</span>
                         </div>
                     </div>
 
@@ -62,8 +81,8 @@
                         </div>
                         <input type="range" name="Impacto" id="slideI" class="form-range" min="1" max="4" value="1" oninput="updateRiesgo('slideI', 'valI')">
                         <div class="d-flex justify-content-between opacity-50" style="font-size: 0.6rem;">
-                            <span>Leve</span>
-                            <span>Catastrófico</span>
+                            <span>Leve (1)</span>
+                            <span>Catastrófico (4)</span>
                         </div>
                     </div>
 
@@ -87,8 +106,6 @@
     </form>
 </div>
 
-
-
 <script>
     function updateRiesgo(sliderId, displayId) {
         const val = document.getElementById(sliderId).value;
@@ -97,21 +114,19 @@
     }
 
     function calcNivel() {
-        let p = parseInt($('#slideP').val());
-        let i = parseInt($('#slideI').val());
+        let p = parseInt($('#slideP').val()) || 1;
+        let i = parseInt($('#slideI').val()) || 1;
         let total = p * i;
-
         $('#txtNivel').text(total);
 
         let container = $('#containerResultado');
         let label = $('#labelNivel');
 
-        // Umbrales para matriz 4x4 (Máximo 16)
         if (total >= 12) {
-            container.css('background-color', 'rgba(214, 40, 40, 0.2)');
+            container.css('background-color', 'rgba(214, 40, 40, 0.4)');
             label.text("Crítico").css('color', '#ff4d4d');
         } else if (total >= 8) {
-            container.css('background-color', 'rgba(255, 193, 7, 0.2)');
+            container.css('background-color', 'rgba(255, 193, 7, 0.3)');
             label.text("Importante").css('color', '#ffc107');
         } else {
             container.css('background-color', 'rgba(255, 255, 255, 0.1)');
@@ -121,18 +136,17 @@
 
     $('#formRiesgo').off('submit').on('submit', function (e) {
         e.preventDefault();
-        var form = $(this);
-        $.post(form.attr('action'), form.serialize(), function (response) {
-            // El controlador devuelve PartialView de Index o el mismo formulario con errores
+        $.post($(this).attr('action'), $(this).serialize(), function (response) {
             if (typeof response === "string") {
                 $('#main-content').html(response);
             } else if (response.success) {
                 loadView('@Url.Action("Index", "Riesgos")');
+            } else {
+                $('#main-content').html(response);
             }
         });
     });
 
-    // Inicializar cálculos
     calcNivel();
 </script>
 
@@ -147,7 +161,8 @@
 
     .btn-outline-navy {
         color: #0b1e3b;
-        border-color: #0b1e3b;
+        border: 2px solid #0b1e3b;
+        background: transparent;
     }
 
         .btn-outline-navy:hover {
@@ -155,12 +170,7 @@
             color: white;
         }
 
-    /* Personalización de sliders para que se vean bien en fondo oscuro */
-    .custom-range::-webkit-slider-runnable-track {
-        background: rgba(255,255,255,0.2);
-    }
-
-    .custom-range::-webkit-slider-thumb {
+    .form-range::-webkit-slider-thumb {
         background: #ffc107;
     }
 </style>
