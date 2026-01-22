@@ -5,16 +5,18 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using SGRC_Integrador.Models;
+using SGRC_Integrador.Filters; // Agregar esto
 
 namespace SGRC_Integrador.Controllers
 {
+    [Authorize]
+    [SessionCheck] // AGREGAR ESTE FILTRO
     public class TratamientosController : Controller
     {
         private SGRC_DBEntities db = new SGRC_DBEntities();
 
         public ActionResult Index()
         {
-            // Cargamos los tratamientos incluyendo el riesgo, el activo y los KPIs relacionados
             var tratamientos = db.Tratamientos
                 .Include(t => t.Riesgo)
                 .Include(t => t.Riesgo.Activo)
@@ -23,7 +25,6 @@ namespace SGRC_Integrador.Controllers
             return PartialView(tratamientos);
         }
 
-        // Cambiado de Create a Gestionar
         public ActionResult Gestionar(int? idRiesgo)
         {
             if (idRiesgo == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -31,33 +32,47 @@ namespace SGRC_Integrador.Controllers
             var riesgo = db.Riesgos.Include(r => r.Activo).FirstOrDefault(r => r.IdRiesgo == idRiesgo);
             if (riesgo == null) return HttpNotFound();
 
+            // DEPURACIÓN DETALLADA
+            System.Diagnostics.Debug.WriteLine($"╔══════════════════════════════════════╗");
+            System.Diagnostics.Debug.WriteLine($"║ GESTIONAR - Diagnóstico de Sesión    ║");
+            System.Diagnostics.Debug.WriteLine($"╠══════════════════════════════════════╣");
+            System.Diagnostics.Debug.WriteLine($"║ SessionID: {Session.SessionID}");
+            System.Diagnostics.Debug.WriteLine($"║ Session[UsuarioNombre]: {Session["UsuarioNombre"]}");
+            System.Diagnostics.Debug.WriteLine($"║ Session[UsuarioId]: {Session["UsuarioId"]}");
+            System.Diagnostics.Debug.WriteLine($"║ User.Identity.Name: {User.Identity.Name}");
+            System.Diagnostics.Debug.WriteLine($"║ User.Identity.IsAuthenticated: {User.Identity.IsAuthenticated}");
+            System.Diagnostics.Debug.WriteLine($"╚══════════════════════════════════════╝");
+
+            // Obtener nombre de usuario
+            string nombreUsuario = Session["UsuarioNombre"]?.ToString();
+
+            ViewBag.UsuarioActual = nombreUsuario ?? "Usuario SGRC";
             ViewBag.RiesgoInfo = riesgo;
+
+            System.Diagnostics.Debug.WriteLine($"→ ViewBag.UsuarioActual asignado: '{ViewBag.UsuarioActual}'");
+
             return PartialView(new Tratamiento { IdRiesgo = riesgo.IdRiesgo });
         }
 
         [HttpPost]
-        public ActionResult Gestionar(Tratamiento tratamiento, int nuevaProbabilidad, int nuevoImpacto, string[] kpi_nombre, string[] kpi_meta, string[] kpi_frec_valor, string[] kpi_frec_unidad)
+        public ActionResult Gestionar(Tratamiento tratamiento, int nuevaProbabilidad, int nuevoImpacto,
+            string[] kpi_nombre, string[] kpi_meta, string[] kpi_frec_valor, string[] kpi_frec_unidad)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    // 1. Guardar Plan de Tratamiento
                     db.Tratamientos.Add(tratamiento);
 
-                    // 2. Actualizar Riesgo (Marcar como tratado y registrar el residual)
                     var riesgo = db.Riesgos.Find(tratamiento.IdRiesgo);
                     if (riesgo != null)
                     {
                         riesgo.Tratado = true;
-                        // Calculamos el residual para que quede constancia en la BD
-                        // riesgo.NivelResidual = nuevaProbabilidad * nuevoImpacto; (Si tienes el campo)
                         db.Entry(riesgo).State = EntityState.Modified;
                     }
 
                     db.SaveChanges();
 
-                    // 3. Guardar KPIs
                     if (kpi_nombre != null)
                     {
                         for (int i = 0; i < kpi_nombre.Length; i++)
@@ -84,21 +99,20 @@ namespace SGRC_Integrador.Controllers
             }
 
             ViewBag.RiesgoInfo = db.Riesgos.Include(r => r.Activo).FirstOrDefault(r => r.IdRiesgo == tratamiento.IdRiesgo);
+            ViewBag.UsuarioActual = Session["UsuarioNombre"]?.ToString() ?? "Usuario SGRC";
+
             return PartialView(tratamiento);
         }
 
-        // GET: Tratamientos/Bitacora/5
         public ActionResult Bitacora(int id)
         {
             var tratamiento = db.Tratamientos
                 .Include(t => t.Riesgo)
                 .FirstOrDefault(t => t.IdTratamiento == id);
 
-            // Obtenemos los KPIs para que el usuario pueda elegir en cuál trabajó
             ViewBag.KPIs = db.Database.SqlQuery<TratamientoKPI>(
                 "SELECT * FROM TratamientoKPIs WHERE IdTratamiento = {0}", id).ToList();
 
-            // Obtenemos el historial de la bitácora
             ViewBag.Historial = db.Database.SqlQuery<TratamientoBitacora>(
                 "SELECT * FROM TratamientoBitacora WHERE IdTratamiento = {0} ORDER BY FechaRegistro DESC", id).ToList();
 
@@ -106,39 +120,36 @@ namespace SGRC_Integrador.Controllers
         }
 
         [HttpPost]
-        public JsonResult GuardarBitacora(int IdTratamiento, int? IdKPI, string DescripcionActividad, string ObservacionesTecnicas)
+        public JsonResult GuardarBitacora(int IdTratamiento, int? IdKPI, string DescripcionActividad,
+            string ObservacionesTecnicas, int NuevoProgreso)
         {
             try
             {
-                // Validación de seguridad básica
-                if (string.IsNullOrEmpty(DescripcionActividad))
-                {
-                    return Json(new { success = false, message = "La descripción de la actividad es obligatoria." });
-                }
-
                 string usuario = Session["UsuarioNombre"]?.ToString() ?? "Consultor SGRC";
 
-                // Usamos parámetros con nombre (@p0, @p1...) para evitar errores de tipo de datos y nulos
-                string sql = @"INSERT INTO TratamientoBitacora 
-                       (IdTratamiento, IdKPI, DescripcionActividad, UsuarioResponsable, ObservacionesTecnicas, FechaRegistro) 
-                       VALUES (@p0, @p1, @p2, @p3, @p4, GETDATE())";
+                string sqlBitacora = @"INSERT INTO TratamientoBitacora 
+                               (IdTratamiento, IdKPI, DescripcionActividad, UsuarioResponsable, ObservacionesTecnicas, FechaRegistro) 
+                               VALUES (@p0, @p1, @p2, @p3, @p4, GETDATE())";
 
-                // El truco aquí es (object)VALOR ?? DBNull.Value para que SQL no explote si el KPI es nulo
-                db.Database.ExecuteSqlCommand(sql,
-                    IdTratamiento,
-                    (object)IdKPI ?? DBNull.Value,
-                    DescripcionActividad,
-                    usuario,
-                    (object)ObservacionesTecnicas ?? DBNull.Value);
+                db.Database.ExecuteSqlCommand(sqlBitacora, IdTratamiento, (object)IdKPI ?? DBNull.Value,
+                    DescripcionActividad, usuario, (object)ObservacionesTecnicas ?? DBNull.Value);
+
+                var tratamiento = db.Tratamientos.Find(IdTratamiento);
+                if (tratamiento != null)
+                {
+                    tratamiento.Progreso = NuevoProgreso;
+                    db.Entry(tratamiento).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
 
                 return Json(new { success = true });
             }
             catch (Exception ex)
             {
-                // Enviamos el mensaje real del error para depurar
-                return Json(new { success = false, message = ex.InnerException != null ? ex.InnerException.Message : ex.Message });
+                return Json(new { success = false, message = ex.Message });
             }
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing) db.Dispose();

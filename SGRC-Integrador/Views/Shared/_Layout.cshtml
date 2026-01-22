@@ -75,18 +75,19 @@
     <script>
         // 1. Función para cargar vistas vía AJAX
         function loadView(url) {
-            if (!url) return;
-
-            // Efecto visual de carga en el contenido
-            $('#main-content').css('opacity', '0.5');
-
-            $.get(url, function (data) {
-                $('#main-content').html(data);
-                $('#main-content').css('opacity', '1');
-            }).fail(function () {
-                // Manejo de errores
-                $('#main-content').html('<div class="alert alert-danger">Error al cargar el contenido.</div>');
-                $('#main-content').css('opacity', '1');
+            $.ajax({
+                url: url,
+                type: 'GET',
+                cache: false,
+                xhrFields: {
+                    withCredentials: true  // ESTO ES CRÍTICO para mantener la sesión
+                },
+                success: function (data) {
+                    $('#main-content').html(data);  // o el contenedor que uses
+                },
+                error: function () {
+                    alert('Error al cargar la vista');
+                }
             });
         }
 

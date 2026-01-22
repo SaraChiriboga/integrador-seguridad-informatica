@@ -43,22 +43,27 @@ namespace SGRC_Integrador.Controllers
         {
             int idUsuario = (int)(Session["UserPending2FA"] ?? 0);
             var usuario = db.Usuarios.Find(idUsuario);
-
             if (usuario != null && usuario.Codigo2FA == codigo && usuario.FechaExpiracion2FA > DateTime.Now)
             {
                 // --- DATOS QUE SOLICITASTE CONSERVAR ---
                 Session["UsuarioNombre"] = usuario.Nombre;
                 Session["HoraInicioSesion"] = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
+                // AGREGAR ESTAS LÍNEAS DE DEPURACIÓN
+                Session["UsuarioId"] = usuario.IdUsuario;
+                Session["UsuarioCorreo"] = usuario.Correo;
+
+                // VERIFICACIÓN INMEDIATA
+                System.Diagnostics.Debug.WriteLine($"✓ Sesión guardada - Nombre: {Session["UsuarioNombre"]}");
+                System.Diagnostics.Debug.WriteLine($"✓ SessionID: {Session.SessionID}");
+
                 // Cookie de autenticación para controlar inactividad
                 FormsAuthentication.SetAuthCookie(usuario.Correo, false);
-
                 usuario.Codigo2FA = null; // Limpiar código
                 db.SaveChanges();
 
                 return RedirectToAction("Index", "Home");
             }
-
             ViewBag.Error = "Código inválido o expirado.";
             return View();
         }

@@ -194,6 +194,7 @@
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\RiesgosController.cs" />
     <Compile Include="Controllers\TratamientosController.cs" />
+    <Compile Include="Filters\SessionCheckAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

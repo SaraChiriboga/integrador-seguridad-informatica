@@ -19,12 +19,17 @@
                     <h4 class="fw-bold text-navy mb-1">Registrar Actividad</h4>
                     <p class="text-muted small mb-4">Plan #@Model.IdTratamiento</p>
 
+                    <div class="alert alert-info border-0 rounded-4 mb-4">
+                        <small class="d-block fw-bold">Riesgo Asociado:</small>
+                        <span>@Model.Riesgo.Amenaza</span>
+                    </div>
+
                     <form id="formNuevaBitacora">
                         <input type="hidden" name="IdTratamiento" value="@Model.IdTratamiento" />
 
                         <div class="mb-3">
                             <label class="form-label fw-bold small">KPI Impactado</label>
-                            <select name="IdKPI" class="form-select">
+                            <select name="IdKPI" class="form-select rounded-3">
                                 <option value="">-- Mantenimiento General --</option>
                                 @if (kpis != null)
                                 {
@@ -37,17 +42,32 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold small">Descripción</label>
-                            <textarea name="DescripcionActividad" class="form-control" rows="4" required></textarea>
+                            <label class="form-label fw-bold small">Descripción de Actividad</label>
+                            <textarea name="DescripcionActividad" class="form-control rounded-3" rows="4" required placeholder="¿Qué acciones técnicas se realizaron?"></textarea>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold small">Observaciones</label>
-                            <input type="text" name="ObservacionesTecnicas" class="form-control">
+                            <label class="form-label fw-bold small text-navy">Observaciones Adicionales</label>
+                            <input type="text" name="ObservacionesTecnicas" class="form-control rounded-3" placeholder="Notas de auditoría o hallazgos...">
                         </div>
 
-                        <button type="submit" id="btnGuardar" class="btn btn-navy w-100 py-2 rounded-pill shadow-sm">
-                            <i class="fas fa-save me-2"></i> Guardar Historial
+                        <div class="mb-4 p-3 bg-light border rounded-4 shadow-sm">
+                            <label class="form-label fw-bold small d-flex justify-content-between text-navy">
+                                Progreso Actualizado del Plan
+                                <span class="badge bg-primary rounded-pill"><span id="valProgreso">@(Model.Progreso ?? 0)</span>%</span>
+                            </label>
+                            <input type="range" name="NuevoProgreso" class="form-range"
+                                   min="0" max="100" value="@(Model.Progreso ?? 0)"
+                                   oninput="$('#valProgreso').text(this.value)">
+                            <div class="d-flex justify-content-between mt-1 opacity-50" style="font-size: 0.65rem;">
+                                <span>0%</span>
+                                <span>50%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btnGuardar" class="btn btn-navy w-100 py-3 rounded-pill shadow">
+                            <i class="fas fa-save me-2"></i> Guardar Historial y Progreso
                         </button>
                     </form>
                 </div>
@@ -57,8 +77,8 @@
         <div class="col-lg-7">
             <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
                 <div class="card-body p-4">
-                    <h4 class="fw-bold text-navy mb-4">Historial</h4>
-                    <div class="timeline-container" style="max-height: 500px; overflow-y: auto;">
+                    <h4 class="fw-bold text-navy mb-4"><i class="fas fa-stream me-2"></i>Línea de Tiempo de Seguimiento</h4>
+                    <div class="timeline-container" style="max-height: 600px; overflow-y: auto; padding-right: 10px;">
                         @if (historial != null && historial.Any())
                         {
                             foreach (var log in historial)
@@ -71,13 +91,34 @@
                                     </div>
                                     <div class="timeline-content ps-4 border-start border-2 border-navy position-relative w-100">
                                         <div class="dot-indicator bg-navy"></div>
-                                        <div class="p-3 bg-light rounded-4 shadow-sm">
-                                            <p class="m-0 text-dark small">@log.DescripcionActividad</p>
-                                            <small class="text-muted">Por: @log.UsuarioResponsable</small>
+                                        <div class="p-3 bg-light rounded-4 shadow-sm border border-white">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span class="badge bg-white text-navy border fw-bold">
+                                                    <i class="fas fa-user-edit me-1 text-primary"></i> @(log.UsuarioResponsable ?? "Responsable")
+                                                </span>
+                                                @if (log.IdKPI != null)
+                                                {
+                                                    <span class="badge bg-primary rounded-pill">Impacto KPI</span>
+                                                }
+                                            </div>
+                                            <p class="m-0 text-dark small" style="line-height: 1.5;">@log.DescripcionActividad</p>
+                                            @if (!string.IsNullOrEmpty(log.ObservacionesTecnicas))
+                                            {
+                                                <div class="mt-2 pt-2 border-top border-secondary border-opacity-10">
+                                                    <small class="text-muted"><i class="fas fa-info-circle me-1"></i> @log.ObservacionesTecnicas</small>
+                                                </div>
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             }
+                        }
+                        else
+                        {
+                            <div class="text-center py-5">
+                                <i class="fas fa-clipboard-list fa-4x text-light mb-3"></i>
+                                <p class="text-muted">No existen registros previos para este tratamiento.</p>
+                            </div>
                         }
                     </div>
                 </div>
@@ -86,11 +127,54 @@
     </div>
 </div>
 
+<style>
+    .bg-navy {
+        background-color: #0b1e3b !important;
+    }
+
+    .text-navy {
+        color: #0b1e3b !important;
+    }
+
+    .btn-navy {
+        background-color: #0b1e3b;
+        color: white;
+        border: none;
+        transition: 0.3s;
+    }
+
+        .btn-navy:hover {
+            background-color: #d62828;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+    .dot-indicator {
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        left: -8px;
+        top: 12px;
+        border: 2px solid white;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .timeline-container::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .timeline-container::-webkit-scrollbar-thumb {
+        background: #0b1e3b;
+        border-radius: 10px;
+    }
+</style>
+
 <script>
     $('#formNuevaBitacora').off('submit').on('submit', function(e) {
         e.preventDefault();
         var btn = $('#btnGuardar');
-        btn.prop('disabled', true).html('Guardando...');
+        btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Procesando...');
 
         $.ajax({
             url: '@Url.Action("GuardarBitacora", "Tratamientos")',
@@ -98,17 +182,17 @@
             data: $(this).serialize(),
             success: function(res) {
                 if(res.success) {
-                    // RECARGA LIMPIA: Sin concatenar IDs extraños
+                    // Recarga limpia de la vista para ver el historial y el nuevo progreso
                     loadView('@Url.Action("Bitacora", "Tratamientos")/' + @Model.IdTratamiento);
                 } else {
-                    alert("Error: " + res.message);
-                    btn.prop('disabled', false).html('Guardar Historial');
+                    alert("Error en el servidor: " + res.message);
+                    btn.prop('disabled', false).html('<i class="fas fa-save me-2"></i> Guardar Historial y Progreso');
                 }
             },
             error: function(xhr) {
-                alert("Error de servidor. Código 500: Revise la consola.");
+                alert("Error crítico de conexión. Verifique que el servidor esté activo.");
                 console.log(xhr.responseText);
-                btn.prop('disabled', false).html('Guardar Historial');
+                btn.prop('disabled', false).html('<i class="fas fa-save me-2"></i> Guardar Historial y Progreso');
             }
         });
     });
