@@ -27,18 +27,23 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small text-muted">Tipo de Activo</label>
-                            <select name="Tipo" class="form-select rounded-3" required>
-                                <option value="" disabled selected>Seleccione...</option>
-                                <optgroup label="Tecnología">
-                                    <option value="HW">Hardware</option>
-                                    <option value="SW">Software</option>
-                                    <option value="SERV">Servicio Cloud</option>
+                            <label class="form-label fw-bold small text-muted text-uppercase">Tipo de Activo (Magerit)</label>
+                            <select name="Tipo" class="form-select rounded-3 shadow-sm border-light" required>
+                                <option value="" disabled selected>Seleccione categoría...</option>
+
+                                <optgroup label="Infraestructura y Tecnología">
+                                    <option value="HW">[HW] Equipamiento Informático (Hardware)</option>
+                                    <option value="SW">[SW] Software / Aplicaciones</option>
+                                    <option value="S">[S] Servicios (Hosting, Conectividad)</option>
                                 </optgroup>
-                                <optgroup label="Información">
-                                    <option value="DATOS">Base de Datos / Archivos</option>
+
+                                <optgroup label="Información y Activos No Técnicos">
+                                    <option value="D">[D] Datos / Información (Bases de Datos)</option>
+                                    <option value="L">[L] Instalaciones (Datacenters, Agencias)</option>
+                                    <option value="P">[P] Personal (Administradores, Técnicos)</option>
                                 </optgroup>
                             </select>
+                            <small class="text-muted" style="font-size: 0.7rem;">Basado en el Catálogo de Activos Magerit v3.0</small>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">Ubicación Física/Lógica</label>

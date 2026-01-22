@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold mb-0 text-navy">Inventario de Activos</h2>
-            <p class="text-muted">Gestión de activos de información y activos físicos.</p>
+            <p class="text-muted">Gestión de activos de información y activos físicos bajo estándar Magerit.</p>
         </div>
         <button class="btn btn-navy rounded-pill px-4" onclick="loadView('@Url.Action("Create", "Activos")')">
             <i class="fas fa-plus me-2"></i> Nuevo Activo
@@ -25,13 +25,26 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        string claseBadge = "bg-secondary";
-                        string nombreLargo = item.Tipo;
+                        string claseBadge = "";
+                        string nombreMagerit = "";
 
-                        if (item.Tipo == "HW") { claseBadge = "bg-info text-dark"; nombreLargo = "Hardware"; }
-                        else if (item.Tipo == "SW") { claseBadge = "bg-primary"; nombreLargo = "Software"; }
-                        else if (item.Tipo == "DATOS") { claseBadge = "bg-success"; nombreLargo = "Datos"; }
-                        else if (item.Tipo == "SERV") { claseBadge = "bg-warning text-dark"; nombreLargo = "Servicio"; }
+                        switch (item.Tipo)
+                        {
+                            case "HW":
+                                claseBadge = "badge-hw"; nombreMagerit = "[HW] Hardware"; break;
+                            case "SW":
+                                claseBadge = "badge-sw"; nombreMagerit = "[SW] Software"; break;
+                            case "D":
+                                claseBadge = "badge-datos"; nombreMagerit = "[D] Datos"; break;
+                            case "S":
+                                claseBadge = "badge-serv"; nombreMagerit = "[S] Servicios"; break;
+                            case "L":
+                                claseBadge = "badge-inst"; nombreMagerit = "[L] Instalaciones"; break;
+                            case "P":
+                                claseBadge = "badge-pers"; nombreMagerit = "[P] Personal"; break;
+                            default:
+                                claseBadge = "bg-light text-muted border"; nombreMagerit = item.Tipo; break;
+                        }
 
                         <tr>
                             <td class="ps-4">
@@ -41,14 +54,16 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="badge @claseBadge rounded-pill">@nombreLargo</span>
+                                <span class="badge-custom @claseBadge">
+                                    @nombreMagerit
+                                </span>
                             </td>
                             <td class="text-center">
                                 <div class="d-inline-flex align-items-center justify-content-center border rounded-pill px-3 py-1 @(item.ValorTotal >= 10 ? "border-danger text-danger bg-danger bg-opacity-10" : "bg-light")">
                                     <span class="fw-bold me-1">@item.ValorTotal</span>
                                     <small class="opacity-50">/ 12</small>
                                     @if (item.ValorTotal >= 10)
-                                    {<i class="fas fa-fire-alt ms-2" title="Activo Crítico"></i>}
+                                    {<i class="fas fa-fire-alt ms-2 animate-pulse" title="Activo Crítico"></i>}
                                 </div>
                             </td>
                             <td class="text-end pe-4">
@@ -135,12 +150,80 @@
     .btn-navy {
         background-color: #0b1e3b;
         color: white;
+        border: none;
     }
 
         .btn-navy:hover {
             background-color: #d62828;
             color: white;
         }
+
+    /* Estilos de Badges Premium sin iconos */
+    .badge-custom {
+        padding: 5px 12px;
+        border-radius: 8px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid transparent;
+        letter-spacing: 0.3px;
+    }
+
+    .badge-hw {
+        background-color: rgba(49, 130, 206, 0.1);
+        color: #2b6cb0;
+        border-color: rgba(49, 130, 206, 0.2);
+    }
+
+    .badge-sw {
+        background-color: rgba(102, 126, 234, 0.1);
+        color: #4c51bf;
+        border-color: rgba(102, 126, 234, 0.2);
+    }
+
+    .badge-datos {
+        background-color: rgba(72, 187, 120, 0.1);
+        color: #276749;
+        border-color: rgba(72, 187, 120, 0.2);
+    }
+
+    .badge-serv {
+        background-color: rgba(237, 137, 54, 0.1);
+        color: #9c4221;
+        border-color: rgba(237, 137, 54, 0.2);
+    }
+
+    .badge-inst {
+        background-color: rgba(11, 30, 59, 0.08);
+        color: #0b1e3b;
+        border-color: rgba(11, 30, 59, 0.15);
+    }
+
+    .badge-pers {
+        background-color: rgba(159, 122, 234, 0.1);
+        color: #6b46c1;
+        border-color: rgba(159, 122, 234, 0.2);
+    }
+
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.4;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
 
     .btn-link:hover {
         transform: scale(1.2);

@@ -220,33 +220,72 @@
     color: #212529;
 }
 
-/* --- BADGES DE ACTIVOS --- */
+/* =========================================
+   BADGES PREMIUM - ESTILO MAGERIT
+   ========================================= */
+
+/* Base sutil y elegante */
 .badge-custom {
-    padding: 6px 12px;
+    padding: 6px 14px;
     border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 700;
     letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
 }
 
+/* [HW] Equipamiento - Azul Glacial */
 .badge-hw {
-    background-color: #e2e8f0;
-    color: #1e293b;
+    background-color: rgba(49, 130, 206, 0.12) !important;
+    color: #2b6cb0 !important;
+    border-color: rgba(49, 130, 206, 0.2);
 }
 
+/* [SW] Software - Índigo Soft */
 .badge-sw {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: rgba(102, 126, 234, 0.12) !important;
+    color: #4c51bf !important;
+    border-color: rgba(102, 126, 234, 0.2);
 }
 
+/* [D] Datos - Esmeralda Tenue */
 .badge-datos {
-    background-color: #fce7f3;
-    color: #9d174d;
+    background-color: rgba(72, 187, 120, 0.12) !important;
+    color: #276749 !important;
+    border-color: rgba(72, 187, 120, 0.2);
 }
 
-.badge-personal {
-    background-color: #ffedd5;
-    color: #9a3412;
+/* [S] Servicios - Ambar Cálido */
+.badge-serv {
+    background-color: rgba(237, 137, 54, 0.12) !important;
+    color: #9c4221 !important;
+    border-color: rgba(237, 137, 54, 0.2);
+}
+
+/* [L] Instalaciones - Slate/Navy Moderno */
+.badge-inst {
+    background-color: rgba(11, 30, 59, 0.08) !important;
+    color: #0b1e3b !important;
+    border-color: rgba(11, 30, 59, 0.15);
+}
+
+/* [P] Personal - Púrpura Royal */
+.badge-pers {
+    background-color: rgba(159, 122, 234, 0.12) !important;
+    color: #6b46c1 !important;
+    border-color: rgba(159, 122, 234, 0.2);
+}
+
+/* Efecto hover sutil */
+.badge-custom:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    filter: brightness(0.95);
 }
 
 /* --- TARJETA DE RIESGO (SEMAFORO) --- */
