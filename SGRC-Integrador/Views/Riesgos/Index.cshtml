@@ -68,7 +68,6 @@
                                 }
                             </td>
                             <td class="text-center">
-                                @* GRUPO CENTRADO *@
                                 <div class="d-flex justify-content-center">
                                     <div class="btn-group shadow-sm rounded-pill bg-white border p-1">
                                         <button class="btn btn-link text-navy p-2" title="Detalles" onclick="loadView('@Url.Action("Details", "Riesgos", new { id = item.IdRiesgo })')">
@@ -77,19 +76,20 @@
 
                                         @if (!item.Tratado.GetValueOrDefault())
                                         {
-                                            <button class="btn btn-link text-warning p-2" title="Tratar Riesgo"
-                                                    onclick="loadView('@Url.Action("Gestionar", "Tratamientos", new { idRiesgo = item.IdRiesgo })')">
+                                            <button class="btn btn-link text-warning p-2" title="Tratar Riesgo" onclick="loadView('@Url.Action("Gestionar", "Tratamientos", new { idRiesgo = item.IdRiesgo })')">
                                                 <i class="fas fa-hammer"></i>
                                             </button>
                                         }
                                         else
                                         {
-                                            @* Cambia el botón de "Ver Tratamiento" por este *@
-                                            <button class="btn btn-link text-success p-2" title="Ver Tratamiento"
-                                                    onclick="loadView('@Url.Action("Index", "Tratamientos", new { highlightId = item.IdRiesgo })')">
+                                            <button class="btn btn-link text-success p-2" title="Ver Tratamiento" onclick="loadView('@Url.Action("Index", "Tratamientos", new { highlightId = item.IdRiesgo })')">
                                                 <i class="fas fa-clipboard-check"></i>
                                             </button>
                                         }
+
+                                        <button class="btn btn-link text-dark p-2" title="Eliminar Análisis" onclick="confirmarEliminarRiesgo(@item.IdRiesgo, '@item.Amenaza')">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </td>
@@ -100,3 +100,111 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalEliminarRiesgo" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-danger text-white rounded-top-4 border-0">
+                <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Eliminar Análisis de Riesgo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-warning border-0 small mb-4">
+                    <i class="fas fa-info-circle me-2"></i> <strong>Atención:</strong> Al eliminar este análisis, también se borrarán permanentemente todos los planes de tratamiento y bitácoras asociados.
+                </div>
+                <p class="text-center mb-4">Confirmar eliminación de la amenaza: <br><strong id="nombreRiesgoEliminar" class="text-navy fs-5"></strong></p>
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Contraseña del Auditor</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0"><i class="fas fa-lock"></i></span>
+                        <input type="password" id="passAuditorRiesgo" class="form-control border-light bg-light" placeholder="Ingrese su contraseña">
+                    </div>
+                </div>
+                <input type="hidden" id="idRiesgoEliminar" />
+            </div>
+            <div class="modal-footer border-0 p-3">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4 shadow-sm" onclick="ejecutarEliminacionRiesgo()">Confirmar y Borrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function confirmarEliminarRiesgo(id, nombre) {
+        $('#idRiesgoEliminar').val(id);
+        $('#nombreRiesgoEliminar').text(nombre);
+        $('#passAuditorRiesgo').val('');
+        var modal = new bootstrap.Modal(document.getElementById('modalEliminarRiesgo'));
+        modal.show();
+    }
+
+    function ejecutarEliminacionRiesgo() {
+        const id = $('#idRiesgoEliminar').val();
+        const pass = $('#passAuditorRiesgo').val();
+
+        if (!pass) {
+            alert("Debe ingresar su contraseña para autorizar la eliminación.");
+            return;
+        }
+
+        $.ajax({
+            url: '@Url.Action("EliminarRiesgoConfirmed", "Riesgos")',
+            type: 'POST',
+            data: { id: id, password: pass },
+            success: function (res) {
+                if (res.success) {
+                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarRiesgo')).hide();
+                    loadView('@Url.Action("Index", "Riesgos")');
+                } else {
+                    alert(res.message);
+                }
+            },
+            error: function () {
+                alert("Error de conexión con el servidor.");
+            }
+        });
+    }
+</script>
+
+<style>
+    .text-navy {
+        color: #0b1e3b;
+    }
+
+    .btn-navy {
+        background-color: #0b1e3b;
+        color: white;
+        border: none;
+    }
+
+        .btn-navy:hover {
+            background-color: #d62828;
+            color: white;
+        }
+
+    .btn-link:hover {
+        transform: scale(1.2);
+        transition: 0.2s;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+</style>

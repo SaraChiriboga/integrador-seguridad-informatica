@@ -61,5 +61,40 @@ namespace SGRC_Integrador.Controllers
 
             return PartialView(riesgo);
         }
+
+        [HttpPost]
+        public JsonResult EliminarRiesgoConfirmed(int id, string password)
+        {
+            try
+            {
+                // 1. Validar Auditor y Contraseña
+                string nombreUsuario = Session["UsuarioNombre"]?.ToString();
+                var auditor = db.Usuarios.FirstOrDefault(u => u.Nombre == nombreUsuario);
+
+                if (auditor == null || auditor.PasswordHash != password)
+                {
+                    return Json(new { success = false, message = "Contraseña de seguridad incorrecta." });
+                }
+
+                // 2. Buscar el Riesgo incluyendo sus tratamientos
+                var riesgo = db.Riesgos.Include("Tratamientos").FirstOrDefault(r => r.IdRiesgo == id);
+                if (riesgo == null) return Json(new { success = false, message = "Análisis de riesgo no encontrado." });
+
+                // 3. Eliminación en Cascada manual (si no está configurada en la BD)
+                if (riesgo.Tratamientos.Any())
+                {
+                    db.Tratamientos.RemoveRange(riesgo.Tratamientos);
+                }
+
+                db.Riesgos.Remove(riesgo);
+                db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error técnico: " + ex.Message });
+            }
+        }
     }
 }
