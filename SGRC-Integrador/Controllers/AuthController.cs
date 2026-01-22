@@ -118,7 +118,7 @@ namespace SGRC_Integrador.Controllers
 
             // Ruta física del logo (Asegúrate de tener logo-azul.png o similar para mejor compatibilidad)
             // Si necesitas usar el SVG, la mayoría de clientes lo bloquearán; se recomienda PNG para emails.
-            string pathLogo = Server.MapPath("~/Content/Images/logo-azul.svg");
+            string pathLogo = Server.MapPath("~/Content/Images/logoazul.png");
             var image = bodyBuilder.LinkedResources.Add(pathLogo);
             image.ContentId = "logo_sgrc";
 
@@ -154,7 +154,7 @@ namespace SGRC_Integrador.Controllers
             {
                 client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                 client.Connect("smtp.gmail.com", 465, true);
-                client.Authenticate("sarilola10@gmail.com", "mdzl kroq vkhf rjxf");
+                client.Authenticate("sarilola10@gmail.com", "eejj psef qedo fnat");
                 client.Send(mensaje);
                 client.Disconnect(true);
             }

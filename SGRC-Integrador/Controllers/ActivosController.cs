@@ -89,33 +89,42 @@ namespace SGRC_Integrador.Controllers
         [HttpPost]
         public JsonResult DeleteConfirmed(int id, string password)
         {
-            try
+            using (var transaction = db.Database.BeginTransaction())
             {
-                // Usamos la sesión que definimos en tu Login
-                string nombreUsuario = Session["UsuarioNombre"]?.ToString();
-                var usuario = db.Usuarios.FirstOrDefault(u => u.Nombre == nombreUsuario);
-
-                if (usuario == null || usuario.PasswordHash != password)
+                try
                 {
-                    return Json(new { success = false, message = "Contraseña de seguridad incorrecta." });
+                    // 1. Validar identidad del Auditor
+                    string nombreUsuario = Session["UsuarioNombre"]?.ToString();
+                    var usuario = db.Usuarios.FirstOrDefault(u => u.Nombre == nombreUsuario);
+
+                    if (usuario == null || usuario.PasswordHash != password)
+                    {
+                        return Json(new { success = false, message = "Contraseña de seguridad incorrecta. Autorización denegada." });
+                    }
+
+                    // 2. Buscar activo con sus riesgos
+                    var activo = db.Activos.Include(a => a.Riesgos).FirstOrDefault(a => a.IdActivo == id);
+                    if (activo == null) return Json(new { success = false, message = "El activo ya no existe." });
+
+                    // 3. Eliminación en Cascada Manual
+                    // Borramos los riesgos asociados primero para evitar errores de llave foránea
+                    if (activo.Riesgos.Any())
+                    {
+                        db.Riesgos.RemoveRange(activo.Riesgos);
+                    }
+
+                    // 4. Borrar Activo
+                    db.Activos.Remove(activo);
+                    db.SaveChanges();
+
+                    transaction.Commit();
+                    return Json(new { success = true });
                 }
-
-                var activo = db.Activos.Include(a => a.Riesgos).FirstOrDefault(a => a.IdActivo == id);
-                if (activo == null) return Json(new { success = false, message = "Activo no encontrado." });
-
-                if (activo.Riesgos.Any())
+                catch (Exception ex)
                 {
-                    return Json(new { success = false, message = "Restricción de Integridad: Este activo tiene riesgos analizados y no puede eliminarse." });
+                    transaction.Rollback();
+                    return Json(new { success = false, message = "Error técnico: " + ex.Message });
                 }
-
-                db.Activos.Remove(activo);
-                db.SaveChanges();
-
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = ex.Message });
             }
         }
 

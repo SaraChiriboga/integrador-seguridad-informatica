@@ -105,3 +105,96 @@
         </div>
     </form>
 </div>
+
+<script>
+    // Función para actualizar los badges y el cálculo total del CID
+    function updateSlider(id, valId) {
+        const val = document.getElementById(id).value;
+        document.getElementById(valId).innerText = val;
+
+        const c = parseInt(document.getElementById('slideC').value);
+        const i = parseInt(document.getElementById('slideI').value);
+        const d = parseInt(document.getElementById('slideD').value);
+
+        const total = c + i + d;
+        const txtTotal = document.getElementById('txtTotal');
+        const badgeNivel = document.getElementById('badgeNivel');
+
+        txtTotal.innerText = total;
+
+        // Lógica de criticidad basada en la suma (Escala sugerida)
+        if (total >= 10) {
+            badgeNivel.innerText = "¡ACTIVO CRÍTICO!";
+            badgeNivel.className = "mt-2 fw-bold text-danger animate-pulse";
+            txtTotal.parentElement.className = "bg-opacity-20 p-4 rounded-4 text-center border border-danger shadow-lg";
+        } else if (total >= 7) {
+            badgeNivel.innerText = "Activo Significativo";
+            badgeNivel.className = "mt-2 fw-bold text-warning";
+            txtTotal.parentElement.className = "bg-white bg-opacity-10 p-4 rounded-4 text-center";
+        } else {
+            badgeNivel.innerText = "Activo Bajo";
+            badgeNivel.className = "mt-2 fw-bold text-white opacity-75";
+            txtTotal.parentElement.className = "bg-white bg-opacity-10 p-4 rounded-4 text-center";
+        }
+    }
+
+    // Manejo del envío del formulario mediante AJAX
+    $(document).ready(function () {
+        $('#formActivo').on('submit', function (e) {
+            e.preventDefault(); // Evita la recarga de página
+
+            const btn = $(this).find('button[type="submit"]');
+            btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Guardando...');
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        // Recargar la lista de activos usando la función global loadView
+                        loadView('@Url.Action("Index", "Activos")');
+                        // Opcional: Mostrar una notificación de éxito
+                    } else {
+                        alert("Error al guardar: " + response.message);
+                        btn.prop('disabled', false).html('<i class="fas fa-save me-2"></i>Guardar Activo');
+                    }
+                },
+                error: function () {
+                    alert("Error de conexión con el servidor.");
+                    btn.prop('disabled', false).html('<i class="fas fa-save me-2"></i>Guardar Activo');
+                }
+            });
+        });
+    });
+</script>
+
+<style>
+    /* Estilos personalizados para los sliders */
+    .custom-range::-webkit-slider-thumb {
+        background: #0b1e3b;
+        border: 2px solid white;
+    }
+
+    .bg-navy {
+        background-color: #0b1e3b;
+    }
+
+    .text-navy {
+        color: #0b1e3b;
+    }
+
+    .btn-navy {
+        background-color: #0b1e3b;
+        color: white;
+    }
+
+    .btn-navy:hover {
+        background-color: #d62828; /* Rojo corporativo para hover */
+        color: white;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+</style>

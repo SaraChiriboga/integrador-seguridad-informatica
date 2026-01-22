@@ -102,7 +102,10 @@
                                     <button class="btn btn-link text-navy p-2" title="Detalles" onclick="loadView('@Url.Action("Details", "Activos", new { id = item.IdActivo })')"><i class="fas fa-eye"></i></button>
                                     <button class="btn btn-link text-primary p-2" title="Editar" onclick="loadView('@Url.Action("Edit", "Activos", new { id = item.IdActivo })')"><i class="fas fa-edit"></i></button>
                                     <button class="btn btn-link text-danger p-2" title="Analizar Riesgo" onclick="loadView('@Url.Action("Create", "Riesgos", new { activoId = item.IdActivo })')"><i class="fas fa-biohazard"></i></button>
-                                    <button class="btn btn-link text-dark p-2" title="Eliminar" onclick="confirmarEliminacion(@item.IdActivo, '@item.Nombre')"><i class="fas fa-trash-alt"></i></button>
+                                    <button class="btn btn-link text-danger" title="Eliminar"
+                                            onclick="confirmarEliminar(@item.IdActivo, '@item.Nombre')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -120,79 +123,72 @@
 <div class="modal fade" id="modalEliminarActivo" data-bs-backdrop="static" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg rounded-4">
-            <div class="modal-header bg-dark text-white rounded-top-4 border-0">
-                <h5 class="modal-title fw-bold"><i class="fas fa-shield-alt me-2"></i>Confirmación de Seguridad</h5>
+            <div class="modal-header bg-danger text-white rounded-top-4 border-0">
+                <h5 class="modal-title fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
-                <p class="text-center mb-4">Está por eliminar el activo: <br><strong id="nombreActivoEliminar" class="text-danger fs-5"></strong></p>
+                <div class="alert alert-warning border-0 small mb-4">
+                    <i class="fas fa-info-circle me-2"></i> <strong>Atención:</strong> Esta acción es irreversible. Se eliminarán también todos los análisis de riesgos vinculados a este activo.
+                </div>
+                <p class="text-center mb-4">Confirme la eliminación del activo: <br><strong id="nombreActivoEliminar" class="text-navy fs-5"></strong></p>
+
                 <div class="mb-3">
                     <label class="form-label small fw-bold text-muted text-uppercase">Contraseña del Auditor</label>
                     <div class="input-group">
                         <span class="input-group-text bg-light border-0"><i class="fas fa-lock"></i></span>
-                        <input type="password" id="confirmPass" class="form-control border-light bg-light" placeholder="Ingrese su contraseña actual">
+                        <input type="password" id="passAuditor" class="form-control border-light bg-light" placeholder="Ingrese su contraseña para autorizar">
                     </div>
                 </div>
                 <input type="hidden" id="idActivoEliminar" />
             </div>
             <div class="modal-footer border-0 p-3">
                 <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger rounded-pill px-4 shadow-sm" onclick="ejecutarEliminacion()">Confirmar Eliminación</button>
+                <button type="button" class="btn btn-danger rounded-pill px-4 shadow-sm" onclick="ejecutarEliminacion()">Confirmar y Borrar</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        // Evento de búsqueda por texto
-        $("#txtBuscar").on("keyup", function () { aplicarFiltros(); });
+    // 1. Función que abre el modal y prepara los datos
+    function confirmarEliminar(id, nombre) {
+        $('#idActivoEliminar').val(id);
+        $('#nombreActivoEliminar').text(nombre);
+        $('#passAuditor').val(''); // Limpiar campo
+        var modal = new bootstrap.Modal(document.getElementById('modalEliminarActivo'));
+        modal.show();
+    }
 
-        // Evento de cambio en selects
-        $("#filtroTipo, #filtroCriticidad").on("change", function () { aplicarFiltros(); });
-    });
+    // 2. Función que ejecuta el AJAX al controlador
+    function ejecutarEliminacion() {
+        const id = $('#idActivoEliminar').val();
+        const pass = $('#passAuditor').val();
 
-    function aplicarFiltros() {
-        const texto = $("#txtBuscar").val().toLowerCase();
-        const tipo = $("#filtroTipo").val();
-        const nivel = $("#filtroCriticidad").val();
-        let visibles = 0;
+        if (!pass) {
+            alert("Debe ingresar su contraseña para autorizar la eliminación.");
+            return;
+        }
 
-        $(".activo-row").each(function () {
-            const nombreActivo = $(this).find(".activo-nombre").text().toLowerCase();
-            const idActivo = $(this).find(".activo-id").text().toLowerCase();
-            const tipoActivo = $(this).data("tipo");
-            const nivelActivo = $(this).data("nivel");
-
-            const coincideTexto = nombreActivo.includes(texto) || idActivo.includes(texto);
-            const coincideTipo = tipo === "" || tipoActivo.includes(tipo);
-            const coincideNivel = nivel === "todos" || nivelActivo === nivel;
-
-            if (coincideTexto && coincideTipo && coincideNivel) {
-                $(this).fadeIn(200);
-                visibles++;
-            } else {
-                $(this).hide();
+        $.ajax({
+            url: '@Url.Action("DeleteConfirmed", "Activos")',
+            type: 'POST',
+            data: { id: id, password: pass },
+            success: function (res) {
+                if (res.success) {
+                    // Cerrar modal
+                    bootstrap.Modal.getInstance(document.getElementById('modalEliminarActivo')).hide();
+                    // Recargar la tabla
+                    loadView('@Url.Action("Index", "Activos")');
+                } else {
+                    alert(res.message);
+                }
+            },
+            error: function () {
+                alert("Error de comunicación con el servidor.");
             }
         });
-
-        if (visibles === 0) $("#noResultados").removeClass("d-none");
-        else $("#noResultados").addClass("d-none");
     }
-
-    function resetFiltros() {
-        $("#txtBuscar").val("");
-        $("#filtroTipo").val("");
-        $("#filtroCriticidad").val("todos");
-        $(".activo-row").fadeIn(200);
-        $("#noResultados").addClass("d-none");
-    }
-
-    function exportarActivosPDF() {
-        window.open('@Url.Action("ExportarActivosPDF", "Activos")', '_blank');
-    }
-
-    // ... funciones de eliminación existentes ...
 </script>
 
 <style>
