@@ -196,52 +196,63 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
 
-    // --- REENVIAR CÓDIGO ---
-    resendLink.addEventListener('click', (e) => {
-        e.preventDefault();
+    // --- REENVIAR CÓDIGO (LÓGICA REAL) ---
+resendLink.addEventListener('click', (e) => {
+    e.preventDefault();
 
-        if (!resendLink.classList.contains('disabled')) {
-            // Aquí puedes hacer una llamada AJAX al servidor para reenviar el código
-            // Ejemplo con fetch:
-            /*
-            fetch('/Auth/ResendCode', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Resetear el formulario
-                    resetForm();
-                }
-            });
-            */
+    if (!resendLink.classList.contains('disabled')) {
 
-            // Por ahora, solo mostramos un mensaje
-            showNotification('Código reenviado a tu correo', 'success');
+        // Mostrar estado de carga en el link
+        const originalText = resendLink.innerHTML;
+        resendLink.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+        resendLink.classList.add('disabled');
 
-            // Resetear formulario
-            resetForm();
-
-            // Deshabilitar enlace temporalmente (60 segundos)
-            resendLink.classList.add('disabled');
-            let resendTimeLeft = 60;
-            const originalText = resendLink.innerHTML;
-
-            const resendInterval = setInterval(() => {
-                resendTimeLeft--;
-                resendLink.innerHTML = `<i class="fa-solid fa-clock"></i> Reenviar en ${resendTimeLeft}s`;
-
-                if (resendTimeLeft <= 0) {
-                    clearInterval(resendInterval);
-                    resendLink.innerHTML = originalText;
-                    resendLink.classList.remove('disabled');
-                }
-            }, 1000);
+        // Usar Url.Action garantiza que la ruta sea /Auth/ResendCode
+    fetch('@Url.Action("ResendCode", "Auth")', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
         }
-    });
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('¡Código nuevo enviado con éxito!', 'success');
+                resetForm(); // Limpia los cuadros y reinicia el contador de 5 min
+
+                // Inicia cuenta regresiva de 60s para permitir otro reenvío
+                startResendCooldown(60);
+            } else {
+                showNotification(data.message, 'error');
+                resendLink.innerHTML = originalText;
+                resendLink.classList.remove('disabled');
+            }
+        })
+        .catch(error => {
+            showNotification('Error de conexión al servidor', 'error');
+            resendLink.innerHTML = originalText;
+            resendLink.classList.remove('disabled');
+        });
+    }
+});
+
+// Función para el Cooldown del botón de reenvío
+function startResendCooldown(seconds) {
+    let timeLeft = seconds;
+    resendLink.classList.add('disabled');
+
+    const interval = setInterval(() => {
+        timeLeft--;
+        resendLink.innerHTML = `<i class="fa-solid fa-clock"></i> Reenviar en ${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+            clearInterval(interval);
+            resendLink.innerHTML = '<i class="fa-solid fa-rotate-right"></i> Reenviar código';
+            resendLink.classList.remove('disabled');
+        }
+    }, 1000);
+}
 
     // --- RESETEAR FORMULARIO ---
     function resetForm() {
@@ -320,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => resendLink.classList.remove('disabled'), 60000);
 });
 
-document.head.appendChild(style);
     </script>
 </body>
 </html>

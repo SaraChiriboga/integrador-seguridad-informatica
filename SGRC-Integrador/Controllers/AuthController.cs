@@ -29,11 +29,50 @@ namespace SGRC_Integrador.Controllers
 
                 EnviarCorreo(usuario.Correo, codigo);
 
+                // Guardamos AMBOS para tener persistencia en el reenvío
                 Session["UserPending2FA"] = usuario.IdUsuario;
+                Session["TempEmail"] = usuario.Correo; // <--- AGREGAR ESTO
+
                 return RedirectToAction("VerificarCodigo");
             }
             ViewBag.Error = "Credenciales incorrectas";
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult ResendCode()
+        {
+            try
+            {
+                // 1. Recuperar el ID del usuario pendiente
+                int idUsuario = (int)(Session["UserPending2FA"] ?? 0);
+                string email = Session["TempEmail"]?.ToString();
+
+                if (idUsuario == 0 || string.IsNullOrEmpty(email))
+                {
+                    return Json(new { success = false, message = "Sesión expirada. Inicie sesión de nuevo." });
+                }
+
+                // 2. Generar nuevo código
+                string nuevoCodigo = new Random().Next(100000, 999999).ToString();
+
+                // 3. Actualizar en la base de datos (IMPORTANTE: Debe guardarse en la DB para que VerificarCodigo lo reconozca)
+                var usuario = db.Usuarios.Find(idUsuario);
+                if (usuario == null) return Json(new { success = false, message = "Usuario no encontrado." });
+
+                usuario.Codigo2FA = nuevoCodigo;
+                usuario.FechaExpiracion2FA = DateTime.Now.AddMinutes(5);
+                db.SaveChanges();
+
+                // 4. Enviar el correo real
+                EnviarCorreo(email, nuevoCodigo);
+
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error: " + ex.Message });
+            }
         }
 
         public ActionResult VerificarCodigo() => View();

@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\auth\\verificarcodigo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\auth\\verificarcodigo.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\content\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\content\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\sgrc-integrador\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|solutionrelative:sgrc-integrador\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6B7B8E18-460D-46C0-B0F1-9F8DA2EB80E5}|SGRC-Integrador\\SGRC-Integrador.csproj|c:\\users\\saril\\desktop\\seg\\sgrc-integrador\\sgrc-integrador\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -46,7 +54,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 247,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,20 +70,46 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "SGRC-Integrador\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAUwD0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-22T08:52:56.3Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "VerificarCodigo.cshtml",
+              "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Auth\\VerificarCodigo.cshtml",
+              "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Auth\\VerificarCodigo.cshtml",
+              "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Auth\\VerificarCodigo.cshtml",
+              "RelativeToolTip": "SGRC-Integrador\\Views\\Auth\\VerificarCodigo.cshtml",
+              "ViewState": "AgIAAMYAAAAAAAAAAAAAwNUAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2026-01-22T08:50:49.433Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
               "Title": "UsuariosController.cs",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\UsuariosController.cs",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\UsuariosController.cs",
               "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\UsuariosController.cs",
               "RelativeToolTip": "SGRC-Integrador\\Controllers\\UsuariosController.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABwAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABcAAABEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-01-22T08:47:04.647Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Shared\\_Layout.cshtml",
@@ -88,7 +122,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Home\\Index.cshtml",
@@ -101,20 +135,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "Site.css",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Content\\Site.css",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Content\\Site.css",
               "ToolTip": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Content\\Site.css",
               "RelativeToolTip": "SGRC-Integrador\\Content\\Site.css",
-              "ViewState": "AgIAAL8FAAAAAAAAAAAUwOAFAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAMIFAAAAAAAAAAAQwOAFAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2026-01-22T08:34:12.664Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Index.cshtml",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Activos\\Index.cshtml",
@@ -127,7 +161,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "Create.cshtml",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Activos\\Create.cshtml",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Activos\\Create.cshtml",
@@ -140,7 +174,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "RiesgosController.cs",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Controllers\\RiesgosController.cs",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Controllers\\RiesgosController.cs",
@@ -153,7 +187,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "Index.cshtml",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Views\\Riesgos\\Index.cshtml",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Views\\Riesgos\\Index.cshtml",
@@ -166,7 +200,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "Activo.cs",
               "DocumentMoniker": "C:\\Users\\saril\\Desktop\\seg\\SGRC-Integrador\\SGRC-Integrador\\Models\\Activo.cs",
               "RelativeDocumentMoniker": "SGRC-Integrador\\Models\\Activo.cs",
