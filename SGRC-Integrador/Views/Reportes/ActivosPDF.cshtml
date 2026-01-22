@@ -4,59 +4,208 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .header {
+            border-bottom: 3px solid #0b1e3b;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Forzamos el color azul marino del sistema al logo */
+        .logo {
+            height: 80px;
+            float: left;
+        }
+
+        .report-info {
+            float: right;
+            text-align: right;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .title {
+            clear: both;
+            text-align: center;
+            color: #0b1e3b;
+            text-transform: uppercase;
+            margin: 15px 0;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        /* Cuadro de resumen premium */
+        .summary-box {
+            background: #f0f4f8;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            display: table;
+            width: 100%;
+        }
+
+        .summary-item {
+            display: table-cell;
+            text-align: center;
+            border-right: 1px solid #cbd5e0;
+        }
+
+            .summary-item:last-child {
+                border-right: none;
+            }
+
+        .summary-value {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            color: #0b1e3b;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            font-size: 10px;
         }
 
         th {
             background-color: #0b1e3b;
             color: white;
+            padding: 10px 5px;
+            text-align: left;
+            text-transform: uppercase;
         }
 
-        .critical {
-            color: red;
+        td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 8px 5px;
+            vertical-align: middle;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+
+        .badge {
+            padding: 3px 6px;
+            border-radius: 12px;
             font-weight: bold;
+            color: white;
+            font-size: 9px;
+        }
+
+        .bg-danger {
+            background-color: #e53e3e;
+        }
+
+        .bg-warning {
+            background-color: #dd6b20;
+        }
+
+        .bg-info {
+            background-color: #3182ce;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: -10px;
+            width: 100%;
+            font-size: 9px;
+            text-align: center;
+            color: #a0aec0;
+            border-top: 1px solid #edf2f7;
+            padding-top: 5px;
         }
     </style>
 </head>
 <body>
-    <h2>Inventario de Activos Críticos - SGRC</h2>
+
+    <div class="header">
+        <img src="@Url.Content("~/Content/Images/logo-azul.svg")" alt="logo" class="logo" />
+
+        <div class="report-info">
+            <span style="color: #0b1e3b; font-weight: bold;">AUDITORÍA DE ACTIVOS</span><br />
+            <strong>Auditor:</strong> @(ViewBag.Auditor ?? "No especificado")<br />
+            <strong>Fecha de Emisión:</strong> @(ViewBag.FechaReporte ?? DateTime.Now.ToShortDateString())<br />
+            <strong>ID Reporte:</strong> SGRC-@DateTime.Now.Ticks.ToString().Substring(0, 8)
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+    <h2 class="title">Inventario Maestro de Activos de Información</h2>
+
+    <div class="summary-box">
+        <div class="summary-item">
+            <span class="summary-muted">Total Activos</span>
+            <span class="summary-value">@Model.Count()</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-muted">Críticos (Riesgo Alto)</span>
+            <span class="summary-value text-danger">@Model.Count(a => a.ValorTotal >= 10)</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-muted">Promedio Criticidad</span>
+            <span class="summary-value">@(Model.Any() ? Math.Round(Model.Average(a => (double)a.ValorTotal), 1).ToString() : "0") / 12</span>
+        </div>
+    </div>
+
     <table>
         <thead>
             <tr>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>C</th>
-                <th>I</th>
-                <th>D</th>
-                <th>Total</th>
+                <th style="width: 4%;">ID</th>
+                <th style="width: 18%;">Nombre del Activo</th>
+                <th style="width: 8%;">Tipo</th>
+                <th style="width: 12%;">Ubicación</th>
+                <th style="width: 28%;">Descripción / Especificaciones</th>
+                <th style="text-align:center; width: 4%;">C</th>
+                <th style="text-align:center; width: 4%;">I</th>
+                <th style="text-align:center; width: 4%;">D</th>
+                <th style="text-align:center; width: 10%;">Valoración</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Nombre</td>
-                    <td>@item.Tipo</td>
-                    <td>@item.ValorC</td>
-                    <td>@item.ValorI</td>
-                    <td>@item.ValorD</td>
-                    <td class="@(item.ValorTotal >= 10 ? "critical" : "")">@item.ValorTotal</td>
+                    <td style="text-align:center;">@item.IdActivo</td>
+                    <td><strong>@item.Nombre</strong></td>
+                    <td><span style="text-transform: uppercase;">@item.Tipo</span></td>
+                    <td>@item.Ubicacion</td>
+                    <td style="color: #4a5568;">@(string.IsNullOrEmpty(item.Descripcion) ? "N/D" : item.Descripcion)</td>
+                    <td style="text-align:center;">@item.ValorC</td>
+                    <td style="text-align:center;">@item.ValorI</td>
+                    <td style="text-align:center;">@item.ValorD</td>
+                    <td style="text-align:center;">
+                        @{
+                            string clase = item.ValorTotal >= 10 ? "bg-danger" : (item.ValorTotal >= 7 ? "bg-warning" : "bg-info");
+                            string texto = item.ValorTotal >= 10 ? "CRÍTICO" : (item.ValorTotal >= 7 ? "MEDIO" : "BAJO");
+                        }
+                        <span class="badge @clase">@texto (@item.ValorTotal)</span>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
+
+    <div style="margin-top: 40px; border-left: 4px solid #0b1e3b; padding-left: 15px;">
+        <h4 style="margin: 0; font-size: 12px; color: #0b1e3b;">Certificación de Auditoría</h4>
+        <p style="font-size: 9px; color: #718096; margin-top: 5px;">
+            Este reporte ha sido generado bajo los estándares de la norma ISO 27001 y la Ley Orgánica de Protección de Datos Personales (LOPDP).
+            La información aquí contenida es estrictamente CONFIDENCIAL.
+        </p>
+    </div>
+
+    <div class="footer">
+        SGRC v2026 - Sistema de Gestión de Riesgos y Cumplimiento | Página 1
+    </div>
+
 </body>
 </html>

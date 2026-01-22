@@ -23,10 +23,19 @@ namespace SGRC_Integrador.Controllers
         public ActionResult ExportarActivosPDF()
         {
             var activos = db.Activos.ToList();
-            return new ViewAsPdf("ActivosPDF", activos)
+
+            // 1. FECHA: Formato largo en español
+            ViewBag.FechaReporte = DateTime.Now.ToString("f", new System.Globalization.CultureInfo("es-ES"));
+
+            // 2. AUDITOR: Obtenemos el nombre de la sesión
+            string nombreAuditor = Session["UsuarioNombre"]?.ToString();
+            ViewBag.Auditor = !string.IsNullOrEmpty(nombreAuditor) ? nombreAuditor : "Auditor no identificado";
+
+            return new Rotativa.ViewAsPdf("ActivosPDF", activos)
             {
                 FileName = "Inventario_Activos_SGRC.pdf",
-                PageOrientation = Rotativa.Options.Orientation.Landscape
+                PageOrientation = Rotativa.Options.Orientation.Landscape,
+                CustomSwitches = "--load-error-handling ignore" // Ayuda con la carga de imágenes
             };
         }
 
