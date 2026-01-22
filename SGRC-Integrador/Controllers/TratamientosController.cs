@@ -135,29 +135,21 @@ namespace SGRC_Integrador.Controllers
         }
 
         [HttpPost]
-        public JsonResult GuardarBitacora(int IdTratamiento, int? IdKPI, string DescripcionActividad,
-            string ObservacionesTecnicas, int NuevoProgreso)
+        public JsonResult GuardarBitacora(TratamientoBitacora model, int NuevoProgreso)
         {
             try
             {
-                string usuario = Session["UsuarioNombre"]?.ToString() ?? "Consultor SGRC";
+                // ... tu lógica para guardar en la base de datos ...
+                // No olvides actualizar el progreso en la tabla Tratamiento:
+                var tratamiento = db.Tratamientos.Find(model.IdTratamiento);
+                tratamiento.Progreso = NuevoProgreso;
 
-                string sqlBitacora = @"INSERT INTO TratamientoBitacora 
-                               (IdTratamiento, IdKPI, DescripcionActividad, UsuarioResponsable, ObservacionesTecnicas, FechaRegistro) 
-                               VALUES (@p0, @p1, @p2, @p3, @p4, GETDATE())";
+                model.FechaRegistro = DateTime.Now;
+                model.UsuarioResponsable = Session["UsuarioNombre"]?.ToString() ?? "Auditor";
+                db.TratamientoBitacoras.Add(model);
+                db.SaveChanges();
 
-                db.Database.ExecuteSqlCommand(sqlBitacora, IdTratamiento, (object)IdKPI ?? DBNull.Value,
-                    DescripcionActividad, usuario, (object)ObservacionesTecnicas ?? DBNull.Value);
-
-                var tratamiento = db.Tratamientos.Find(IdTratamiento);
-                if (tratamiento != null)
-                {
-                    tratamiento.Progreso = NuevoProgreso;
-                    db.Entry(tratamiento).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
-
-                return Json(new { success = true });
+                return Json(new { success = true, id = model.IdTratamiento }); // Devolvemos el ID
             }
             catch (Exception ex)
             {
