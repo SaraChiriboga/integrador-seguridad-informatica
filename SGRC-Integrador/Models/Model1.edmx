@@ -33,6 +33,28 @@
           <Property Name="NivelRiesgo" Type="int" StoreGeneratedPattern="Computed" />
           <Property Name="Tratado" Type="bit" />
         </EntityType>
+        <EntityType Name="TratamientoBitacora">
+          <Key>
+            <PropertyRef Name="IdBitacora" />
+          </Key>
+          <Property Name="IdBitacora" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdTratamiento" Type="int" Nullable="false" />
+          <Property Name="IdKPI" Type="int" />
+          <Property Name="FechaRegistro" Type="datetime" />
+          <Property Name="DescripcionActividad" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="UsuarioResponsable" Type="nvarchar" MaxLength="100" />
+          <Property Name="ObservacionesTecnicas" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="TratamientoKPIs">
+          <Key>
+            <PropertyRef Name="IdKPI" />
+          </Key>
+          <Property Name="IdKPI" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdTratamiento" Type="int" Nullable="false" />
+          <Property Name="NombreKPI" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MetaEsperada" Type="nvarchar" MaxLength="50" />
+          <Property Name="FrecuenciaMedicion" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Tratamientos">
           <Key>
             <PropertyRef Name="IdTratamiento" />
@@ -44,6 +66,7 @@
           <Property Name="Responsable" Type="nvarchar" MaxLength="100" />
           <Property Name="FechaLimite" Type="date" />
           <Property Name="Progreso" Type="int" />
+          <Property Name="ControlISO" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Usuarios">
           <Key>
@@ -60,6 +83,34 @@
           <Property Name="Codigo2FA" Type="nvarchar" MaxLength="6" />
           <Property Name="FechaExpiracion2FA" Type="datetime" />
         </EntityType>
+        <Association Name="FK_Bitacora_Tratamiento">
+          <End Role="Tratamientos" Type="Self.Tratamientos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TratamientoBitacora" Type="Self.TratamientoBitacora" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tratamientos">
+              <PropertyRef Name="IdTratamiento" />
+            </Principal>
+            <Dependent Role="TratamientoBitacora">
+              <PropertyRef Name="IdTratamiento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_KPI_Tratamiento">
+          <End Role="Tratamientos" Type="Self.Tratamientos" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TratamientoKPIs" Type="Self.TratamientoKPIs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tratamientos">
+              <PropertyRef Name="IdTratamiento" />
+            </Principal>
+            <Dependent Role="TratamientoKPIs">
+              <PropertyRef Name="IdTratamiento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Riesgo_Activo">
           <End Role="Activos" Type="Self.Activos" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -91,8 +142,18 @@
         <EntityContainer Name="SGRC_DBModelStoreContainer">
           <EntitySet Name="Activos" EntityType="Self.Activos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Riesgos" EntityType="Self.Riesgos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TratamientoBitacora" EntityType="Self.TratamientoBitacora" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TratamientoKPIs" EntityType="Self.TratamientoKPIs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tratamientos" EntityType="Self.Tratamientos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Bitacora_Tratamiento" Association="Self.FK_Bitacora_Tratamiento">
+            <End Role="Tratamientos" EntitySet="Tratamientos" />
+            <End Role="TratamientoBitacora" EntitySet="TratamientoBitacora" />
+          </AssociationSet>
+          <AssociationSet Name="FK_KPI_Tratamiento" Association="Self.FK_KPI_Tratamiento">
+            <End Role="Tratamientos" EntitySet="Tratamientos" />
+            <End Role="TratamientoKPIs" EntitySet="TratamientoKPIs" />
+          </AssociationSet>
           <AssociationSet Name="FK_Riesgo_Activo" Association="Self.FK_Riesgo_Activo">
             <End Role="Activos" EntitySet="Activos" />
             <End Role="Riesgos" EntitySet="Riesgos" />
@@ -149,6 +210,9 @@
           <Property Name="FechaLimite" Type="DateTime" Precision="0" />
           <Property Name="Progreso" Type="Int32" />
           <NavigationProperty Name="Riesgo" Relationship="Self.FK_Tratamiento_Riesgo" FromRole="Tratamientos" ToRole="Riesgos" />
+          <Property Name="ControlISO" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="TratamientoKPIs" Relationship="SGRC_DBModel.FK_KPI_Tratamiento" FromRole="Tratamiento" ToRole="TratamientoKPI" />
+          <NavigationProperty Name="TratamientoBitacoras" Relationship="SGRC_DBModel.FK_Bitacora_Tratamiento" FromRole="Tratamiento" ToRole="TratamientoBitacora" />
         </EntityType>
         <EntityType Name="Usuario">
           <Key>
@@ -206,7 +270,69 @@
             <End Role="Riesgos" EntitySet="Riesgos" />
             <End Role="Tratamientos" EntitySet="Tratamientos" />
           </AssociationSet>
+          <EntitySet Name="TratamientoKPIs" EntityType="SGRC_DBModel.TratamientoKPI" />
+          <AssociationSet Name="FK_KPI_Tratamiento" Association="SGRC_DBModel.FK_KPI_Tratamiento">
+            <End Role="Tratamiento" EntitySet="Tratamientos" />
+            <End Role="TratamientoKPI" EntitySet="TratamientoKPIs" />
+          </AssociationSet>
+          <EntitySet Name="TratamientoBitacoras" EntityType="SGRC_DBModel.TratamientoBitacora" />
+          <AssociationSet Name="FK_Bitacora_Tratamiento" Association="SGRC_DBModel.FK_Bitacora_Tratamiento">
+            <End Role="Tratamiento" EntitySet="Tratamientos" />
+            <End Role="TratamientoBitacora" EntitySet="TratamientoBitacoras" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="TratamientoKPI">
+          <Key>
+            <PropertyRef Name="IdKPI" />
+          </Key>
+          <Property Name="IdKPI" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdTratamiento" Type="Int32" Nullable="false" />
+          <Property Name="NombreKPI" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MetaEsperada" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FrecuenciaMedicion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Tratamiento" Relationship="SGRC_DBModel.FK_KPI_Tratamiento" FromRole="TratamientoKPI" ToRole="Tratamiento" />
+        </EntityType>
+        <Association Name="FK_KPI_Tratamiento">
+          <End Type="SGRC_DBModel.Tratamiento" Role="Tratamiento" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SGRC_DBModel.TratamientoKPI" Role="TratamientoKPI" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tratamiento">
+              <PropertyRef Name="IdTratamiento" />
+            </Principal>
+            <Dependent Role="TratamientoKPI">
+              <PropertyRef Name="IdTratamiento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TratamientoBitacora">
+          <Key>
+            <PropertyRef Name="IdBitacora" />
+          </Key>
+          <Property Name="IdBitacora" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdTratamiento" Type="Int32" Nullable="false" />
+          <Property Name="IdKPI" Type="Int32" />
+          <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+          <Property Name="DescripcionActividad" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UsuarioResponsable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ObservacionesTecnicas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Tratamiento" Relationship="SGRC_DBModel.FK_Bitacora_Tratamiento" FromRole="TratamientoBitacora" ToRole="Tratamiento" />
+        </EntityType>
+        <Association Name="FK_Bitacora_Tratamiento">
+          <End Type="SGRC_DBModel.Tratamiento" Role="Tratamiento" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="SGRC_DBModel.TratamientoBitacora" Role="TratamientoBitacora" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tratamiento">
+              <PropertyRef Name="IdTratamiento" />
+            </Principal>
+            <Dependent Role="TratamientoBitacora">
+              <PropertyRef Name="IdTratamiento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -246,6 +372,7 @@
           <EntitySetMapping Name="Tratamientos">
             <EntityTypeMapping TypeName="SGRC_DBModel.Tratamiento">
               <MappingFragment StoreEntitySet="Tratamientos">
+                <ScalarProperty Name="ControlISO" ColumnName="ControlISO" />
                 <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
                 <ScalarProperty Name="IdRiesgo" ColumnName="IdRiesgo" />
                 <ScalarProperty Name="Estrategia" ColumnName="Estrategia" />
@@ -269,6 +396,30 @@
                 <ScalarProperty Name="Rol" ColumnName="Rol" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TratamientoKPIs">
+            <EntityTypeMapping TypeName="SGRC_DBModel.TratamientoKPI">
+              <MappingFragment StoreEntitySet="TratamientoKPIs">
+                <ScalarProperty Name="FrecuenciaMedicion" ColumnName="FrecuenciaMedicion" />
+                <ScalarProperty Name="MetaEsperada" ColumnName="MetaEsperada" />
+                <ScalarProperty Name="NombreKPI" ColumnName="NombreKPI" />
+                <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
+                <ScalarProperty Name="IdKPI" ColumnName="IdKPI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TratamientoBitacoras">
+            <EntityTypeMapping TypeName="SGRC_DBModel.TratamientoBitacora">
+              <MappingFragment StoreEntitySet="TratamientoBitacora">
+                <ScalarProperty Name="ObservacionesTecnicas" ColumnName="ObservacionesTecnicas" />
+                <ScalarProperty Name="UsuarioResponsable" ColumnName="UsuarioResponsable" />
+                <ScalarProperty Name="DescripcionActividad" ColumnName="DescripcionActividad" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="IdKPI" ColumnName="IdKPI" />
+                <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
+                <ScalarProperty Name="IdBitacora" ColumnName="IdBitacora" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

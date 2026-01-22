@@ -55,7 +55,7 @@
                             @if (!item.Tratado.GetValueOrDefault())
                             {
                                 <button class="btn btn-sm btn-warning"
-                                        onclick="loadView('@Url.Action("Create", "Tratamientos", new { idRiesgo = item.IdRiesgo })')">
+                                        onclick="loadView('@Url.Action("Gestionar", "Tratamientos", new { idRiesgo = item.IdRiesgo })')">
                                     <i class="fas fa-hammer me-1"></i> Tratar
                                 </button>
                             }

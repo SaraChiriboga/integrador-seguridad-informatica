@@ -29,5 +29,7 @@ namespace SGRC_Integrador.Models
         public virtual DbSet<Riesgo> Riesgos { get; set; }
         public virtual DbSet<Tratamiento> Tratamientos { get; set; }
         public virtual DbSet<Usuario> Usuarios { get; set; }
+        public virtual DbSet<TratamientoKPI> TratamientoKPIs { get; set; }
+        public virtual DbSet<TratamientoBitacora> TratamientoBitacoras { get; set; }
     }
 }

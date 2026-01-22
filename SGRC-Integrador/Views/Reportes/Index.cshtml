@@ -1,34 +1,103 @@
-﻿<div class="container fade-in">
+﻿<div class="container fade-in py-4">
     <div class="mb-4">
-        <h2 class="fw-bold">Centro de Reportes y Auditoría</h2>
+        <h2 class="fw-bold text-navy">Centro de Reportes y Auditoría</h2>
         <p class="text-muted">Exporte la información técnica necesaria para la toma de decisiones estratégicas.</p>
     </div>
 
     <div class="row">
-        <div class="col-md-6 mb-4">
-            <div class="card border-0 shadow-sm p-4 rounded-4 text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center h-100">
                 <div class="mb-3">
                     <i class="fas fa-file-pdf fa-3x text-danger"></i>
                 </div>
-                <h5 class="fw-bold">Inventario de Activos (PDF)</h5>
+                <h5 class="fw-bold">Inventario de Activos</h5>
                 <p class="small text-muted">Listado completo de activos con su respectiva valoración C-I-D.</p>
-                <a href="@Url.Action("ExportarActivosPDF", "Reportes")" target="_blank" class="btn btn-outline-danger w-100">
+                <a href="@Url.Action("ExportarActivosPDF", "Reportes")" target="_blank" class="btn btn-outline-danger w-100 mt-auto">
                     <i class="fas fa-download me-2"></i>Descargar PDF
                 </a>
             </div>
         </div>
 
-        <div class="col-md-6 mb-4">
-            <div class="card border-0 shadow-sm p-4 rounded-4 text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center h-100">
                 <div class="mb-3">
                     <i class="fas fa-file-excel fa-3x text-success"></i>
                 </div>
-                <h5 class="fw-bold">Matriz de Riesgos (Excel)</h5>
+                <h5 class="fw-bold">Matriz de Riesgos</h5>
                 <p class="small text-muted">Detalle técnico de amenazas, probabilidad e impacto para auditoría.</p>
-                <a href="@Url.Action("ExportarRiesgosExcel", "Reportes")" class="btn btn-outline-success w-100">
+                <a href="@Url.Action("ExportarRiesgosExcel", "Reportes")" class="btn btn-outline-success w-100 mt-auto">
                     <i class="fas fa-download me-2"></i>Descargar Excel
                 </a>
             </div>
         </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm p-4 rounded-4 text-center h-100 bg-white">
+                <div class="mb-3">
+                    <i class="fas fa-clipboard-check fa-3x text-primary"></i>
+                </div>
+                <h5 class="fw-bold">Planes de Tratamiento</h5>
+                <p class="small text-muted">Expediente completo: Estrategia, KPIs y Bitácora de mantenimiento.</p>
+
+                @* Usamos un modal o un buscador simple si hay muchos planes,
+                    pero para el reporte general, enviamos al listado de selección *@
+                <button onclick="mostrarSeleccionPlan()" class="btn btn-outline-primary w-100 mt-auto">
+                    <i class="fas fa-file-export me-2"></i>Generar Informe
+                </button>
+            </div>
+        </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalSeleccionarPlan" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-navy text-white rounded-top-4">
+                <h5 class="modal-title fw-bold">Seleccionar Plan de Tratamiento</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <label class="form-label small fw-bold">Seleccione el Riesgo Tratado:</label>
+                <select id="selectPlanId" class="form-select mb-4 rounded-3">
+                    @* Este select se llenará dinámicamente con los planes existentes *@
+                </select>
+                <button onclick="descargarPlanSeleccionado()" class="btn btn-navy w-100 rounded-pill">
+                    <i class="fas fa-download me-2"></i>Descargar Auditoría Completa
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mostrarSeleccionPlan() {
+        // 1. Cargar la lista mediante AJAX
+        $.get('@Url.Action("GetTratamientosList", "Reportes")', function(data) {
+            let options = '<option value="">-- Seleccione un Plan --</option>';
+            data.forEach(function(item) {
+                options += `<option value="${item.Id}">${item.Amenaza} (Activo: ${item.Activo})</option>`;
+            });
+            $('#selectPlanId').html(options);
+
+            // 2. ABRIR EL MODAL USANDO JS NATIVO (Evita el error de "not a function")
+            var myModal = new bootstrap.Modal(document.getElementById('modalSeleccionarPlan'));
+            myModal.show();
+        });
+    }
+
+    function descargarPlanSeleccionado() {
+        let id = $('#selectPlanId').val();
+        if(!id) {
+            alert("Por favor, seleccione un plan de la lista.");
+            return;
+        }
+
+        // Abrir el PDF en pestaña nueva
+        window.open('@Url.Action("PlanTratamientoPDF", "Reportes")/' + id, '_blank');
+
+        // Cerrar el modal
+        var modalEl = document.getElementById('modalSeleccionarPlan');
+        var modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+    }
+</script>

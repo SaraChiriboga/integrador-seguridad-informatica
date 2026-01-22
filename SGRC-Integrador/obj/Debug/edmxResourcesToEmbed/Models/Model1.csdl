@@ -43,6 +43,9 @@
     <Property Name="FechaLimite" Type="DateTime" Precision="0" />
     <Property Name="Progreso" Type="Int32" />
     <NavigationProperty Name="Riesgo" Relationship="Self.FK_Tratamiento_Riesgo" FromRole="Tratamientos" ToRole="Riesgos" />
+    <Property Name="ControlISO" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="TratamientoKPIs" Relationship="SGRC_DBModel.FK_KPI_Tratamiento" FromRole="Tratamiento" ToRole="TratamientoKPI" />
+    <NavigationProperty Name="TratamientoBitacoras" Relationship="SGRC_DBModel.FK_Bitacora_Tratamiento" FromRole="Tratamiento" ToRole="TratamientoBitacora" />
   </EntityType>
   <EntityType Name="Usuario">
     <Key>
@@ -100,5 +103,67 @@
       <End Role="Riesgos" EntitySet="Riesgos" />
       <End Role="Tratamientos" EntitySet="Tratamientos" />
     </AssociationSet>
+    <EntitySet Name="TratamientoKPIs" EntityType="SGRC_DBModel.TratamientoKPI" />
+    <AssociationSet Name="FK_KPI_Tratamiento" Association="SGRC_DBModel.FK_KPI_Tratamiento">
+      <End Role="Tratamiento" EntitySet="Tratamientos" />
+      <End Role="TratamientoKPI" EntitySet="TratamientoKPIs" />
+    </AssociationSet>
+    <EntitySet Name="TratamientoBitacoras" EntityType="SGRC_DBModel.TratamientoBitacora" />
+    <AssociationSet Name="FK_Bitacora_Tratamiento" Association="SGRC_DBModel.FK_Bitacora_Tratamiento">
+      <End Role="Tratamiento" EntitySet="Tratamientos" />
+      <End Role="TratamientoBitacora" EntitySet="TratamientoBitacoras" />
+    </AssociationSet>
   </EntityContainer>
+  <EntityType Name="TratamientoKPI">
+    <Key>
+      <PropertyRef Name="IdKPI" />
+    </Key>
+    <Property Name="IdKPI" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdTratamiento" Type="Int32" Nullable="false" />
+    <Property Name="NombreKPI" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="MetaEsperada" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="FrecuenciaMedicion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Tratamiento" Relationship="SGRC_DBModel.FK_KPI_Tratamiento" FromRole="TratamientoKPI" ToRole="Tratamiento" />
+  </EntityType>
+  <Association Name="FK_KPI_Tratamiento">
+    <End Type="SGRC_DBModel.Tratamiento" Role="Tratamiento" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="SGRC_DBModel.TratamientoKPI" Role="TratamientoKPI" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tratamiento">
+        <PropertyRef Name="IdTratamiento" />
+      </Principal>
+      <Dependent Role="TratamientoKPI">
+        <PropertyRef Name="IdTratamiento" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="TratamientoBitacora">
+    <Key>
+      <PropertyRef Name="IdBitacora" />
+    </Key>
+    <Property Name="IdBitacora" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="IdTratamiento" Type="Int32" Nullable="false" />
+    <Property Name="IdKPI" Type="Int32" />
+    <Property Name="FechaRegistro" Type="DateTime" Precision="3" />
+    <Property Name="DescripcionActividad" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UsuarioResponsable" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="ObservacionesTecnicas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Tratamiento" Relationship="SGRC_DBModel.FK_Bitacora_Tratamiento" FromRole="TratamientoBitacora" ToRole="Tratamiento" />
+  </EntityType>
+  <Association Name="FK_Bitacora_Tratamiento">
+    <End Type="SGRC_DBModel.Tratamiento" Role="Tratamiento" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="SGRC_DBModel.TratamientoBitacora" Role="TratamientoBitacora" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tratamiento">
+        <PropertyRef Name="IdTratamiento" />
+      </Principal>
+      <Dependent Role="TratamientoBitacora">
+        <PropertyRef Name="IdTratamiento" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>

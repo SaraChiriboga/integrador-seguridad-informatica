@@ -11,6 +11,10 @@
         <EntityTypeShape EntityType="SGRC_DBModel.Usuario" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
         <AssociationConnector Association="SGRC_DBModel.FK_Riesgo_Activo" ManuallyRouted="false" />
         <AssociationConnector Association="SGRC_DBModel.FK_Tratamiento_Riesgo" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SGRC_DBModel.TratamientoKPI" Width="1.5" PointX="7.5" PointY="1.625" />
+        <AssociationConnector Association="SGRC_DBModel.FK_KPI_Tratamiento" />
+        <EntityTypeShape EntityType="SGRC_DBModel.TratamientoBitacora" Width="1.5" PointX="7.5" PointY="5.5" />
+        <AssociationConnector Association="SGRC_DBModel.FK_Bitacora_Tratamiento" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

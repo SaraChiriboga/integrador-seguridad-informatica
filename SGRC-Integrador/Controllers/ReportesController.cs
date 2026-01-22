@@ -4,9 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SGRC_Integrador.Models;
-using Rotativa; // Para PDF
-using ClosedXML.Excel; // Para Excel
+using Rotativa;
+using ClosedXML.Excel;
 using System.IO;
+using System.Data.Entity; // Necesario para que las expresiones lambda t => t.Propiedad funcionen en .Include()
 
 namespace SGRC_Integrador.Controllers
 {
@@ -14,17 +15,14 @@ namespace SGRC_Integrador.Controllers
     {
         private SGRC_DBEntities db = new SGRC_DBEntities();
 
-        // Vista principal del módulo de reportes
         public ActionResult Index()
         {
             return PartialView();
         }
 
-        // Generar PDF del Inventario de Activos
         public ActionResult ExportarActivosPDF()
         {
             var activos = db.Activos.ToList();
-            // Retorna una vista convertida en PDF
             return new ViewAsPdf("ActivosPDF", activos)
             {
                 FileName = "Inventario_Activos_SGRC.pdf",
@@ -32,20 +30,60 @@ namespace SGRC_Integrador.Controllers
             };
         }
 
-        // Generar Excel de la Matriz de Riesgos
+        public ActionResult PlanTratamientoPDF(int id)
+        {
+            // Ahora esto funcionará correctamente gracias al using System.Data.Entity
+            var tratamiento = db.Tratamientos
+                .Include(t => t.Riesgo)
+                .Include(t => t.Riesgo.Activo)
+                .FirstOrDefault(t => t.IdTratamiento == id);
+
+            if (tratamiento == null) return HttpNotFound();
+
+            ViewBag.KPIs = db.Database.SqlQuery<TratamientoKPI>(
+                "SELECT * FROM TratamientoKPIs WHERE IdTratamiento = {0}", id).ToList();
+
+            ViewBag.Bitacora = db.Database.SqlQuery<TratamientoBitacora>(
+                "SELECT * FROM TratamientoBitacora WHERE IdTratamiento = {0} ORDER BY FechaRegistro DESC", id).ToList();
+
+            return new ViewAsPdf("PlanTratamientoPDF", tratamiento)
+            {
+                FileName = "Plan_Tratamiento_" + id + ".pdf",
+                PageOrientation = Rotativa.Options.Orientation.Portrait,
+                PageMargins = new Rotativa.Options.Margins(10, 10, 10, 10)
+            };
+        }
+
+        public JsonResult GetTratamientosList()
+        {
+            var lista = db.Tratamientos
+                .Include(t => t.Riesgo)
+                .Include(t => t.Riesgo.Activo)
+                .Select(t => new {
+                    Id = t.IdTratamiento,
+                    Amenaza = t.Riesgo.Amenaza,
+                    Activo = t.Riesgo.Activo.Nombre
+                }).ToList();
+
+            return Json(lista, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult ExportarRiesgosExcel()
         {
-            var riesgos = db.Riesgos.Include("Activo").ToList();
+            // Cambiado a lambda para consistencia
+            var riesgos = db.Riesgos.Include(r => r.Activo).ToList();
 
             using (var workbook = new XLWorkbook())
             {
                 var worksheet = workbook.Worksheets.Add("Matriz de Riesgos");
 
-                // Cabeceras
-                worksheet.Cell(1, 1).Value = "Activo";
-                worksheet.Cell(1, 2).Value = "Amenaza";
-                worksheet.Cell(1, 3).Value = "Nivel (P x I)";
-                worksheet.Cell(1, 4).Value = "Estado";
+                // Cabeceras y Estilos básicos
+                var header = worksheet.Row(1);
+                header.Cell(1).Value = "Activo";
+                header.Cell(2).Value = "Amenaza";
+                header.Cell(3).Value = "Nivel (P x I)";
+                header.Cell(4).Value = "Estado";
+                header.Style.Font.Bold = true;
 
                 // Datos
                 for (int i = 0; i < riesgos.Count; i++)
@@ -55,6 +93,8 @@ namespace SGRC_Integrador.Controllers
                     worksheet.Cell(i + 2, 3).Value = riesgos[i].NivelRiesgo;
                     worksheet.Cell(i + 2, 4).Value = riesgos[i].Tratado.GetValueOrDefault() ? "Tratado" : "Expuesto";
                 }
+
+                worksheet.Columns().AdjustToContents(); // Ajusta el ancho de las celdas automáticamente
 
                 using (var stream = new MemoryStream())
                 {

@@ -34,6 +34,7 @@
     <EntitySetMapping Name="Tratamientos">
       <EntityTypeMapping TypeName="SGRC_DBModel.Tratamiento">
         <MappingFragment StoreEntitySet="Tratamientos">
+          <ScalarProperty Name="ControlISO" ColumnName="ControlISO" />
           <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
           <ScalarProperty Name="IdRiesgo" ColumnName="IdRiesgo" />
           <ScalarProperty Name="Estrategia" ColumnName="Estrategia" />
@@ -57,6 +58,30 @@
           <ScalarProperty Name="Rol" ColumnName="Rol" />
           <ScalarProperty Name="Activo" ColumnName="Activo" />
           <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TratamientoKPIs">
+      <EntityTypeMapping TypeName="SGRC_DBModel.TratamientoKPI">
+        <MappingFragment StoreEntitySet="TratamientoKPIs">
+          <ScalarProperty Name="FrecuenciaMedicion" ColumnName="FrecuenciaMedicion" />
+          <ScalarProperty Name="MetaEsperada" ColumnName="MetaEsperada" />
+          <ScalarProperty Name="NombreKPI" ColumnName="NombreKPI" />
+          <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
+          <ScalarProperty Name="IdKPI" ColumnName="IdKPI" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TratamientoBitacoras">
+      <EntityTypeMapping TypeName="SGRC_DBModel.TratamientoBitacora">
+        <MappingFragment StoreEntitySet="TratamientoBitacora">
+          <ScalarProperty Name="ObservacionesTecnicas" ColumnName="ObservacionesTecnicas" />
+          <ScalarProperty Name="UsuarioResponsable" ColumnName="UsuarioResponsable" />
+          <ScalarProperty Name="DescripcionActividad" ColumnName="DescripcionActividad" />
+          <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+          <ScalarProperty Name="IdKPI" ColumnName="IdKPI" />
+          <ScalarProperty Name="IdTratamiento" ColumnName="IdTratamiento" />
+          <ScalarProperty Name="IdBitacora" ColumnName="IdBitacora" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

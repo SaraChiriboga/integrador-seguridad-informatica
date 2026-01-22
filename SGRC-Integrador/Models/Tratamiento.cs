@@ -14,6 +14,13 @@ namespace SGRC_Integrador.Models
     
     public partial class Tratamiento
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Tratamiento()
+        {
+            this.TratamientoKPIs = new HashSet<TratamientoKPI>();
+            this.TratamientoBitacoras = new HashSet<TratamientoBitacora>();
+        }
+    
         public int IdTratamiento { get; set; }
         public int IdRiesgo { get; set; }
         public string Estrategia { get; set; }
@@ -21,7 +28,12 @@ namespace SGRC_Integrador.Models
         public string Responsable { get; set; }
         public Nullable<System.DateTime> FechaLimite { get; set; }
         public Nullable<int> Progreso { get; set; }
+        public string ControlISO { get; set; }
     
         public virtual Riesgo Riesgo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TratamientoKPI> TratamientoKPIs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TratamientoBitacora> TratamientoBitacoras { get; set; }
     }
 }

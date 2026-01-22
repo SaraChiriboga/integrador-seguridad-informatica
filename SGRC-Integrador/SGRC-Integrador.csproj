@@ -221,6 +221,12 @@
     <Compile Include="Models\Tratamiento.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TratamientoBitacora.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TratamientoKPI.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Usuario.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -306,7 +312,6 @@
     <Content Include="Views\Riesgos\Index.cshtml" />
     <Content Include="Views\Riesgos\Create.cshtml" />
     <Content Include="Views\Reportes\Index.cshtml" />
-    <Content Include="Views\Tratamientos\Create.cshtml" />
     <Content Include="Views\Tratamientos\Delete.cshtml" />
     <Content Include="Views\Tratamientos\Details.cshtml" />
     <Content Include="Views\Tratamientos\Edit.cshtml" />
@@ -314,6 +319,9 @@
     <Content Include="Views\Reportes\ActivosPDF.cshtml" />
     <Content Include="Views\Auth\Login.cshtml" />
     <Content Include="Views\Auth\VerificarCodigo.cshtml" />
+    <Content Include="Views\Tratamientos\Gestionar.cshtml" />
+    <Content Include="Views\Tratamientos\Bitacora.cshtml" />
+    <Content Include="Views\Reportes\PlanTratamientoPDF.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

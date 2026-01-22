@@ -28,6 +28,28 @@
     <Property Name="NivelRiesgo" Type="int" StoreGeneratedPattern="Computed" />
     <Property Name="Tratado" Type="bit" />
   </EntityType>
+  <EntityType Name="TratamientoBitacora">
+    <Key>
+      <PropertyRef Name="IdBitacora" />
+    </Key>
+    <Property Name="IdBitacora" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdTratamiento" Type="int" Nullable="false" />
+    <Property Name="IdKPI" Type="int" />
+    <Property Name="FechaRegistro" Type="datetime" />
+    <Property Name="DescripcionActividad" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UsuarioResponsable" Type="nvarchar" MaxLength="100" />
+    <Property Name="ObservacionesTecnicas" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="TratamientoKPIs">
+    <Key>
+      <PropertyRef Name="IdKPI" />
+    </Key>
+    <Property Name="IdKPI" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IdTratamiento" Type="int" Nullable="false" />
+    <Property Name="NombreKPI" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="MetaEsperada" Type="nvarchar" MaxLength="50" />
+    <Property Name="FrecuenciaMedicion" Type="nvarchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="Tratamientos">
     <Key>
       <PropertyRef Name="IdTratamiento" />
@@ -39,6 +61,7 @@
     <Property Name="Responsable" Type="nvarchar" MaxLength="100" />
     <Property Name="FechaLimite" Type="date" />
     <Property Name="Progreso" Type="int" />
+    <Property Name="ControlISO" Type="nvarchar" MaxLength="255" />
   </EntityType>
   <EntityType Name="Usuarios">
     <Key>
@@ -55,6 +78,34 @@
     <Property Name="Codigo2FA" Type="nvarchar" MaxLength="6" />
     <Property Name="FechaExpiracion2FA" Type="datetime" />
   </EntityType>
+  <Association Name="FK_Bitacora_Tratamiento">
+    <End Role="Tratamientos" Type="Self.Tratamientos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TratamientoBitacora" Type="Self.TratamientoBitacora" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tratamientos">
+        <PropertyRef Name="IdTratamiento" />
+      </Principal>
+      <Dependent Role="TratamientoBitacora">
+        <PropertyRef Name="IdTratamiento" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_KPI_Tratamiento">
+    <End Role="Tratamientos" Type="Self.Tratamientos" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TratamientoKPIs" Type="Self.TratamientoKPIs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Tratamientos">
+        <PropertyRef Name="IdTratamiento" />
+      </Principal>
+      <Dependent Role="TratamientoKPIs">
+        <PropertyRef Name="IdTratamiento" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Riesgo_Activo">
     <End Role="Activos" Type="Self.Activos" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -86,8 +137,18 @@
   <EntityContainer Name="SGRC_DBModelStoreContainer">
     <EntitySet Name="Activos" EntityType="Self.Activos" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Riesgos" EntityType="Self.Riesgos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TratamientoBitacora" EntityType="Self.TratamientoBitacora" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TratamientoKPIs" EntityType="Self.TratamientoKPIs" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Tratamientos" EntityType="Self.Tratamientos" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Bitacora_Tratamiento" Association="Self.FK_Bitacora_Tratamiento">
+      <End Role="Tratamientos" EntitySet="Tratamientos" />
+      <End Role="TratamientoBitacora" EntitySet="TratamientoBitacora" />
+    </AssociationSet>
+    <AssociationSet Name="FK_KPI_Tratamiento" Association="Self.FK_KPI_Tratamiento">
+      <End Role="Tratamientos" EntitySet="Tratamientos" />
+      <End Role="TratamientoKPIs" EntitySet="TratamientoKPIs" />
+    </AssociationSet>
     <AssociationSet Name="FK_Riesgo_Activo" Association="Self.FK_Riesgo_Activo">
       <End Role="Activos" EntitySet="Activos" />
       <End Role="Riesgos" EntitySet="Riesgos" />

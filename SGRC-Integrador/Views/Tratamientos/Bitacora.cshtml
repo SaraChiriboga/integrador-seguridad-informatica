@@ -1,0 +1,115 @@
+﻿@model SGRC_Integrador.Models.Tratamiento
+@{
+    var historial = ViewBag.Historial as List<SGRC_Integrador.Models.TratamientoBitacora>;
+    var kpis = ViewBag.KPIs as List<SGRC_Integrador.Models.TratamientoKPI>;
+    Layout = null;
+}
+
+<div class="container-fluid py-4 fade-in">
+    <div class="mb-4">
+        <button onclick="loadView('@Url.Action("Index", "Tratamientos")')" class="btn btn-link text-navy p-0 text-decoration-none fw-bold">
+            <i class="fas fa-arrow-left me-2"></i> Volver al Tablero de Gestión
+        </button>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold text-navy mb-1">Registrar Actividad</h4>
+                    <p class="text-muted small mb-4">Plan #@Model.IdTratamiento</p>
+
+                    <form id="formNuevaBitacora">
+                        <input type="hidden" name="IdTratamiento" value="@Model.IdTratamiento" />
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">KPI Impactado</label>
+                            <select name="IdKPI" class="form-select">
+                                <option value="">-- Mantenimiento General --</option>
+                                @if (kpis != null)
+                                {
+                                    foreach (var kpi in kpis)
+                                    {
+                                        <option value="@kpi.IdKPI">@kpi.NombreKPI</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Descripción</label>
+                            <textarea name="DescripcionActividad" class="form-control" rows="4" required></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small">Observaciones</label>
+                            <input type="text" name="ObservacionesTecnicas" class="form-control">
+                        </div>
+
+                        <button type="submit" id="btnGuardar" class="btn btn-navy w-100 py-2 rounded-pill shadow-sm">
+                            <i class="fas fa-save me-2"></i> Guardar Historial
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 bg-white h-100">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold text-navy mb-4">Historial</h4>
+                    <div class="timeline-container" style="max-height: 500px; overflow-y: auto;">
+                        @if (historial != null && historial.Any())
+                        {
+                            foreach (var log in historial)
+                            {
+                                <div class="timeline-item d-flex mb-4">
+                                    <div class="timeline-date pe-3 text-end" style="min-width: 110px;">
+                                        @{ DateTime f = log.FechaRegistro ?? DateTime.Now; }
+                                        <span class="d-block fw-bold text-navy">@f.ToString("dd MMM")</span>
+                                        <span class="small text-muted">@f.ToString("HH:mm")</span>
+                                    </div>
+                                    <div class="timeline-content ps-4 border-start border-2 border-navy position-relative w-100">
+                                        <div class="dot-indicator bg-navy"></div>
+                                        <div class="p-3 bg-light rounded-4 shadow-sm">
+                                            <p class="m-0 text-dark small">@log.DescripcionActividad</p>
+                                            <small class="text-muted">Por: @log.UsuarioResponsable</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#formNuevaBitacora').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        var btn = $('#btnGuardar');
+        btn.prop('disabled', true).html('Guardando...');
+
+        $.ajax({
+            url: '@Url.Action("GuardarBitacora", "Tratamientos")',
+            type: 'POST',
+            data: $(this).serialize(),
+            success: function(res) {
+                if(res.success) {
+                    // RECARGA LIMPIA: Sin concatenar IDs extraños
+                    loadView('@Url.Action("Bitacora", "Tratamientos")/' + @Model.IdTratamiento);
+                } else {
+                    alert("Error: " + res.message);
+                    btn.prop('disabled', false).html('Guardar Historial');
+                }
+            },
+            error: function(xhr) {
+                alert("Error de servidor. Código 500: Revise la consola.");
+                console.log(xhr.responseText);
+                btn.prop('disabled', false).html('Guardar Historial');
+            }
+        });
+    });
+</script>

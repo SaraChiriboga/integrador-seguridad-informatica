@@ -1,0 +1,227 @@
+﻿@model SGRC_Integrador.Models.Tratamiento
+@{
+    var riesgo = ViewBag.RiesgoInfo as SGRC_Integrador.Models.Riesgo;
+    Layout = null;
+}
+
+<div class="container py-4 fade-in">
+    <div style="margin-bottom:10px;">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2 class="fw-bold">Riesgo #@riesgo.IdRiesgo: @riesgo.Amenaza</h2>
+                <p class="mb-0 opacity-75">Activo: @(riesgo.Activo?.Nombre ?? "N/A") | Nivel Inherente: <strong>@riesgo.NivelRiesgo</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <form id="formGestionar" action="@Url.Action("Gestionar", "Tratamientos")" method="post">
+        <input type="hidden" name="IdRiesgo" value="@riesgo.IdRiesgo" />
+        <input type="hidden" name="Estrategia" id="inputEstrategia" required />
+
+        <label class="form-label fw-bold mb-3 text-navy">1. Estrategia Gerencial y Ética</label>
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="strategy-card p-3 border rounded-4 text-center cursor-pointer" onclick="selectStrategy('Mitigar', this)">
+                    <i class="fas fa-user-shield fa-2x mb-2 text-primary"></i>
+                    <h6 class="fw-bold m-0">Mitigar</h6>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="strategy-card p-3 border rounded-4 text-center cursor-pointer" onclick="selectStrategy('Transferir', this)">
+                    <i class="fas fa-exchange-alt fa-2x mb-2 text-warning"></i>
+                    <h6 class="fw-bold m-0">Transferir</h6>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="strategy-card p-3 border rounded-4 text-center cursor-pointer" onclick="selectStrategy('Evitar', this)">
+                    <i class="fas fa-hand-paper fa-2x mb-2 text-danger"></i>
+                    <h6 class="fw-bold m-0">Evitar</h6>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="strategy-card p-3 border rounded-4 text-center cursor-pointer" onclick="selectStrategy('Aceptar', this)">
+                    <i class="fas fa-check-double fa-2x mb-2 text-success"></i>
+                    <h6 class="fw-bold m-0">Aceptar</h6>
+                </div>
+            </div>
+        </div>
+
+        <div id="panelISO" class="card p-3 mb-4 border-start border-primary border-5 bg-light shadow-sm" style="display:none;">
+            <label class="form-label fw-bold"><i class="fas fa-book-reader me-2"></i>Control Normativo ISO 27002:2022</label>
+            <select name="ControlISO" class="form-select">
+                <option value="">-- Seleccione el control técnico aplicado --</option>
+                <option value="5.17">5.17 Autenticación Multifactor (MFA)</option>
+                <option value="8.1">8.1 Seguridad de Endpoints</option>
+                <option value="8.20">8.20 Seguridad de Redes</option>
+                <option value="8.24">8.24 Gestión de Incidentes</option>
+            </select>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="card p-4 rounded-4 shadow-sm border-0 h-100 bg-white">
+                    <h5 class="fw-bold text-navy"><i class="fas fa-vial me-2"></i>Simulador de Riesgo Residual</h5>
+                    <div class="mb-3 mt-3">
+                        <label class="small fw-bold">Probabilidad Post-Control (1-5)</label>
+                        <input type="range" name="nuevaProbabilidad" class="form-range" min="1" max="5" value="2" id="rangeProb" oninput="calcResidual()">
+                    </div>
+                    <div class="mb-3">
+                        <label class="small fw-bold">Impacto Post-Control (1-5)</label>
+                        <input type="range" name="nuevoImpacto" class="form-range" min="1" max="5" value="@riesgo.Impacto" id="rangeImp" oninput="calcResidual()">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-4 rounded-4 shadow-sm border-0 h-100 text-center bg-white">
+                    <h5 class="fw-bold mb-3">Impacto en el Nivel de Riesgo</h5>
+                    <div class="d-flex align-items-end justify-content-center gap-5" style="height: 120px;">
+                        <div>
+                            <div class="bg-danger rounded-top shadow-sm" style="width: 45px; height: @(riesgo.NivelRiesgo * 5)px;"></div>
+                            <small class="fw-bold d-block mt-2">Antes (@riesgo.NivelRiesgo)</small>
+                        </div>
+                        <div>
+                            <div id="barResidual" class="bg-success rounded-top shadow-sm" style="width: 45px; height: 20px; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></div>
+                            <small class="fw-bold d-block mt-2">Después (<span id="txtResidual">--</span>)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4 rounded-4 border-0 shadow-sm mb-4 bg-white">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold m-0 text-navy"><i class="fas fa-chart-line me-2"></i>Indicadores de Seguimiento (KPIs)</h5>
+                <button type="button" class="btn btn-sm btn-outline-navy" onclick="addKPI()">+ Añadir Indicador</button>
+            </div>
+            <div id="kpi-container">
+                <div class="kpi-row row g-2 mb-3 align-items-end border-bottom pb-3">
+                    <div class="col-md-5">
+                        <label class="small fw-bold text-muted">Nombre del Indicador</label>
+                        <input type="text" name="kpi_nombre[]" class="form-control" placeholder="Ej: % de parches aplicados">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="small fw-bold text-muted">Meta %</label>
+                        <input type="number" name="kpi_meta[]" class="form-control" placeholder="0-100">
+                    </div>
+                    <div class="col-md-5">
+                        <label class="small fw-bold text-muted">Frecuencia de Medición</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-navy text-white border-0">Cada</span>
+                            <input type="number" name="kpi_frec_valor[]" class="form-control" value="1" min="1">
+                            <select name="kpi_frec_unidad[]" class="form-select">
+                                <option value="Horas">Horas</option>
+                                <option value="Días">Días</option>
+                                <option value="Semanas" selected>Semanas</option>
+                                <option value="Meses">Meses</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4 rounded-4 shadow-sm border-0 mb-4 bg-white">
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="form-label fw-bold">Acción Correctiva Detallada</label>
+                    <textarea name="AccionCorrectiva" class="form-control" rows="3" required placeholder="Pasos técnicos para mitigar la amenaza..."></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Responsable del Plan</label>
+                    <input type="text" name="Responsable" class="form-control" required value="@Session["UsuarioNombre"]" readonly />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Fecha Límite</label>
+                    <input type="date" name="FechaLimite" class="form-control" required />
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-navy btn-lg w-100 rounded-pill shadow-lg mt-3">
+            <i class="fas fa-check-circle me-2"></i>Confirmar y Ejecutar Plan de Tratamiento
+        </button>
+    </form>
+</div>
+
+<div class="modal fade" id="modalEtica" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-danger text-white border-0">
+                <h5 class="modal-title fw-bold"><i class="fas fa-gavel me-2"></i>ADVERTENCIA ÉTICA Y LEGAL</h5>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <i class="fas fa-exclamation-triangle fa-4x text-danger mb-3"></i>
+                <p class="mb-3">Usted está intentando <strong>ACEPTAR</strong> un riesgo de nivel crítico (<strong>@riesgo.NivelRiesgo</strong>).</p>
+                <div class="alert alert-warning small text-start">
+                    <strong>Referencia LOPDP Art. 42:</strong> La negligencia en la aplicación de medidas de seguridad ante riesgos altos conlleva responsabilidad civil y penal.
+                </div>
+                <p class="small text-muted">¿Confirma bajo su estricta responsabilidad profesional?</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary rounded-pill" onclick="revertirAceptar()">Revisar Estrategia</button>
+                <button type="button" class="btn btn-danger rounded-pill" data-bs-dismiss="modal">Asumir Responsabilidad</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Lógica de Estrategias
+    function selectStrategy(val, el) {
+        $('.strategy-card').removeClass('border-navy bg-light shadow-sm').addClass('border-secondary opacity-75');
+        $(el).addClass('border-navy bg-light shadow-sm').removeClass('border-secondary opacity-75');
+        $('#inputEstrategia').val(val);
+
+        if (val === 'Mitigar') $('#panelISO').slideDown(); else $('#panelISO').slideUp();
+
+        if (val === 'Aceptar' && @riesgo.NivelRiesgo >= 12) {
+            $('#modalEtica').modal('show');
+        }
+    }
+
+    // 2. Simulador Residual
+    function calcResidual() {
+        let p = $('#rangeProb').val();
+        let i = $('#rangeImp').val();
+        let res = p * i;
+        $('#txtResidual').text(res);
+        $('#barResidual').css('height', (res * 5) + 'px');
+    }
+
+    // 3. Agregar KPI dinámico
+    function addKPI() {
+        var html = `
+            <div class="kpi-row row g-2 mb-3 align-items-end border-bottom pb-3 fade-in">
+                <div class="col-md-5"><input type="text" name="kpi_nombre[]" class="form-control" placeholder="Nombre KPI" required></div>
+                <div class="col-md-2"><input type="number" name="kpi_meta[]" class="form-control" placeholder="Meta %"></div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-navy text-white border-0">Cada</span>
+                        <input type="number" name="kpi_frec_valor[]" class="form-control" value="1">
+                        <select name="kpi_frec_unidad[]" class="form-select">
+                            <option value="Horas">Horas</option><option value="Días">Días</option><option value="Semanas" selected>Semanas</option><option value="Meses">Meses</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-1"><button type="button" class="btn btn-outline-danger w-100" onclick="$(this).closest('.kpi-row').remove()">x</button></div>
+            </div>`;
+        $('#kpi-container').append(html);
+    }
+
+    function revertirAceptar() {
+        $('#modalEtica').modal('hide');
+        $('.strategy-card').first().click();
+    }
+
+    $('#formGestionar').submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        $.post(form.attr('action'), form.serialize(), function (res) {
+            loadView('@Url.Action("Index", "Riesgos")');
+        });
+    });
+
+    // Inicializar valores
+    calcResidual();
+    $('.strategy-card').first().click();
+</script>
